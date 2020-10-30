@@ -1,2 +1,2 @@
 # CMP-428-Group
-Charlton, Nick, Ray, Xuan Video Game Group Project
+Charlton, Nick, Ray, Xujuan Video Game Group Project
