@@ -24,7 +24,7 @@ public class TestGame extends GamePanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		maps.get(0).drawMap(g);
+		if(maps.size() != 0) maps.get(0).drawMap(g);
 		player.draw(g);
 	}
 
