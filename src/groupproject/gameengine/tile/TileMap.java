@@ -56,8 +56,8 @@ public class TileMap {
     }
 
     public Tile[] getSurroundingTiles(int x, int y, String direction) {
-        int row = y / 8;
-        int col = x / 8;
+        int row = y / mapModel.getPerTileHeight();
+        int col = x / mapModel.getPerTileWidth();
         Map<String, Tile[]> surroundingTiles = new HashMap<>();
         surroundingTiles.put("right", new Tile[]{mainLayerTiles[row][col+1], mainLayerTiles[row-1][col+1], mainLayerTiles[row+1][col+1]});
         surroundingTiles.put("left", new Tile[]{mainLayerTiles[row][col-1], mainLayerTiles[row-1][col-1], mainLayerTiles[row+1][col-1]});
