@@ -25,6 +25,12 @@ public class Tile {
         g.drawImage(tileImage, x, y, null);
     }
 
+    public void drawBoundsRect(Graphics g) {
+        if(collisionEnabled) g.setColor(Color.red);
+        else g.setColor(Color.green);
+        boundsRect.draw(g);
+    }
+
     public int getWidth() {
         return width;
     }
