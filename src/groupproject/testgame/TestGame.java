@@ -24,20 +24,16 @@ public class TestGame extends GamePanel {
 	// Paints all the components onto a base image, then that image is upscaled 3x (very roughly for now.).
 	public void paintComponent(Graphics g) {
 		BufferedImage frame = new BufferedImage(224, 256, BufferedImage.TYPE_INT_RGB);
-		Graphics test = frame.createGraphics();
-		super.paintComponent(test);
+		Graphics base = frame.createGraphics();
+		super.paintComponent(base);
 		if (!maps.isEmpty()) {
-			maps.get(0).drawMap(test);
-			for (int i = 0; i < 3; i++) {
-				maps.get(0).getSurroundingTiles(player.getBounds().getX(), player.getBounds().getY(), "right")[i].drawBoundsRect(test);
-				maps.get(0).getSurroundingTiles(player.getBounds().getX(), player.getBounds().getY(), "down")[i].drawBoundsRect(test);
-				maps.get(0).getSurroundingTiles(player.getBounds().getX(), player.getBounds().getY(), "up")[i].drawBoundsRect(test);
-				maps.get(0).getSurroundingTiles(player.getBounds().getX(), player.getBounds().getY(), "left")[i].drawBoundsRect(test);
-			}
+			maps.get(0).drawMap(base);
+			for (Tile tile : maps.get(0).getSurroundingTiles(player.getBounds().getX(), player.getBounds().getY(), "all"))
+				tile.drawBoundsRect(base);
 		}
-		player.draw(test);
-		redGhost.draw((test));
-		test.dispose();
+		player.draw(base);
+		redGhost.draw((base));
+		base.dispose();
 		g.drawImage(frame, 0, 0, 672, 768, null);
 	}
 
