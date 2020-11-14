@@ -2,6 +2,8 @@ package groupproject.gameengine.tile;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TileMap {
     private final TileMapModel mapModel;
@@ -53,16 +55,14 @@ public class TileMap {
         g.drawImage(map, 0, 0, null);
     }
 
-    public static BufferedImage resizeBufferedImage(BufferedImage image, int width, int height) {
-        Image tempImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics g = resizedImage.createGraphics();
-        g.drawImage(tempImage, 0, 0, null);
-        g.dispose();
-        return resizedImage;
-    }
-
-    public Tile[][] getMainLayerTiles() {
-        return mainLayerTiles;
+    public Tile[] getSurroundingTiles(int x, int y, String direction) {
+        int row = y / 8;
+        int col = x / 8;
+        Map<String, Tile[]> surroundingTiles = new HashMap<>();
+        surroundingTiles.put("right", new Tile[]{mainLayerTiles[row][col+1], mainLayerTiles[row-1][col+1], mainLayerTiles[row+1][col+1]});
+        surroundingTiles.put("left", new Tile[]{mainLayerTiles[row][col-1], mainLayerTiles[row-1][col-1], mainLayerTiles[row+1][col-1]});
+        surroundingTiles.put("up", new Tile[]{mainLayerTiles[row-1][col], mainLayerTiles[row-1][col+1], mainLayerTiles[row-1][col-1]});
+        surroundingTiles.put("down", new Tile[]{mainLayerTiles[row+1][col], mainLayerTiles[row+1][col+1], mainLayerTiles[row+1][col-1]});
+        return surroundingTiles.get(direction);
     }
 }
