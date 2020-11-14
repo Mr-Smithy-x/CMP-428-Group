@@ -110,4 +110,12 @@ public abstract class Sprite {
 	public int getVelocity() {
 		return velocity;
 	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
 }

@@ -16,8 +16,8 @@ import groupproject.gameengine.tile.TileMap;
 public class TestGame extends GamePanel {
 	private static final int WINDOW_HEIGHT = 768;
 	private static final int WINDOW_WIDTH = 672;
-	private final transient Pacman player = new Pacman(4, 12);
-	private final transient Ghost redGhost = new Ghost(80, 12, "red", 100);
+	private final transient Pacman player = new Pacman(3, 11);
+	private final transient Ghost redGhost = new Ghost(80, 11, "red", 100);
 	private final transient List<TileMap> maps = new ArrayList<>();
 
 	@Override

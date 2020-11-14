@@ -15,8 +15,8 @@ public class Rect {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.diagonalX = x + width;
-		this.diagonalY = y + height;
+		this.diagonalX = x + (width-1);
+		this.diagonalY = y + (height-1);
 	}
 
 	public void move(int dx, int dy) {
