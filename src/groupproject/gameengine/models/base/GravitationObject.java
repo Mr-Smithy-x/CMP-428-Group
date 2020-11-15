@@ -4,39 +4,39 @@ import groupproject.gameengine.contracts.Gravitation;
 
 public abstract class GravitationObject extends MovableObject implements Gravitation {
 
-    float velocity_x, velocity_y;
-    float acceleration_x, acceleration_y;
-    float drag_x, drag_y;
+    double velocity_x, velocity_y;
+    double acceleration_x, acceleration_y;
+    double drag_x, drag_y;
 
 
     @Override
     public void setVelocityX(Number velocity_x) {
-        this.velocity_x = velocity_x.floatValue();
+        this.velocity_x = velocity_x.doubleValue();
     }
 
     @Override
     public void setVelocityY(Number velocity_y) {
-        this.velocity_y = velocity_y.floatValue();
+        this.velocity_y = velocity_y.doubleValue();
     }
 
     @Override
     public void setAccelerationX(Number acceleration_x) {
-        this.acceleration_x = acceleration_x.floatValue();
+        this.acceleration_x = acceleration_x.doubleValue();
     }
 
     @Override
     public void setAccelerationY(Number acceleration_y) {
-        this.acceleration_y = acceleration_y.floatValue();
+        this.acceleration_y = acceleration_y.doubleValue();
     }
 
     @Override
     public void setDragX(Number drag_x) {
-        this.drag_x = drag_x.floatValue();
+        this.drag_x = drag_x.doubleValue();
     }
 
     @Override
     public void setDragY(Number drag_y) {
-        this.drag_y = drag_y.floatValue();
+        this.drag_y = drag_y.doubleValue();
     }
 
     @Override

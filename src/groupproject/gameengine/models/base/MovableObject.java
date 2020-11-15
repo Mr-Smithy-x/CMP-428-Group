@@ -4,8 +4,8 @@ import groupproject.gameengine.contracts.Movable;
 
 public abstract class MovableObject implements Movable {
 
-    protected float x, y;
-    protected float width, height;
+    protected double x, y;
+    protected double width, height;
     protected int world_angle;
 
 
@@ -51,12 +51,12 @@ public abstract class MovableObject implements Movable {
 
     @Override
     public void setX(Number x) {
-        this.x = x.floatValue();
+        this.x = x.doubleValue();
     }
 
     @Override
     public void setY(Number y) {
-        this.y = y.floatValue();
+        this.y = y.doubleValue();
     }
 
     @Override

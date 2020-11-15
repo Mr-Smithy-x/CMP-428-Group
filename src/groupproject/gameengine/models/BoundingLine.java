@@ -49,11 +49,13 @@ public class BoundingLine implements BoundingContractLine, CameraContract, Rende
 
     @Override
     public void setNormalX(Number normal_x) {
+        System.out.println("Normal X:" + normal_x);
         this.normal_x = normal_x.doubleValue();
     }
 
     @Override
     public void setNormalY(Number normal_y) {
+        System.out.println("Normal Y:" + normal_y);
         this.normal_y = normal_y.doubleValue();
     }
 

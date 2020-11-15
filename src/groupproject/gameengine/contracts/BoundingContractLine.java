@@ -6,8 +6,8 @@ public interface BoundingContractLine extends BoundingContract {
     default Number distanceTo(Number x, Number y) {
         //double vx = point_x - x.doubleValue(); // |v| <vx, vy>
         //double vy = point_y - y.doubleValue();
-        double vx = x.doubleValue() - x.doubleValue();
-        double vy = y.doubleValue() - y.doubleValue();
+        double vx = x.doubleValue() - getX().doubleValue();
+        double vy = y.doubleValue() - getY().doubleValue();
         //return -d;
         //x.doubleValue() * normal_x + y.intValue() * normal_y - c;
         return getNormalX().doubleValue() * vx + getNormalY().doubleValue() * vy;

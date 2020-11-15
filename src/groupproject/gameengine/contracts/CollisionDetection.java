@@ -34,12 +34,14 @@ public interface CollisionDetection extends Movable {
     }
 
     default boolean overlaps(BoundingContractLine line) {
-        double distance = line.distanceTo(getX(), getY()).doubleValue();
-        return distance < getRadius().doubleValue();
+        double distance = line.distanceTo(getX().doubleValue(), getY().doubleValue()).doubleValue();
+        double v = getRadius().doubleValue();
+        //System.out.printf("DISTANCE: %s, Radius: %s\n", distance, v);
+        return distance * distance < v * v;
     }
 
     default void pushedBackBy(BoundingContractLine line) {
-        double distance = line.distanceTo(getX(), getY()).doubleValue();
+        double distance = line.distanceTo(getX().doubleValue(), getY().doubleValue()).doubleValue();
         double p = getRadius().doubleValue() - distance;
         setWorld(
                 getX().doubleValue() + p * line.getNormalX().doubleValue(),

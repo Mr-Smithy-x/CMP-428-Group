@@ -14,6 +14,14 @@ public class BoundingCircle
 
     double radius;
 
+    public BoundingCircle(double x, double y, double radius){
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.width = radius * 2;
+        this.height = radius * 2;
+    }
+
 
     @Override
     public Number getRadius() {
@@ -33,12 +41,6 @@ public class BoundingCircle
                 getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
                 (int) (getCameraOffsetX(GlobalCamera.getInstance()).doubleValue() + radius * getCosAngle().doubleValue()),
                 (int) (getCameraOffsetY(GlobalCamera.getInstance()).doubleValue() + radius * getSinAngle().doubleValue())
-        );
-        g.drawLine(
-                getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
-                getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
-                getCameraOffsetX2(GlobalCamera.getInstance()).intValue(),
-                getCameraOffsetY2(GlobalCamera.getInstance()).intValue()
         );
     }
 }

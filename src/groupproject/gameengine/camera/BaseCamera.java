@@ -8,7 +8,7 @@ public abstract class BaseCamera {
     private float vx, vy;
     private float ay, av;
     protected float x_origin, y_origin;
-    protected int scaling = 4;
+    protected int scaling = 1;
     protected int gravity = 1;
 
 
