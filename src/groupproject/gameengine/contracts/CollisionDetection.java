@@ -1,6 +1,6 @@
 package groupproject.gameengine.contracts;
 
-public interface CollisionDetection extends Movable {
+public interface CollisionDetection extends Gravitation {
 
     default void pushes(Movable contract) {
         double dx = getX().doubleValue() - contract.getX().doubleValue();
@@ -10,7 +10,7 @@ public interface CollisionDetection extends Movable {
         double uy = dy / d;
         double ri = getRadius().doubleValue() + contract.getRadius().doubleValue();
         double p = ri - d;
-        this.setWorld(
+        setWorld(
                 getX().doubleValue() + ux * p / 2,
                 getY().doubleValue() + uy * p / 2
         );
@@ -48,5 +48,37 @@ public interface CollisionDetection extends Movable {
                 getY().doubleValue() + p * line.getNormalY().doubleValue()
         );
     }
+
+
+    default void bounceOff(Gravitation gravitational) {
+        double dx = gravitational.getX().doubleValue() - getX().doubleValue();
+        double dy = gravitational.getY().doubleValue() - getY().doubleValue();
+        double mag = Math.sqrt(dx * dx + dy * dy);
+        double ux = dx / mag; //in this case unit vector
+        double uy = dy / mag;
+        double tx = -uy; //tangent vector
+        double ty = ux;
+        double u = getVelocityX().doubleValue() * ux + getVelocityY().doubleValue() * uy;
+        double t = getVelocityX().doubleValue() * tx + getVelocityY().doubleValue() * ty;
+        double cu = gravitational.getVelocityX().doubleValue() * ux + gravitational.getVelocityY().doubleValue() * uy;
+        double ct = gravitational.getVelocityX().doubleValue() * tx + gravitational.getVelocityY().doubleValue() * ty;
+        setVelocity(.9 * (t * tx + cu * ux), .9 * (t * ty + cu * uy));
+        gravitational.setVelocity(.9 * (ct * tx + u * ux), .9 * (ct * ty + u * uy));
+    }
+
+    default void bounceOffLine(BoundingContractLine line) {
+        double d = line.distanceTo(getX().doubleValue(), getY().doubleValue()).doubleValue();
+        double p = getRadius().doubleValue() - d;
+        setWorld(
+                getX().doubleValue() + 1.9 * (p * line.getNormalX().doubleValue()),
+                getY().doubleValue() + 1.9 * (p * line.getNormalY().doubleValue())
+        );
+        double mag = 1.9 * (getVelocityX().doubleValue() * line.getNormalX().doubleValue() + getVelocityY().doubleValue() * line.getNormalY().doubleValue());
+        double tx = mag * line.getNormalX().doubleValue();
+        double ty = mag * line.getNormalY().doubleValue();
+        setVelocity(getVelocityX().doubleValue() - tx, getVelocityY().doubleValue() - ty);
+        pushedBackBy(line); //fixes issue overlaping
+    }
+
 
 }

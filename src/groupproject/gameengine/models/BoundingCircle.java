@@ -14,6 +14,11 @@ public class BoundingCircle
 
     double radius;
 
+    @Override
+    public boolean isDraggable() {
+        return true;
+    }
+
     public BoundingCircle(double x, double y, double radius){
         this.x = x;
         this.y = y;

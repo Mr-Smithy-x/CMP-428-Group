@@ -9,6 +9,7 @@ import java.awt.event.*;
 
 public abstract class GameContainer implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 
+    Font timesRoman = new Font("TimesNewRoman", Font.PLAIN, 32);
     Thread t;
     protected boolean[] pressing = new boolean[1024];
     boolean playing = true;
@@ -26,6 +27,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         this.container = canvas;
         off_screen_image = canvas.createImage(canvas.getWidth(), canvas.getHeight());
         off_g = off_screen_image.getGraphics();
+        off_g.setFont(timesRoman);
         container.requestFocus();
         container.addKeyListener(this);
         container.addMouseListener(this);
@@ -36,6 +38,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         this.container = container;
         off_screen_image = container.createImage(container.getWidth(), container.getHeight());
         off_g = off_screen_image.getGraphics();
+        off_g.setFont(timesRoman);
         container.requestFocus();
         container.addKeyListener(this);
         container.addMouseListener(this);
@@ -70,6 +73,9 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     protected void onPausePaint(Graphics g){
         g.setColor(new Color(0f,0f,0f,0.3f));
         g.fillRect(0, 0, getWidth(), getHeight());
+        String paused = "Paused";
+        int width = g.getFontMetrics().stringWidth(paused) / 2;
+        g.drawString(paused, getWidth()/2 - width, getHeight()/2);
     }
 
 

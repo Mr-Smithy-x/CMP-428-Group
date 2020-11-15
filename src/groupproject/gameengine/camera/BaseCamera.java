@@ -1,6 +1,7 @@
 package groupproject.gameengine.camera;
 
 import groupproject.gameengine.contracts.Movable;
+import groupproject.gameengine.models.BoundingBox;
 
 public abstract class BaseCamera {
 
@@ -50,12 +51,19 @@ public abstract class BaseCamera {
     public void setOrigin(Movable e, float screen_width, float screen_height) {
         float x = e.getX().floatValue();
         float y = e.getY().floatValue();
+
         //Commented out code would center the pixel onto the screen, but with this dynamic, it works much differently
         x_origin = x - (screen_width / 2);// + (e.getWidth().floatValue() / 2);
         y_origin = y - (screen_height / 2);// + (e.getHeight().floatValue() / 2);
 
         this.x = x_origin;
         this.y = y_origin;
+
+
+        if(e instanceof BoundingBox){
+            x_origin -= e.getWidth().doubleValue() / 2;
+            y_origin -= e.getHeight().doubleValue() / 2;
+        }
 
         // System.out.printf("(X: %s,Y: %s), ORIGIN: (x: %s, y: %s)", x, y, x_origin, y_origin);
     }

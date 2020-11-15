@@ -15,13 +15,13 @@ public interface BoundingContractLine extends BoundingContract {
 
 
     default Number computeNormal() {
-        double vx = this.getX2().doubleValue() - this.getX().doubleValue(); //<vx, vy> ie. vector v
-        double vy = this.getY2().doubleValue() - this.getY().doubleValue();
+        double vx = getX2().doubleValue() - getX().doubleValue(); //<vx, vy> ie. vector v
+        double vy = getY2().doubleValue() - getY().doubleValue();
         double mag_v = Math.sqrt(vx * vx + vy * vy); //magnitude (length?) |v|
         double ux = vx / mag_v; // unit vector <ux, uy> ie. u
         double uy = vy / mag_v; // direction to
         setNormal(-uy, ux);
-        return this.getX().doubleValue() * getNormalX().doubleValue() + this.getY().doubleValue() * getNormalY().doubleValue();
+        return getX().doubleValue() * getNormalX().doubleValue() + getY().doubleValue() * getNormalY().doubleValue();
     }
 
 
