@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 public abstract class GameContainer implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 
@@ -48,10 +49,10 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
 
     protected abstract void onPlay();
     protected abstract void onPaint(Graphics g);
-    protected abstract void onInitialize();
+    protected abstract void onInitialize() throws IOException;
 
 
-    public void start() {
+    public void start() throws IOException {
         onInitialize();
         t = new Thread(this);
         t.start();

@@ -11,6 +11,7 @@ public abstract class BaseCamera {
     protected float x_origin, y_origin;
     protected int scaling = 1;
     protected int gravity = 1;
+    public static boolean DEBUG = true;
 
 
     public int getScaling() {
