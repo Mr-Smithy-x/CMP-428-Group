@@ -2,9 +2,10 @@ package groupproject.gameengine.sprite;
 
 
 import groupproject.gameengine.camera.GlobalCamera;
-import groupproject.gameengine.contracts.*;
+import groupproject.gameengine.contracts.CameraContract;
+import groupproject.gameengine.contracts.CollisionDetection;
+import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingCircle;
-import groupproject.gameengine.models.base.GravitationObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 
 public abstract class SpriteSheet
-        extends GravitationObject
         implements CollisionDetection, Renderable, CameraContract {
 
 
@@ -297,6 +297,16 @@ public abstract class SpriteSheet
     }
 
     @Override
+    public void setWidth(Number width) {
+        //TODO: nothing
+    }
+
+    @Override
+    public void setHeight(Number height) {
+        //TODO: nothing
+    }
+
+    @Override
     public Number getRadius() {
         return circle.getRadius();
     }
@@ -343,7 +353,7 @@ public abstract class SpriteSheet
 
     @Override
     public void gravitate() {
-        super.gravitate();
+        circle.gravitate();
         nextImageColumn();
         moving = true;
     }

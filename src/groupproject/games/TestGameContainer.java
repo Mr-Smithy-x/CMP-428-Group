@@ -30,6 +30,10 @@ public class TestGameContainer extends GameContainer {
         circle.setAcceleration(0, 0.9);
         circle.setVelocity(0, 0);
         circle.setDrag(0.99, 0.99);
+        dog.setAcceleration(0, 0.9);
+        dog.setVelocity(0, 0);
+        dog.setDrag(0.99, 0.99);
+
         box.setAcceleration(0, 0.9);
         box.setVelocity(0, 0);
         box.setDrag(0.99, 0.99);
@@ -40,6 +44,7 @@ public class TestGameContainer extends GameContainer {
     protected void onPlay() {
         circle.gravitate();
         box.gravitate();
+        dog.gravitate();
 
         if (pressing[LT]) {
             link.moveLeft(10);
