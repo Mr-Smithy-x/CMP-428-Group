@@ -97,7 +97,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         g.fillRect(0, 0, getWidth(), getHeight());
         String paused = "Paused";
         int width = g.getFontMetrics().stringWidth(paused) / 2;
-        g.drawString(paused, getWidth() / 2 - width, getHeight() / 2);
+        g.drawString(paused, getWidth() / 2 - width, getHeight() / 2 + g.getFontMetrics().getHeight() / 2);
     }
 
     private void onRepaint() {
