@@ -69,4 +69,19 @@ public class BoundingBox extends GravitationObject implements CollisionDetection
                 getWidth().intValue(), getHeight().intValue());
     }
 
+    public Number getDiagonalX() {
+        return x + width - 1;
+    }
+
+    public Number getDiagonalY() {
+        return y + height - 1;
+    }
+
+
+    public boolean overlaps(BoundingBox r, int dx, int dy) {
+        return !(this.x + dx > r.getDiagonalX().intValue() || this.y + dy > r.getDiagonalY().intValue() ||
+                r.x > this.getDiagonalX().intValue() + dx || r.y > this.getDiagonalY().intValue() + dy);
+    }
+
+
 }

@@ -7,13 +7,21 @@ public interface Movable extends BoundingContract {
     double[] sin = TrigLookupHelper.sin;
 
     //region Getters
-    Number getSinAngle();
-    Number getCosAngle();
-    int getWorldAngle();
+    default Number getSinAngle() {
+        return 0;
+    }
+    default Number getCosAngle() {
+        return 0;
+    }
+    default int getWorldAngle() {
+        return 0;
+    }
     //endregion
 
     //region Setters
-    void setWorldAngle(int world_angle);
+    default void setWorldAngle(int world_angle){
+        //Nothing
+    }
 
     //endregion
 

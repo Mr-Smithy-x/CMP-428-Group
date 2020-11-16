@@ -50,8 +50,8 @@ public class TileMap {
         for (int row = 0; row < mapModel.getMapRows(); row++) {
             for (int col = 0; col < mapModel.getMapColumns(); col++) {
                 Tile currentTile = mainLayerTiles[row][col];
-                currentTile.draw(gMap);
-                if(objectLayerTiles[row][col] != null) objectLayerTiles[row][col].draw(gMap);
+                currentTile.render(gMap);
+                if(objectLayerTiles[row][col] != null) objectLayerTiles[row][col].render(gMap);
             }
         }
         g.drawImage(map, 0, 0, null);

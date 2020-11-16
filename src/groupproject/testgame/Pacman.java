@@ -1,12 +1,12 @@
 package groupproject.testgame;
 
-import groupproject.gameengine.Rect;
+import groupproject.gameengine.models.BoundingBox;
 import groupproject.gameengine.sprite.Sprite;
 
 public class Pacman extends Sprite {
 	public Pacman(int x, int y) {
 		super(x, y, "pac", 65);
-		this.boundsRect = new Rect(x+5, y+5, 8, 8);
+		this.boundsRect = new BoundingBox(x+5, y+5, 8, 8);
 	}
 
 	@Override
