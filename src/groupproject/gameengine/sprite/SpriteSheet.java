@@ -56,7 +56,6 @@ public abstract class SpriteSheet
         return images;
     }
 
-
     protected abstract void setupImages();
 
     protected void validate() {

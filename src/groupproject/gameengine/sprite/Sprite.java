@@ -2,6 +2,7 @@ package groupproject.gameengine.sprite;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -10,14 +11,12 @@ import java.util.logging.Logger;
 
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.contracts.CameraContract;
-import groupproject.gameengine.contracts.Movable;
+import groupproject.gameengine.contracts.CollisionDetection;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
 
-public abstract class Sprite implements Renderable, CameraContract, Movable {
+public abstract class Sprite implements Renderable, CameraContract, CollisionDetection {
     private static final String SPRITE_FOLDER = "assets/sprites/";
-    protected int x;
-    protected int y;
     protected Logger logger = Logger.getLogger("GameEngine", null);
     protected String currentDirection = "";
     protected HashMap<String, Animation> animDict = new HashMap<>();
@@ -25,12 +24,10 @@ public abstract class Sprite implements Renderable, CameraContract, Movable {
     protected int velocity;
 
     public Sprite(int x, int y, String spritePrefix, int delay) {
-        this.x = x;
-        this.y = y;
         velocity = 1;
         loadBaseAnimations(spritePrefix, delay);
         initAnimations();
-        this.boundsRect = new BoundingBox(this.x, this.y,
+        this.boundsRect = new BoundingBox(x, y,
                 getFirstAnimation().getCurrentFrame().getWidth(),
                 getFirstAnimation().getCurrentFrame().getHeight());
     }
@@ -52,14 +49,16 @@ public abstract class Sprite implements Renderable, CameraContract, Movable {
     @Override
     public void render(Graphics g) {
         if (animDict.containsKey(currentDirection)) {
-            g.drawImage(animDict.get(currentDirection).getCurrentFrame(),
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue(), null);
+            BufferedImage currentFrame = animDict.get(currentDirection).getCurrentFrame();
+            g.drawImage(currentFrame,
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth() / 4,
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight() / 4, null);
         } else {
             Animation firstAnim = getFirstAnimation();
-            g.drawImage(firstAnim.getCurrentFrame(),
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
+            BufferedImage currentFrame = firstAnim.getCurrentFrame();
+            g.drawImage(currentFrame,
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth() / 4,
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight() / 4,
                     null);
         }
 
@@ -81,19 +80,15 @@ public abstract class Sprite implements Renderable, CameraContract, Movable {
     public void move() {
         switch (currentDirection) {
             case "up":
-                y -= velocity;
                 boundsRect.moveUp(velocity);
                 break;
             case "down":
-                y += velocity;
                 boundsRect.moveDown(velocity);
                 break;
             case "left":
-                x -= velocity;
                 boundsRect.moveLeft(velocity);
                 break;
             case "right":
-                x += velocity;
                 boundsRect.moveRight(velocity);
                 break;
             default:
@@ -123,12 +118,12 @@ public abstract class Sprite implements Renderable, CameraContract, Movable {
 
     @Override
     public Number getX() {
-        return x;
+        return boundsRect.getX();
     }
 
     @Override
     public Number getY() {
-        return y;
+        return boundsRect.getY();
     }
 
     @Override
@@ -152,13 +147,98 @@ public abstract class Sprite implements Renderable, CameraContract, Movable {
     }
 
     @Override
+    public void gravitate() {
+        boundsRect.gravitate();
+    }
+
+    @Override
     public void setX(Number x) {
-        this.x = x.intValue();
+        boundsRect.setX(x);
     }
 
     @Override
     public void setY(Number y) {
-        this.y = y.intValue();
+        boundsRect.setY(y);
     }
 
+    @Override
+    public void setVelocityX(Number velocityX) {
+        boundsRect.setVelocityX(velocityX);
+    }
+
+    @Override
+    public void setVelocityY(Number velocityY) {
+        boundsRect.setVelocityY(velocityY);
+    }
+
+    @Override
+    public void setAccelerationX(Number accelerationX) {
+        boundsRect.setAccelerationX(accelerationX);
+    }
+
+    @Override
+    public void setAccelerationY(Number accelerationY) {
+        boundsRect.setAccelerationY(accelerationY);
+    }
+
+    @Override
+    public void setDragX(Number dragX) {
+        boundsRect.setDragX(dragX);
+    }
+
+    @Override
+    public void setDragY(Number dragY) {
+        boundsRect.setDragY(dragY);
+    }
+
+    @Override
+    public Number getDragX() {
+        return boundsRect.getDragX();
+    }
+
+    @Override
+    public Number getDragY() {
+        return boundsRect.getDragY();
+    }
+
+    @Override
+    public Number getVelocityX() {
+        return boundsRect.getVelocityX();
+    }
+
+    @Override
+    public Number getVelocityY() {
+        return boundsRect.getVelocityY();
+    }
+
+    @Override
+    public Number getAccelerationX() {
+        return boundsRect.getAccelerationX();
+    }
+
+    @Override
+    public Number getAccelerationY() {
+        return boundsRect.getAccelerationY();
+    }
+
+
+    @Override
+    public void setWorldAngle(int worldAngle) {
+        boundsRect.setWorldAngle(worldAngle);
+    }
+
+    @Override
+    public int getWorldAngle() {
+        return boundsRect.getWorldAngle();
+    }
+
+    @Override
+    public Number getSinAngle() {
+        return boundsRect.getSinAngle();
+    }
+
+    @Override
+    public Number getCosAngle() {
+        return boundsRect.getCosAngle();
+    }
 }
