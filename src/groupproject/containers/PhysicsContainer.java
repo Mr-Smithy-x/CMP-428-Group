@@ -1,4 +1,4 @@
-package groupproject.games.examples;
+package groupproject.containers;
 
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
@@ -13,7 +13,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-public class ExampleGameContainer extends GameContainer {
+public class PhysicsContainer extends GameContainer {
 
 
     BoundingCircle circle;
@@ -123,19 +123,11 @@ public class ExampleGameContainer extends GameContainer {
         Canvas canvas = make(width, height);
         frame.add(canvas);
         frame.pack();
-        return new ExampleGameContainer(frame, canvas);
+        return new PhysicsContainer(frame, canvas);
     }
 
-    public static GameContainer applet(Applet applet) {
-        return new ExampleGameContainer(applet);
-    }
-
-    protected ExampleGameContainer(JFrame container, Canvas canvas) {
+    protected PhysicsContainer(JFrame container, Canvas canvas) {
         super(container, canvas);
-    }
-
-    protected ExampleGameContainer(Applet container) {
-        super(container);
     }
 
 }

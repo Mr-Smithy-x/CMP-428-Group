@@ -1,4 +1,4 @@
-package groupproject.games.examples;
+package groupproject.containers;
 
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
@@ -15,7 +15,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExamplePacmanContainer extends GameContainer {
+public class PacmanContainer extends GameContainer {
 
     private static final int WINDOW_HEIGHT = 768;
     private static final int WINDOW_WIDTH = 672;
@@ -167,20 +167,11 @@ public class ExamplePacmanContainer extends GameContainer {
         Canvas canvas = make(WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.add(canvas);
         frame.pack();
-        return new ExamplePacmanContainer(frame, canvas);
+        return new PacmanContainer(frame, canvas);
     }
 
-    public static GameContainer applet(Applet applet) {
-        return new ExamplePacmanContainer(applet);
-    }
-
-    protected ExamplePacmanContainer(JFrame container, Canvas canvas) {
+    protected PacmanContainer(JFrame container, Canvas canvas) {
         super(container, canvas);
     }
-
-    protected ExamplePacmanContainer(Applet container) {
-        super(container);
-    }
-
 
 }
