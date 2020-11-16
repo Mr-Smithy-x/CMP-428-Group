@@ -1,15 +1,14 @@
-package groupproject.containers;
+package groupproject.containers.pacman;
 
+import groupproject.containers.pacman.models.Ghost;
+import groupproject.containers.pacman.models.Pacman;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.sprite.Sprite;
 import groupproject.gameengine.tile.Tile;
 import groupproject.gameengine.tile.TileMap;
-import groupproject.games.Ghost;
-import groupproject.games.Pacman;
 
 import javax.swing.*;
-import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -145,25 +144,22 @@ public class PacmanContainer extends GameContainer {
     }
 
     @Override
-    protected void onPaint(Graphics base) {
+    protected void onPaint(Graphics g) {
         if (!maps.isEmpty()) {
-            maps.get(0).render(base);
+            maps.get(0).render(g);
             for (Tile tile : maps.get(0).getSurroundingTiles(
                     player.getBounds().getX().intValue(),
                     player.getBounds().getY().intValue(), "all"))
-                tile.drawBoundsRect(base);
+                tile.drawBoundsRect(g);
         }
-        player.render(base);
-        redGhost.render(base);
-        GlobalCamera.getInstance().render(base, getContainer());
-        //base.dispose();
+        player.render(g);
+        redGhost.render(g);
+        GlobalCamera.getInstance().render(g, getContainer());
     }
 
 
-
-
     public static GameContainer frame() {
-        JFrame frame = make("Test Game", WINDOW_WIDTH, WINDOW_HEIGHT);
+        JFrame frame = make("Pacman Test Game", WINDOW_WIDTH, WINDOW_HEIGHT);
         Canvas canvas = make(WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.add(canvas);
         frame.pack();

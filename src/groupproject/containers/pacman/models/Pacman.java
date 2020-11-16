@@ -1,4 +1,4 @@
-package groupproject.games;
+package groupproject.containers.pacman.models;
 
 import groupproject.gameengine.models.BoundingBox;
 import groupproject.gameengine.sprite.Sprite;

@@ -1,19 +1,18 @@
-package groupproject.containers;
+package groupproject.containers.zelda;
 
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingCircle;
 import groupproject.gameengine.models.BoundingLine;
-import groupproject.games.Dog;
-import groupproject.games.Link;
+import groupproject.containers.zelda.models.Dog;
+import groupproject.containers.zelda.models.Link;
 
 import javax.swing.*;
-import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-public class PhysicsContainer extends GameContainer {
+public class ZeldaContainer extends GameContainer {
 
 
     BoundingCircle circle;
@@ -119,14 +118,14 @@ public class PhysicsContainer extends GameContainer {
 
 
     public static GameContainer frame(int width, int height) {
-        JFrame frame = make("Test Game", width, height);
+        JFrame frame = make("Zelda Test Game", width, height);
         Canvas canvas = make(width, height);
         frame.add(canvas);
         frame.pack();
-        return new PhysicsContainer(frame, canvas);
+        return new ZeldaContainer(frame, canvas);
     }
 
-    protected PhysicsContainer(JFrame container, Canvas canvas) {
+    protected ZeldaContainer(JFrame container, Canvas canvas) {
         super(container, canvas);
     }
 

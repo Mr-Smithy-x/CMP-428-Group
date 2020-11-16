@@ -1,4 +1,4 @@
-package groupproject.games;
+package groupproject.containers.zelda.models;
 
 import groupproject.gameengine.sprite.SpriteSheet;
 import groupproject.gameengine.sprite.SubImage;
