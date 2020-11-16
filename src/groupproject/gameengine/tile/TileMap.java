@@ -1,5 +1,8 @@
 package groupproject.gameengine.tile;
 
+import groupproject.gameengine.contracts.CameraContract;
+import groupproject.gameengine.contracts.Renderable;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -7,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class TileMap {
+public class TileMap implements CameraContract, Renderable {
     private final TileMapModel mapModel;
     private final TileSet tileSet;
     private final int mapWidth;
@@ -44,7 +47,8 @@ public class TileMap {
         }
     }
 
-    public void drawMap(Graphics g) {
+    @Override
+    public void render(Graphics g) {
         BufferedImage map = new BufferedImage(mapWidth, mapHeight, BufferedImage.TYPE_INT_RGB);
         Graphics gMap = map.getGraphics();
         for (int row = 0; row < mapModel.getMapRows(); row++) {
@@ -54,6 +58,7 @@ public class TileMap {
                 if(objectLayerTiles[row][col] != null) objectLayerTiles[row][col].render(gMap);
             }
         }
+        //These coords stay the same in regards to the camera, changing this would be catastrophic
         g.drawImage(map, 0, 0, null);
     }
 
@@ -99,6 +104,46 @@ public class TileMap {
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
+    }
+
+    @Override
+    public Number getX() {
+        return 0;
+    }
+
+    @Override
+    public Number getY() {
+        return 0;
+    }
+
+    @Override
+    public Number getWidth() {
+        return mapWidth;
+    }
+
+    @Override
+    public Number getHeight() {
+        return mapHeight;
+    }
+
+    @Override
+    public void setWidth(Number width) {
+        //Do Nothing
+    }
+
+    @Override
+    public void setHeight(Number height) {
+        //Do Nothing
+    }
+
+    @Override
+    public void setX(Number x) {
+        //Do Nothing
+    }
+
+    @Override
+    public void setY(Number y) {
+        //Do Nothing
     }
 }
 

@@ -28,10 +28,10 @@ public class TestGame extends GamePanel {
         Graphics base = frame.createGraphics();
         super.paintComponent(base);
         if (!maps.isEmpty()) {
-            maps.get(0).drawMap(base);
+            maps.get(0).render(base);
             for (Tile tile : maps.get(0).getSurroundingTiles(
-                    (int) (player.getBounds().getX().intValue() - GlobalCamera.getInstance().getX()),
-                    (int) (player.getBounds().getY().intValue() - GlobalCamera.getInstance().getY()), "all"))
+                    player.getBounds().getX().intValue(),
+                    player.getBounds().getY().intValue(), "all"))
                 tile.drawBoundsRect(base);
         }
         player.render(base);
@@ -45,6 +45,7 @@ public class TestGame extends GamePanel {
         try {
             maps.add(loadTileMap("pacman.tilemap"));
             maps.get(0).initializeMap();
+            GlobalCamera.getInstance().setOrigin(player.getBounds(), maps.get(0));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,6 +83,10 @@ public class TestGame extends GamePanel {
         if (allowMove || !isSpriteCollidingWithMap(player, direction)) {
             player.setSpriteDirection(direction);
             player.move();
+            //Its important to note that when using the camera with tilemap call this method
+            //do not use getWidth or getHeight of the component window when using it with the tilemap
+            //player.getBounds is accurate in terms of centering the square
+            GlobalCamera.getInstance().setOrigin(player.getBounds(), maps.get(0));
         }
     }
 
