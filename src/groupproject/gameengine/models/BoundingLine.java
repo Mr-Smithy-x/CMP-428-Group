@@ -9,74 +9,74 @@ import java.awt.*;
 
 public class BoundingLine implements BoundingContractLine, CameraContract, Renderable {
 
-    double point_x;
-    double point_y;
-    double point_x2;
-    double point_y2;
-    double normal_x;
-    double normal_y;
+    double pointX;
+    double pointY;
+    double pointX2;
+    double pointY2;
+    double normalX;
+    double normalY;
 
     double computedNormal;
 
 
     public BoundingLine(double x1, double y1, double x2, double y2) {
-        this.point_x = x1;
-        this.point_y = y1;
-        this.point_x2 = x2;
-        this.point_y2 = y2;
+        this.pointX = x1;
+        this.pointY = y1;
+        this.pointX2 = x2;
+        this.pointY2 = y2;
         computedNormal = this.computeNormal().doubleValue();
     }
 
     @Override
     public Number getX2() {
-        return point_x2;
+        return pointX2;
     }
 
     @Override
     public Number getY2() {
-        return point_y2;
+        return pointY2;
     }
 
     @Override
     public Number getNormalX() {
-        return normal_x;
+        return normalX;
     }
 
     @Override
     public Number getNormalY() {
-        return normal_y;
+        return normalY;
     }
 
     @Override
-    public void setNormalX(Number normal_x) {
-        System.out.println("Normal X:" + normal_x);
-        this.normal_x = normal_x.doubleValue();
+    public void setNormalX(Number normalX) {
+        System.out.println("Normal X:" + normalX);
+        this.normalX = normalX.doubleValue();
     }
 
     @Override
-    public void setNormalY(Number normal_y) {
-        System.out.println("Normal Y:" + normal_y);
-        this.normal_y = normal_y.doubleValue();
+    public void setNormalY(Number normalY) {
+        System.out.println("Normal Y:" + normalY);
+        this.normalY = normalY.doubleValue();
     }
 
     @Override
     public Number getX() {
-        return point_x;
+        return pointX;
     }
 
     @Override
     public Number getY() {
-        return point_y;
+        return pointY;
     }
 
     @Override
     public void setX(Number x) {
-        this.point_x = x.doubleValue();
+        this.pointX = x.doubleValue();
     }
 
     @Override
     public void setY(Number y) {
-        this.point_y = y.doubleValue();
+        this.pointY = y.doubleValue();
     }
 
     @Override

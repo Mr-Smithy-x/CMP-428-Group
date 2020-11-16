@@ -6,7 +6,7 @@ public abstract class MovableObject implements Movable {
 
     protected double x, y;
     protected double width, height;
-    protected int world_angle;
+    protected int worldAngle;
 
 
     @Override
@@ -31,22 +31,22 @@ public abstract class MovableObject implements Movable {
 
     @Override
     public Number getSinAngle() {
-        return sin[world_angle];
+        return sin[worldAngle];
     }
 
     @Override
     public Number getCosAngle() {
-        return cos[world_angle];
+        return cos[worldAngle];
     }
 
     @Override
     public int getWorldAngle() {
-        return world_angle;
+        return worldAngle;
     }
 
     @Override
-    public void setWorldAngle(int world_angle) {
-        this.world_angle = world_angle;
+    public void setWorldAngle(int worldAngle) {
+        this.worldAngle = worldAngle;
     }
 
     @Override

@@ -18,8 +18,8 @@ public abstract class SpriteSheet
 
 
     private static final String SPRITE_SHEET_FOLDER = "assets/sheets/";
-    protected int shift_right = 0;
-    protected int shift_down;
+    protected int shiftRight = 0;
+    protected int shiftDown;
     public static final int UP = 0;
     public static final int DOWN = 1;
     public static final int LEFT = 2;
@@ -35,10 +35,9 @@ public abstract class SpriteSheet
     protected BufferedImage spriteSheet;
     protected SubImage[][] subImages = new SubImage[16][];
     protected SubImage[] stillImages = new SubImage[16];
-    protected File file;
     protected int delay = 0;
     protected int duration = 10;
-    protected int current_column = 0;
+    protected int currentColumn = 0;
     protected int pose = 0;
     protected CollisionDetection circle;
 
@@ -47,21 +46,6 @@ public abstract class SpriteSheet
         initializeSheet();
         setupImages();
         circle = new BoundingCircle(0, 0, subImages[0][0].getWidth());
-    }
-
-
-    @Deprecated
-    public void initEvenly(int rows, int columns, int width, int height) {
-        for (int i_row = 0; i_row < rows; i_row++) {
-            int roster_height = spriteSheet.getHeight();
-            int real_height = height;
-            for (int j_column = 0; j_column < columns; j_column++) {
-                int roster_width = spriteSheet.getWidth();
-                int real_width = width;
-                //BufferedImage subimage = spriteSheet.getSubimage(j_column * width, i_row * height, width, height);
-                //subimages[i_row][j_column] = new SubImage(subimage);
-            }
-        }
     }
 
     protected SubImage[] initAnimation(int column, int row, int width, int height, int size) {
@@ -76,20 +60,20 @@ public abstract class SpriteSheet
     protected abstract void setupImages();
 
     protected void validate() {
-        if (current_column >= subImages[pose].length) {
-            current_column = 0;
+        if (currentColumn >= subImages[pose].length) {
+            currentColumn = 0;
         }
-        if (current_column < 0) {
-            current_column = subImages[pose].length - 1;
+        if (currentColumn < 0) {
+            currentColumn = subImages[pose].length - 1;
         }
     }
 
-    public void setShiftDown(int shift_down) {
-        this.shift_down = shift_down;
+    public void setShiftDown(int shiftDown) {
+        this.shiftDown = shiftDown;
     }
 
-    public void setShiftRight(int shift_right) {
-        this.shift_right = shift_right;
+    public void setShiftRight(int shiftRight) {
+        this.shiftRight = shiftRight;
     }
 
     @Override
@@ -101,8 +85,8 @@ public abstract class SpriteSheet
             image = getStillImage();
         }
         g.drawImage(image,
-                (int) (getCameraOffsetX(GlobalCamera.getInstance()).doubleValue() - (image.getWidth(null) / 2) + shift_right),
-                (int) (getCameraOffsetY(GlobalCamera.getInstance()).doubleValue() - (image.getHeight(null) / 2) + shift_down),
+                (int) (getCameraOffsetX(GlobalCamera.getInstance()).doubleValue() - (image.getWidth(null) / 2) + shiftRight),
+                (int) (getCameraOffsetY(GlobalCamera.getInstance()).doubleValue() - (image.getHeight(null) / 2) + shiftDown),
                 image.getWidth(null),
                 image.getHeight(null),
                 null
@@ -113,10 +97,9 @@ public abstract class SpriteSheet
         }
     }
 
-
     protected void nextImageColumn() {
         if (delay == 0) {
-            current_column++;
+            currentColumn++;
             validate();
             delay = duration;
         }
@@ -125,7 +108,7 @@ public abstract class SpriteSheet
 
     protected void prevImageColumn() {
         if (delay == 0) {
-            current_column--;
+            currentColumn--;
             validate();
             delay = duration;
         }
@@ -135,10 +118,10 @@ public abstract class SpriteSheet
     public Image getImage() {
         validate();
         SubImage[] subImage = subImages[pose];
-        if (subImage.length <= current_column) {
-            current_column = 0;
+        if (subImage.length <= currentColumn) {
+            currentColumn = 0;
         }
-        SubImage sub = subImage[current_column];
+        SubImage sub = subImage[currentColumn];
         sub.setImage(spriteSheet);
         return sub.getImage();
     }
@@ -152,7 +135,6 @@ public abstract class SpriteSheet
     protected void initializeSheet() throws IOException {
         spriteSheet = ImageIO.read(new File(getSpriteSheetDirectory() + ".png"));
     }
-
 
     public String getSpriteSheetDirectory() {
         return SPRITE_SHEET_FOLDER + this.getClass().getSimpleName().toLowerCase();
@@ -183,23 +165,22 @@ public abstract class SpriteSheet
         return pose;
     }
 
+    @Override
+    public void setVelocity(Number velocityX, Number velocityY) {
+        circle.setVelocity(velocityX, velocityY);
+    }
+
+    public void setAcceleration(Number accelerateX, Number accelerateY) {
+        circle.setAcceleration(accelerateX, accelerateY);
+    }
+
+    public void setDrag(Number dragX, Number dragY) {
+        circle.setDrag(dragX, dragY);
+    }
 
     @Override
-    public void setVelocity(Number velocity_x, Number velocity_y) {
-        circle.setVelocity(velocity_x, velocity_y);
-    }
-
-    public void setAcceleration(Number accelerate_x, Number accelerate_y) {
-        circle.setAcceleration(accelerate_x, accelerate_y);
-    }
-
-    public void setDrag(Number drag_x, Number drag_y) {
-        circle.setDrag(drag_x, drag_y);
-    }
-
-    @Override
-    public void setWorldAngle(int world_angle) {
-        circle.setWorldAngle(world_angle);
+    public void setWorldAngle(int worldAngle) {
+        circle.setWorldAngle(worldAngle);
     }
 
     @Override
@@ -216,7 +197,6 @@ public abstract class SpriteSheet
     public Number getCosAngle() {
         return circle.getCosAngle();
     }
-
 
     @Override
     public void moveBy(Number dx, Number dy) {
@@ -322,13 +302,13 @@ public abstract class SpriteSheet
     }
 
     @Override
-    public void setVelocityX(Number velocity_x) {
-        circle.setVelocityX(velocity_x);
+    public void setVelocityX(Number velocityX) {
+        circle.setVelocityX(velocityX);
     }
 
     @Override
-    public void setVelocityY(Number velocity_y) {
-        circle.setVelocityY(velocity_y);
+    public void setVelocityY(Number velocityY) {
+        circle.setVelocityY(velocityY);
     }
 
     @Override
@@ -342,13 +322,13 @@ public abstract class SpriteSheet
     }
 
     @Override
-    public void setAccelerationX(Number acceleration_x) {
-        this.circle.setAccelerationX(acceleration_x);
+    public void setAccelerationX(Number accelerationX) {
+        this.circle.setAccelerationX(accelerationX);
     }
 
     @Override
-    public void setAccelerationY(Number acceleration_y) {
-        this.circle.setAccelerationY(acceleration_y);
+    public void setAccelerationY(Number accelerationY) {
+        this.circle.setAccelerationY(accelerationY);
     }
 
     @Override
@@ -364,13 +344,13 @@ public abstract class SpriteSheet
     }
 
     @Override
-    public void setDragX(Number drag_x) {
-        circle.setDragX(drag_x);
+    public void setDragX(Number dragX) {
+        circle.setDragX(dragX);
     }
 
     @Override
-    public void setDragY(Number drag_y) {
-        circle.setDragY(drag_y);
+    public void setDragY(Number dragY) {
+        circle.setDragY(dragY);
     }
 
     @Override

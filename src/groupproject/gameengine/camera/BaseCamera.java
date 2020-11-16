@@ -1,6 +1,5 @@
 package groupproject.gameengine.camera;
 
-import groupproject.gameengine.GamePanel;
 import groupproject.gameengine.contracts.BoundingContract;
 import groupproject.gameengine.models.BoundingBox;
 import groupproject.gameengine.tile.TileMap;
@@ -12,7 +11,7 @@ public abstract class BaseCamera  {
     protected double x, y;
     protected double vx, vy;
     protected double ay, av;
-    protected double x_origin, y_origin;
+    protected double xOrigin, yOrigin;
     protected int scaling = 1;
     protected int gravity = 1;
     public static boolean DEBUG = true;
@@ -31,16 +30,16 @@ public abstract class BaseCamera  {
         double y = e.getY().doubleValue();
 
         //Commented out code would center the pixel onto the screen, but with this dynamic, it works much differently
-        this.x_origin = x - (map.getWidth().doubleValue() / 2);// + (e.getWidth().doubleValue() / 2);
-        this.y_origin = y - (map.getHeight().doubleValue() / 2);// + (e.getHeight().doubleValue() / 2);
+        this.xOrigin = x - (map.getWidth().doubleValue() / 2);// + (e.getWidth().doubleValue() / 2);
+        this.yOrigin = y - (map.getHeight().doubleValue() / 2);// + (e.getHeight().doubleValue() / 2);
 
-        this.x = x_origin;
-        this.y = y_origin;
+        this.x = xOrigin;
+        this.y = yOrigin;
 
 
         if (e instanceof BoundingBox) {
-            x_origin -= e.getWidth().doubleValue() / 2;
-            y_origin -= e.getHeight().doubleValue() / 2;
+            xOrigin -= e.getWidth().doubleValue() / 2;
+            yOrigin -= e.getHeight().doubleValue() / 2;
         }
     }
 
@@ -49,16 +48,16 @@ public abstract class BaseCamera  {
         double y = e.getY().doubleValue();
 
         //Commented out code would center the pixel onto the screen, but with this dynamic, it works much differently
-        x_origin = x - (screen_width / 2);// + (e.getWidth().doubleValue() / 2);
-        y_origin = y - (screen_height / 2);// + (e.getHeight().doubleValue() / 2);
+        xOrigin = x - (screen_width / 2);// + (e.getWidth().doubleValue() / 2);
+        yOrigin = y - (screen_height / 2);// + (e.getHeight().doubleValue() / 2);
 
-        this.x = x_origin;
-        this.y = y_origin;
+        this.x = xOrigin;
+        this.y = yOrigin;
 
 
         if (e instanceof BoundingBox) {
-            x_origin -= e.getWidth().doubleValue() / 2;
-            y_origin -= e.getHeight().doubleValue() / 2;
+            xOrigin -= e.getWidth().doubleValue() / 2;
+            yOrigin -= e.getHeight().doubleValue() / 2;
         }
     }
 
@@ -68,21 +67,21 @@ public abstract class BaseCamera  {
     }
 
     public void setXOrigin(double x_offset) {
-        this.x_origin = x_offset;
+        this.xOrigin = x_offset;
     }
 
     public void setYOrigin(double y_offset) {
-        this.y_origin = y_offset;
+        this.yOrigin = y_offset;
     }
     //endregion
 
     //region Getters
     public double getXOrigin() {
-        return x_origin;
+        return xOrigin;
     }
 
     public double getYOrigin() {
-        return y_origin;
+        return yOrigin;
     }
 
     public int getScaling() {
@@ -102,7 +101,7 @@ public abstract class BaseCamera  {
     }
     //endregion
 
-
+    //region Helpers
     public void moveBy(double dx, double dy) {
         x += dx;
         y += dy;
@@ -125,28 +124,24 @@ public abstract class BaseCamera  {
     }
 
     public void moveOrigin(double xamt, double yamt) {
-        x_origin += xamt;
-        y_origin += yamt;
+        xOrigin += xamt;
+        yOrigin += yamt;
     }
+    //endregion
 
-    public BaseCamera(double x_origin, double y_origin) {
-        this.x_origin = x_origin;
-        this.y_origin = y_origin;
-    }
-
-
-    public void render(Graphics g,  Image frame) {
-        g.setColor(Color.pink);
-        int x = (frame.getWidth(null) / 2);
-        int y = (frame.getHeight(null) / 2);
-        g.drawLine(x - 5, y, x + 5, y);
-        g.drawLine(x, y - 5, x, y + 5);
+    public BaseCamera(double xOrigin, double yOrigin) {
+        this.xOrigin = xOrigin;
+        this.yOrigin = yOrigin;
     }
 
     public void render(Graphics g,  Component frame) {
+        render(g, frame.getWidth(), frame.getHeight());
+    }
+
+    public void render(Graphics g, int width, int height){
         g.setColor(Color.pink);
-        int x = (frame.getWidth() / 2);
-        int y = (frame.getHeight() / 2);
+        int x = (width / 2);
+        int y = (height / 2);
         g.drawLine(x - 5, y, x + 5, y);
         g.drawLine(x, y - 5, x, y + 5);
     }

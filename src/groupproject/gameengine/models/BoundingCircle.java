@@ -39,9 +39,9 @@ public class BoundingCircle
 
     @Override
     public void render(Graphics g) {
-        int x_radius = (int) (getCameraOffsetX(GlobalCamera.getInstance()).doubleValue() - getRadius().doubleValue());
-        int y_radius = (int) (getCameraOffsetY(GlobalCamera.getInstance()).doubleValue() - getRadius().doubleValue());
-        g.drawOval(x_radius, y_radius, (int) (2.0 * radius), (int) (2.0 * radius));
+        int yRadius = (int) (getCameraOffsetX(GlobalCamera.getInstance()).doubleValue() - getRadius().doubleValue());
+        int xRadius = (int) (getCameraOffsetY(GlobalCamera.getInstance()).doubleValue() - getRadius().doubleValue());
+        g.drawOval(yRadius, xRadius, (int) (2.0 * radius), (int) (2.0 * radius));
         g.drawLine(getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
                 getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
                 (int) (getCameraOffsetX(GlobalCamera.getInstance()).doubleValue() + radius * getCosAngle().doubleValue()),

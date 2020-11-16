@@ -1,16 +1,19 @@
-package groupproject.games;
+package groupproject.games.examples;
 
-import groupproject.base.GameContainer;
+import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingCircle;
 import groupproject.gameengine.models.BoundingLine;
+import groupproject.games.Dog;
+import groupproject.games.Link;
 
 import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-public class TestGameContainer extends GameContainer {
+public class ExampleGameContainer extends GameContainer {
 
 
     BoundingCircle circle;
@@ -46,20 +49,20 @@ public class TestGameContainer extends GameContainer {
         box.gravitate();
         dog.gravitate();
 
-        if (pressing[LT]) {
+        if (pressedKey[KeyEvent.VK_LEFT]) {
             link.moveLeft(10);
             dog.moveLeft(10);
             GlobalCamera.getInstance().moveLeft(10);
-        } else if (pressing[RT]) {
+        } else if (pressedKey[KeyEvent.VK_RIGHT]) {
 
             dog.moveRight(10);
             link.moveRight(10);
             GlobalCamera.getInstance().moveRight(10);
-        } else if (pressing[UP]) {
+        } else if (pressedKey[KeyEvent.VK_UP]) {
             link.moveUp(10);
             dog.moveUp(10);
             GlobalCamera.getInstance().moveUp(10);
-        }else if (pressing[DN]) {
+        }else if (pressedKey[KeyEvent.VK_DOWN]) {
             link.moveDown(10);
             dog.moveDown(10);
             GlobalCamera.getInstance().moveDown(10);
@@ -120,18 +123,18 @@ public class TestGameContainer extends GameContainer {
         Canvas canvas = make(width, height);
         frame.add(canvas);
         frame.pack();
-        return new TestGameContainer(frame, canvas);
+        return new ExampleGameContainer(frame, canvas);
     }
 
     public static GameContainer applet(Applet applet) {
-        return new TestGameContainer(applet);
+        return new ExampleGameContainer(applet);
     }
 
-    protected TestGameContainer(JFrame container, Canvas canvas) {
+    protected ExampleGameContainer(JFrame container, Canvas canvas) {
         super(container, canvas);
     }
 
-    protected TestGameContainer(Applet container) {
+    protected ExampleGameContainer(Applet container) {
         super(container);
     }
 

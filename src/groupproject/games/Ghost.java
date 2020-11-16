@@ -1,4 +1,4 @@
-package groupproject.testgame;
+package groupproject.games;
 
 import groupproject.gameengine.models.BoundingBox;
 import groupproject.gameengine.sprite.Sprite;

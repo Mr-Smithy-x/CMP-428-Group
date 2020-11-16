@@ -4,68 +4,68 @@ import groupproject.gameengine.contracts.Gravitation;
 
 public abstract class GravitationObject extends MovableObject implements Gravitation {
 
-    double velocity_x, velocity_y;
-    double acceleration_x, acceleration_y;
-    double drag_x, drag_y;
+    double velocityX, velocityY;
+    double accelerationX, accelerationY;
+    double dragX, dragY;
 
 
     @Override
-    public void setVelocityX(Number velocity_x) {
-        this.velocity_x = velocity_x.doubleValue();
+    public void setVelocityX(Number velocityX) {
+        this.velocityX = velocityX.doubleValue();
     }
 
     @Override
-    public void setVelocityY(Number velocity_y) {
-        this.velocity_y = velocity_y.doubleValue();
+    public void setVelocityY(Number velocityY) {
+        this.velocityY = velocityY.doubleValue();
     }
 
     @Override
-    public void setAccelerationX(Number acceleration_x) {
-        this.acceleration_x = acceleration_x.doubleValue();
+    public void setAccelerationX(Number accelerationX) {
+        this.accelerationX = accelerationX.doubleValue();
     }
 
     @Override
-    public void setAccelerationY(Number acceleration_y) {
-        this.acceleration_y = acceleration_y.doubleValue();
+    public void setAccelerationY(Number accelerationY) {
+        this.accelerationY = accelerationY.doubleValue();
     }
 
     @Override
-    public void setDragX(Number drag_x) {
-        this.drag_x = drag_x.doubleValue();
+    public void setDragX(Number dragX) {
+        this.dragX = dragX.doubleValue();
     }
 
     @Override
-    public void setDragY(Number drag_y) {
-        this.drag_y = drag_y.doubleValue();
+    public void setDragY(Number dragY) {
+        this.dragY = dragY.doubleValue();
     }
 
     @Override
     public Number getDragX() {
-        return drag_x;
+        return dragX;
     }
 
     @Override
     public Number getDragY() {
-        return drag_y;
+        return dragY;
     }
 
     @Override
     public Number getVelocityX() {
-        return velocity_x;
+        return velocityX;
     }
 
     @Override
     public Number getVelocityY() {
-        return velocity_y;
+        return velocityY;
     }
 
     @Override
     public Number getAccelerationX() {
-        return acceleration_x;
+        return accelerationX;
     }
 
     @Override
     public Number getAccelerationY() {
-        return acceleration_y;
+        return accelerationY;
     }
 }

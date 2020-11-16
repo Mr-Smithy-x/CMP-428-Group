@@ -5,6 +5,8 @@ import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.sprite.Sprite;
 import groupproject.gameengine.tile.Tile;
 import groupproject.gameengine.tile.TileMap;
+import groupproject.games.Ghost;
+import groupproject.games.Pacman;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +38,6 @@ public class TestGame extends GamePanel {
         }
         player.render(base);
         redGhost.render(base);
-        GlobalCamera.getInstance().render(base, frame);
         base.dispose();
         g.drawImage(frame, 0, 0, 672, 768, null);
 

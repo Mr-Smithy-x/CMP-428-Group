@@ -55,9 +55,9 @@ public class BoundingBox extends GravitationObject implements CollisionDetection
                     getX().doubleValue() + ux * p / 2,
                     getY().doubleValue() + uy * p / 2
             );
-            double set_pos_x = contract.getX().doubleValue() - (ux * p / 2);
-            double set_pos_y = contract.getY().doubleValue() - (uy * p / 2);
-            contract.setWorld(set_pos_x, set_pos_y);
+            double positionX = contract.getX().doubleValue() - (ux * p / 2);
+            double positionY = contract.getY().doubleValue() - (uy * p / 2);
+            contract.setWorld(positionX, positionY);
         }
     }
 

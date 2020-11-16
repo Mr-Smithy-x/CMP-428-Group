@@ -25,9 +25,9 @@ public interface BoundingContractLine extends BoundingContract {
     }
 
 
-    default void setNormal(Number normal_x, Number normal_y){
-        setNormalX(normal_x);
-        setNormalY(normal_y);
+    default void setNormal(Number normalX, Number normalY){
+        setNormalX(normalX);
+        setNormalY(normalY);
     }
 
 
@@ -62,6 +62,6 @@ public interface BoundingContractLine extends BoundingContract {
 
     }
 
-    void setNormalX(Number normal_x);
-    void setNormalY(Number normal_y);
+    void setNormalX(Number normalX);
+    void setNormalY(Number normalY);
 }

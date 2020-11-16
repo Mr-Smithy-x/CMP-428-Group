@@ -2,32 +2,32 @@ package groupproject.gameengine.contracts;
 
 public interface Gravitation extends Movable {
 
-    default void setVelocity(Number velocity_x, Number velocity_y) {
-        setVelocityX(velocity_x);
-        setVelocityY(velocity_y);
+    default void setVelocity(Number velocityX, Number velocityY) {
+        setVelocityX(velocityX);
+        setVelocityY(velocityY);
     }
 
-    default void setAcceleration(Number accelerate_x, Number accelerate_y) {
-        setAccelerationX(accelerate_x);
-        setAccelerationY(accelerate_y);
+    default void setAcceleration(Number accelerateX, Number accelerateY) {
+        setAccelerationX(accelerateX);
+        setAccelerationY(accelerateY);
     }
 
-    default void setDrag(Number drag_x, Number drag_y) {
-        setDragX(drag_x);
-        setDragY(drag_y);
+    default void setDrag(Number dragX, Number dragY) {
+        setDragX(dragX);
+        setDragY(dragY);
     }
 
-    void setVelocityX(Number velocity_x);
+    void setVelocityX(Number velocityX);
 
-    void setVelocityY(Number velocity_y);
+    void setVelocityY(Number velocityY);
 
-    void setAccelerationX(Number acceleration_x);
+    void setAccelerationX(Number accelerationX);
 
-    void setAccelerationY(Number acceleration_y);
+    void setAccelerationY(Number accelerationY);
 
-    void setDragX(Number drag_x);
+    void setDragX(Number dragX);
 
-    void setDragY(Number drag_y);
+    void setDragY(Number dragY);
 
     Number getDragX();
 

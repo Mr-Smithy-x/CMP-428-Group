@@ -45,20 +45,12 @@ public abstract class GamePanel extends JPanel implements KeyListener {
 		return null;
 	}
 
-	/*
-	 * Main logic for the game, up to you to implement this in your game of course.
-	 */
 	protected abstract void mainGameLogic();
-	/*
-	 * Every game requires objects of some sort, implement that logic in this method.
-	 */
+
 	protected abstract void initObjects();
 	
 	@Override
 	public void keyTyped(KeyEvent e) {
-		/*
-		 * Will be implemented later.
-		 */
 	}
 
 	@Override

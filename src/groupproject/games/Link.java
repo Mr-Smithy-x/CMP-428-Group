@@ -22,8 +22,8 @@ public class Link extends SpriteSheet {
 
     public Link(int position_x, int position_y, int duration) throws IOException {
         super();
-        shift_right = 12;
-        shift_down = 6;
+        shiftRight = 12;
+        shiftDown = 6;
         this.duration = duration;
         setWorld(position_x, position_y);
     }
@@ -39,7 +39,6 @@ public class Link extends SpriteSheet {
         double speed = 2000;
         double cosAngle = speed * getCosAngle().doubleValue();
         double sinAngle = speed * getSinAngle().doubleValue();
-
         switch (getPose()) {
             case ATTACK_UP:
                 sinAngle *= 1;
