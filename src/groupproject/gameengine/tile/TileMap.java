@@ -2,6 +2,10 @@ package groupproject.gameengine.tile;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class TileMap {
     private final TileMapModel mapModel;
@@ -53,16 +57,48 @@ public class TileMap {
         g.drawImage(map, 0, 0, null);
     }
 
-    public static BufferedImage resizeBufferedImage(BufferedImage image, int width, int height) {
-        Image tempImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics g = resizedImage.createGraphics();
-        g.drawImage(tempImage, 0, 0, null);
-        g.dispose();
-        return resizedImage;
+    public List<Tile> getSurroundingTiles(int x, int y, String direction) {
+        int row = y / mapModel.getPerTileHeight();
+        int col = x / mapModel.getPerTileWidth();
+        List<Tile> tiles = new ArrayList<>();
+        switch(direction) {
+        case "up":
+            for (int i : new int[]{col, col + 1, col - 1})
+                tiles.add(getMainLayerTileAt(row-1, i));
+            break;
+        case "down":
+            for (int i : new int[]{col, col + 1, col - 1})
+                tiles.add(getMainLayerTileAt(row+1, i));
+            break;
+        case "left":
+            for (int i : new int[]{row - 1, row, row + 1})
+                tiles.add(getMainLayerTileAt(i, col-1));
+            break;
+        case "right":
+            for (int i : new int[]{row - 1, row, row + 1})
+                tiles.add(getMainLayerTileAt(i, col+1));
+            break;
+        case "all":
+            for (int i : new int[]{row - 1, row + 1}) {
+                tiles.add(getMainLayerTileAt(i, col));
+                tiles.add(getMainLayerTileAt(i, col+1));
+                tiles.add(getMainLayerTileAt(i, col-1));
+            }
+            for (int i : new int[]{col - 1, col + 1})
+                tiles.add(getMainLayerTileAt(row, i));
+            break;
+        default:
+            break;
+        }
+        return tiles.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    public Tile[][] getMainLayerTiles() {
-        return mainLayerTiles;
+    private Tile getMainLayerTileAt(int row, int col) {
+        try {
+            return mainLayerTiles[row][col];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
     }
 }
+
