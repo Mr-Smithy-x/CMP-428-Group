@@ -86,7 +86,7 @@ public abstract class Sprite implements Renderable, CameraContract, Movable {
                 break;
             case "down":
                 y += velocity;
-                boundsRect.moveDown(+velocity);
+                boundsRect.moveDown(velocity);
                 break;
             case "left":
                 x -= velocity;

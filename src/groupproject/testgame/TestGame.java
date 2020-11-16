@@ -35,9 +35,11 @@ public class TestGame extends GamePanel {
                 tile.drawBoundsRect(base);
         }
         player.render(base);
-        redGhost.render((base));
+        redGhost.render(base);
+        GlobalCamera.getInstance().render(base, frame);
         base.dispose();
         g.drawImage(frame, 0, 0, 672, 768, null);
+
     }
 
     @Override

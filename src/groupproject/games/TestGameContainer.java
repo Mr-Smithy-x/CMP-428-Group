@@ -111,6 +111,7 @@ public class TestGameContainer extends GameContainer {
         box.render(g);
         dog.render(g);
         link.render(g);
+        GlobalCamera.getInstance().render(g, getContainer());
     }
 
 
