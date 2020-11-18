@@ -34,11 +34,12 @@ public class Animation {
     public void loadFrames(String prefix, String folder) {
         File directory = new File(folder);
         File[] frameFiles = directory.listFiles(file -> file.getName().startsWith(prefix));
-        if (frameFiles.length == 0) {
+        if (frameFiles == null || frameFiles.length == 0) {
             logger.log(Level.INFO, "No images file found for {0}.", prefix);
-        }
-        for (File f : frameFiles) {
-            this.addFrame(f);
+        } else {
+            for (File f : frameFiles) {
+                this.addFrame(f);
+            }
         }
     }
 
@@ -70,7 +71,7 @@ public class Animation {
 
     public void scale(int scale) {
         frames = frames.stream()
-                .map(frames -> frames.getScaledInstance(frames.getWidth(null) * scale, frames.getHeight(null) * scale, Image.SCALE_FAST))
+                .map(scaledFrames -> scaledFrames.getScaledInstance(scaledFrames.getWidth(null) * scale, scaledFrames.getHeight(null) * scale, Image.SCALE_FAST))
                 .collect(Collectors.toList());
     }
 

@@ -8,11 +8,15 @@ import java.awt.*;
 
 public abstract class BaseCamera {
 
-    public static boolean DEBUG = true;
-    protected double x, y;
-    protected double vx, vy;
-    protected double ay, av;
-    protected double xOrigin, yOrigin;
+    public static final boolean DEBUG = true;
+    protected double x;
+    protected double y;
+    protected double vx;
+    protected double vy;
+    protected double ay;
+    protected double av;
+    protected double xOrigin;
+    protected double yOrigin;
     protected int scaling = 1;
     protected int gravity = 1;
 
@@ -22,16 +26,12 @@ public abstract class BaseCamera {
     }
 
     public void setOrigin(BoundingContract e, TileMap map) {
-        double x = e.getX().doubleValue();
-        double y = e.getY().doubleValue();
-
-        //Commented out code would center the pixel onto the screen, but with this dynamic, it works much differently
-        this.xOrigin = x - (map.getWidth().doubleValue() / 2);// + (e.getWidth().doubleValue() / 2);
-        this.yOrigin = y - (map.getHeight().doubleValue() / 2);// + (e.getHeight().doubleValue() / 2);
+        // Commented out code would center the pixel onto the screen, but with this dynamic, it works much differently
+        this.xOrigin = e.getX().doubleValue() - (map.getWidth().doubleValue() / 2);// + (e.getWidth().doubleValue() / 2);
+        this.yOrigin = e.getY().doubleValue() - (map.getHeight().doubleValue() / 2);// + (e.getHeight().doubleValue() / 2);
 
         this.x = xOrigin;
         this.y = yOrigin;
-
 
         if (e instanceof BoundingBox) {
             xOrigin -= e.getWidth().doubleValue() / 2;
@@ -39,17 +39,13 @@ public abstract class BaseCamera {
         }
     }
 
-    public void setOrigin(BoundingContract e, double screen_width, double screen_height) {
-        double x = e.getX().doubleValue();
-        double y = e.getY().doubleValue();
-
-        //Commented out code would center the pixel onto the screen, but with this dynamic, it works much differently
-        xOrigin = x - (screen_width / 2);// + (e.getWidth().doubleValue() / 2);
-        yOrigin = y - (screen_height / 2);// + (e.getHeight().doubleValue() / 2);
+    public void setOrigin(BoundingContract e, double screenWidth, double screenHeight) {
+        // Commented out code would center the pixel onto the screen, but with this dynamic, it works much differently
+        xOrigin = e.getX().doubleValue() - (screenWidth / 2);// + (e.getWidth().doubleValue() / 2);
+        yOrigin = e.getY().doubleValue() - (screenHeight / 2);// + (e.getHeight().doubleValue() / 2);
 
         this.x = xOrigin;
         this.y = yOrigin;
-
 
         if (e instanceof BoundingBox) {
             xOrigin -= e.getWidth().doubleValue() / 2;
@@ -62,22 +58,20 @@ public abstract class BaseCamera {
         this.y = y;
     }
 
-    //region Getters
     public double getXOrigin() {
         return xOrigin;
     }
 
-    public void setXOrigin(double x_offset) {
-        this.xOrigin = x_offset;
+    public void setXOrigin(double xOffset) {
+        this.xOrigin = xOffset;
     }
 
     public double getYOrigin() {
         return yOrigin;
     }
-    //endregion
 
-    public void setYOrigin(double y_offset) {
-        this.yOrigin = y_offset;
+    public void setYOrigin(double yOffset) {
+        this.yOrigin = yOffset;
     }
 
     public int getScaling() {
@@ -92,7 +86,6 @@ public abstract class BaseCamera {
         return gravity;
     }
 
-    //region Setters
     public void setGravity(int gravity) {
         this.gravity = gravity;
     }
@@ -100,13 +93,11 @@ public abstract class BaseCamera {
     public double getX() {
         return x;
     }
-    //endregion
 
     public double getY() {
         return y;
     }
 
-    //region Helpers
     public void moveBy(double dx, double dy) {
         x += dx;
         y += dy;
@@ -127,7 +118,6 @@ public abstract class BaseCamera {
     public void moveRight(double dist) {
         x += dist;
     }
-    //endregion
 
     public void moveOrigin(double xamt, double yamt) {
         xOrigin += xamt;
@@ -140,9 +130,9 @@ public abstract class BaseCamera {
 
     public void render(Graphics g, int width, int height) {
         g.setColor(Color.pink);
-        int x = (width / 2);
-        int y = (height / 2);
-        g.drawLine(x - 5, y, x + 5, y);
-        g.drawLine(x, y - 5, x, y + 5);
+        int newX = (width / 2);
+        int newY = (height / 2);
+        g.drawLine(newX - 5, newY, newX + 5, newY);
+        g.drawLine(newX, newY - 5, newX, newY + 5);
     }
 }

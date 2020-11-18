@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public abstract class GameContainer implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 
-    protected final transient Logger logger = Logger.getLogger("GameEngine", null);
+    protected final Logger logger = Logger.getLogger("GameEngine", null);
     private final Font mono = new Font(Font.MONOSPACED, Font.BOLD, 16);
     private final Component container;
     protected boolean[] pressedKey = new boolean[255];
@@ -23,11 +23,12 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     /**
      * Mouse Variables
      */
-    protected int mx = 0, my = 0;
-    protected Graphics off_g;
+    protected int mx = 0;
+    protected int my = 0;
+    protected Graphics offScreenGraphics;
     private boolean isRunning = true;
     private Thread t;
-    private Image off_screen_image;
+    private Image offScreenImage;
 
 
     protected GameContainer(JFrame container, Canvas canvas) {
@@ -39,7 +40,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     }
 
     protected static JFrame make(String title, int width, int height) {
-        JFrame frame = new JFrame("Test Game");
+        JFrame frame = new JFrame(title);
         frame.setSize(width, height);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setResizable(false);
@@ -72,15 +73,15 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     protected abstract void onInitialize() throws IOException;
 
     protected void onCreateImages() {
-        off_screen_image = container.createImage(getWidth(), getHeight());
-        off_g = off_screen_image.getGraphics();
-        off_g.setFont(mono);
+        offScreenImage = container.createImage(getWidth(), getHeight());
+        offScreenGraphics = offScreenImage.getGraphics();
+        offScreenGraphics.setFont(mono);
     }
 
     /**
      * Default Scaled Width
      *
-     * @return
+     * @return The scaled width.
      */
     public int getWidth() {
         return container.getWidth();
@@ -89,7 +90,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     /**
      * Default Scaled Height
      *
-     * @return
+     * @return The scaled height.
      */
     public int getHeight() {
         return container.getWidth();
@@ -113,6 +114,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
                 Thread.sleep(16); // should result in 60FPS.
             } catch (InterruptedException x) {
                 logger.log(Level.SEVERE, x.getMessage());
+                Thread.currentThread().interrupt();
                 break;
             }
         }
@@ -141,14 +143,14 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     }
 
     protected void update(Graphics g) {
-        off_g.clearRect(0, 0, container.getWidth(), container.getHeight());
+        offScreenGraphics.clearRect(0, 0, container.getWidth(), container.getHeight());
         if (playing) {
-            onPaint(off_g);
+            onPaint(offScreenGraphics);
         } else {
-            onPaint(off_g);
-            onPausePaint(off_g);
+            onPaint(offScreenGraphics);
+            onPausePaint(offScreenGraphics);
         }
-        g.drawImage(off_screen_image, 0, 0, container.getWidth(), container.getHeight(), null);
+        g.drawImage(offScreenImage, 0, 0, container.getWidth(), container.getHeight(), null);
         g.dispose();
     }
 
@@ -157,7 +159,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     /**
      * Paint the paused screen here!
      *
-     * @param g
+     * @param g - Graphics object that is used for painting.
      */
     protected void onPausePaint(Graphics g) {
         g.setColor(new Color(0f, 0f, 0f, 0.3f));

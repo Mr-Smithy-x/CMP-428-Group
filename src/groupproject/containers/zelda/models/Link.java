@@ -7,15 +7,15 @@ import groupproject.gameengine.sprite.Sprite;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
+import java.util.List;
 
 public class Link extends Sprite {
 
     boolean attacking = false;
 
-    public Link(int position_x, int position_y, int duration) throws IOException {
-        super("link.png", position_x, position_y, 3, duration);
+    public Link(int positionX, int positionY, int duration) throws IOException {
+        super("link.png", positionX, positionY, 3, duration);
     }
 
     /*
@@ -45,7 +45,7 @@ public class Link extends Sprite {
         obj.setVelocity(cosAngle, sinAngle);
     }*/
 
-    public void attack(ArrayList<Sprite> objects) {
+    public void attack(List<Sprite> objects) {
         this.attack();
     }
 
@@ -65,14 +65,14 @@ public class Link extends Sprite {
         case DOWN:
             currentPose = Pose.ATTACK_DOWN;
             break;
+        default:
+            break;
         }
     }
 
     @Override
-    protected HashMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
-        HashMap<Pose, Animation> map = super.setupImages(image, delay);
-        //this.subImages = new SubImage[16][];
-        //this.stillImages = new SubImage[16];
+    protected EnumMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
+        EnumMap<Pose, Animation> map = new EnumMap<>(Pose.class);
         map.put(Pose.UP, getAnimation(image, 0, 4, 30, 30, 8, delay));
         map.put(Pose.DOWN, getAnimation(image, 0, 1, 30, 30, 8, delay));
         map.put(Pose.LEFT, getAnimation(image, 8, 1, 30, 30, 6, delay));

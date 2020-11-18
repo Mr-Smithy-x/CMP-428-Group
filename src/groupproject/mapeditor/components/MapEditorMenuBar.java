@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
+@SuppressWarnings("java:S1874")
 public class MapEditorMenuBar extends JMenuBar {
     private static final JCheckBoxMenuItem paintMode = new JCheckBoxMenuItem("Paint Mode");
     private static final JCheckBoxMenuItem collisionMode = new JCheckBoxMenuItem("Collision Mode");

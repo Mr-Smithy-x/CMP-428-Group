@@ -4,10 +4,12 @@ import groupproject.gameengine.contracts.Gravitation;
 
 public abstract class GravitationObject extends MovableObject implements Gravitation {
 
-    double velocityX, velocityY;
-    double accelerationX, accelerationY;
-    double dragX, dragY;
-
+    double velocityX;
+    double velocityY;
+    double accelerationX;
+    double accelerationY;
+    double dragX;
+    double dragY;
 
     @Override
     public void setVelocityX(Number velocityX) {

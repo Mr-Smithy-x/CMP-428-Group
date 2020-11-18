@@ -5,7 +5,7 @@ public interface CollisionDetection extends Gravitation {
     /**
      * Push objects, use this so that we can push objects to the side.
      *
-     * @param contract
+     * @param contract - The object being pushed.
      */
     default void pushes(Movable contract) {
         double dx = getX().doubleValue() - contract.getX().doubleValue();
@@ -19,9 +19,9 @@ public interface CollisionDetection extends Gravitation {
                 getX().doubleValue() + ux * p / 2,
                 getY().doubleValue() + uy * p / 2
         );
-        double set_pos_x = contract.getX().doubleValue() - (ux * p / 2);
-        double set_pos_y = contract.getY().doubleValue() - (uy * p / 2);
-        contract.setWorld(set_pos_x, set_pos_y);
+        double setPosX = contract.getX().doubleValue() - (ux * p / 2);
+        double setPosY = contract.getY().doubleValue() - (uy * p / 2);
+        contract.setWorld(setPosX, setPosY);
     }
 
 
@@ -42,8 +42,8 @@ public interface CollisionDetection extends Gravitation {
     /**
      * How far is the object from you?
      *
-     * @param movable
-     * @return
+     * @param movable - The object being checked against.
+     * @return The distance between objects.
      */
     default double distanceBetween(Movable movable) {
         double dx = movable.getX().doubleValue() - getX().doubleValue();

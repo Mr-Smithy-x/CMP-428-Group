@@ -11,10 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +21,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     private static final String SPRITE_SHEET_FOLDER = "assets/sheets/";
     protected Logger logger = Logger.getLogger("GameEngine", null);
     protected Pose currentPose = Pose.RIGHT;
-    protected HashMap<Pose, Animation> animDict = new HashMap<>();
+    protected EnumMap<Pose, Animation> animDict = new EnumMap<>(Pose.class);
     protected CollisionDetection bounds;
     protected int velocity;
     protected int scaled = 1;
@@ -77,15 +74,16 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         }
     }
 
-    public Sprite(String spritesheet, int x, int y, int scaled, int delay) throws IOException {
+    public Sprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
         this.scaled = scaled;
-        animDict.putAll(setupImages(initializeSheet(spritesheet), delay));
+        animDict.putAll(setupImages(initializeSheet(spriteSheet), delay));
         initAnimations();
         setupBox(x, y);
     }
 
-    protected HashMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
-        return new HashMap<>();
+    @SuppressWarnings("java:S1172")
+    protected EnumMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
+        return new EnumMap<>(Pose.class);
     }
 
     protected BufferedImage initializeSheet(String spriteSheet) throws IOException {
@@ -180,7 +178,6 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         this.velocity = velocity;
     }
 
-    //region Override
     @Override
     public Number getX() {
         return bounds.getX();
@@ -291,5 +288,4 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     public Number getAccelerationY() {
         return bounds.getAccelerationY();
     }
-    //endregion
 }

@@ -60,12 +60,16 @@ public class Tile implements Renderable, CameraContract {
 
     @Override
     public void setHeight(Number height) {
-
+        /*
+          Not needed.
+         */
     }
 
     @Override
     public void setWidth(Number width) {
-
+        /*
+          Not needed.
+         */
     }
 
     @Override

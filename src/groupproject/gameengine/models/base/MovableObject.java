@@ -4,8 +4,10 @@ import groupproject.gameengine.contracts.Movable;
 
 public abstract class MovableObject implements Movable {
 
-    protected double x, y;
-    protected double width, height;
+    protected double x;
+    protected double y;
+    protected double width;
+    protected double height;
 
     @Override
     public Number getX() {

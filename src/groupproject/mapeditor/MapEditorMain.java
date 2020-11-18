@@ -25,9 +25,9 @@ public class MapEditorMain {
             // Initialize all of the components for the editor.
             JFrame frame = new JFrame("Tile Map Editor");
             JScrollPane mapEditPane = new JScrollPane(editorController.getMapEditorView(),
-                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                    javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
             JScrollPane tileSetPane = new JScrollPane(editorController.getMapEditorTileSetView(),
-                    JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                    javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
             mapEditPane.getVerticalScrollBar().setUnitIncrement(16);
             tileSetPane.getVerticalScrollBar().setUnitIncrement(16);
             mapEditPane.getHorizontalScrollBar().setUnitIncrement(16);
