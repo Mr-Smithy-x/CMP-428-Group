@@ -13,6 +13,14 @@ public interface BoundingContract {
         return getY().doubleValue() + getHeight().doubleValue();
     }
 
+    default Number getDiagonalX() {
+        return getX2().intValue() - 1;
+    }
+
+    default Number getDiagonalY() {
+        return getY2().intValue() - 1;
+    }
+
     Number getWidth();
     Number getHeight();
 

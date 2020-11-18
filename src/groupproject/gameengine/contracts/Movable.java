@@ -19,14 +19,6 @@ public interface Movable extends BoundingContract {
         return 0;
     }
 
-
-    default Number getDiagonalX() {
-        return getX2().intValue() - 1;
-    }
-
-    default Number getDiagonalY() {
-        return getY2().intValue() - 1;
-    }
     //endregion
 
     //region Setters
