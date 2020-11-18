@@ -1,35 +1,78 @@
 package groupproject.gameengine.sprite;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.CollisionDetection;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public abstract class Sprite implements Renderable, CameraContract, CollisionDetection {
+
     private static final String SPRITE_FOLDER = "assets/sprites/";
+    private static final String SPRITE_SHEET_FOLDER = "assets/sheets/";
     protected Logger logger = Logger.getLogger("GameEngine", null);
-    protected String currentDirection = "";
-    protected HashMap<String, Animation> animDict = new HashMap<>();
-    protected BoundingBox boundsRect;
+    protected Direction currentDirection = Direction.RIGHT;
+    protected HashMap<Direction, Animation> animDict = new HashMap<>();
+    protected BoundingBox boundingBox;
     protected int velocity;
+    protected int scaled = 1;
+    protected boolean moving = false;
 
     public Sprite(int x, int y, String spritePrefix, int delay) {
         velocity = 1;
         loadBaseAnimations(spritePrefix, delay);
         initAnimations();
-        this.boundsRect = new BoundingBox(x, y,
-                getFirstAnimation().getCurrentFrame().getWidth(),
-                getFirstAnimation().getCurrentFrame().getHeight());
+        setupBox(x, y);
+    }
+
+    public Sprite(String spritesheet, int x, int y, int scaled, int delay) throws IOException {
+        this.scaled = scaled;
+        animDict.putAll(setupImages(initializeSheet(spritesheet), delay));
+        initAnimations();
+        setupBox(x, y);
+    }
+
+    private void setupBox(int x, int y) {
+        Image currentFrame = getFirstAnimation().getCurrentFrame();
+        this.boundingBox = new BoundingBox(x, y, currentFrame.getWidth(null) / scaled, currentFrame.getHeight(null) / scaled);
+    }
+
+    protected BufferedImage pluck(BufferedImage image, int column, int row, int width, int height) {
+        return image.getSubimage((column * width), row * height, width, height);
+    }
+
+    protected Animation getAnimation(BufferedImage image, int column, int row, int width, int height, int count, int delay) {
+        Animation images = Animation.with(delay);
+        for (int i = 0; i < count; i++) {
+            int x = (column * width) + (i * width);
+            int y = row * height;
+            images.addFrame(image.getSubimage(x, y, width, height));
+        }
+        return images;
+    }
+
+    protected BufferedImage initializeSheet(String spriteSheet) throws IOException {
+        return ImageIO.read(new File(String.format("%s%s", getSpriteSheetDirectory(), spriteSheet)));
+    }
+
+    protected HashMap<Direction, Animation> setupImages(BufferedImage image, int delay) {
+        return new HashMap<>();
+    }
+
+    public String getSpriteSheetDirectory() {
+        return SPRITE_SHEET_FOLDER;
     }
 
     // For initializing anymore animations besides 4 basic ones for the sprite.
@@ -38,10 +81,10 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     // Takes care of initializing animations for the 4 basic directions the sprite would face.
     // Can always override this to fit the needs of your sprite.
     protected void loadBaseAnimations(String prefix, int delay) {
-        String[] directions = {"up", "down", "left", "right"};
-        for (int i = 0; i < directions.length; i++) {
-            Animation anim = new Animation(delay, String.join("_", prefix, directions[i]), getSpriteDirectory());
-            animDict.put(directions[i], anim);
+        String[] directions = Arrays.stream(Direction.values()).map(d -> d.name().toLowerCase()).toArray(String[]::new);
+        for (String direction : directions) {
+            Animation anim = new Animation(delay, String.join("_", prefix, direction), getSpriteDirectory());
+            animDict.put(Direction.parse(direction), anim);
         }
     }
 
@@ -49,22 +92,29 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     @Override
     public void render(Graphics g) {
         if (animDict.containsKey(currentDirection)) {
-            BufferedImage currentFrame = animDict.get(currentDirection).getCurrentFrame();
+            Image currentFrame;
+            if (moving) {
+                currentFrame = animDict.get(currentDirection).getCurrentFrame();
+            } else {
+                currentFrame = animDict.get(currentDirection).getFirstFrame();
+            }
             g.drawImage(currentFrame,
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth() / 4,
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight() / 4, null);
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4, null);
+
+            moving = false;
         } else {
             Animation firstAnim = getFirstAnimation();
-            BufferedImage currentFrame = firstAnim.getCurrentFrame();
+            Image currentFrame = firstAnim.getCurrentFrame();
             g.drawImage(currentFrame,
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth() / 4,
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight() / 4,
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
                     null);
         }
 
         // For debug purposes, draw the bounding box of the sprite.
         g.setColor(Color.blue);
-        boundsRect.render(g);
+        boundingBox.render(g);
     }
 
     private Animation getFirstAnimation() {
@@ -77,19 +127,23 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         }
     }
 
+    public void setVelocity(int velocity) {
+        this.velocity = velocity;
+    }
+
     public void move() {
         switch (currentDirection) {
-            case "up":
-                boundsRect.moveUp(velocity);
+            case UP:
+                moveUp(velocity);
                 break;
-            case "down":
-                boundsRect.moveDown(velocity);
+            case DOWN:
+                moveDown(velocity);
                 break;
-            case "left":
-                boundsRect.moveLeft(velocity);
+            case LEFT:
+                moveLeft(velocity);
                 break;
-            case "right":
-                boundsRect.moveRight(velocity);
+            case RIGHT:
+                moveRight(velocity);
                 break;
             default:
                 break;
@@ -97,18 +151,18 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     }
 
     public BoundingBox getBounds() {
-        return boundsRect;
+        return boundingBox;
     }
 
     public String getSpriteDirectory() {
         return SPRITE_FOLDER + this.getClass().getSimpleName().toLowerCase();
     }
 
-    public String getSpriteDirection() {
+    public Direction getSpriteDirection() {
         return currentDirection;
     }
 
-    public void setSpriteDirection(String currentDirection) {
+    public void setSpriteDirection(Direction currentDirection) {
         this.currentDirection = currentDirection;
     }
 
@@ -116,129 +170,147 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         return velocity;
     }
 
+
+    //region Override
     @Override
     public Number getX() {
-        return boundsRect.getX();
+        return boundingBox.getX();
     }
 
     @Override
     public Number getY() {
-        return boundsRect.getY();
+        return boundingBox.getY();
     }
 
     @Override
     public Number getWidth() {
-        return boundsRect.getWidth();
+        return boundingBox.getWidth();
     }
 
     @Override
     public Number getHeight() {
-        return boundsRect.getHeight();
+        return boundingBox.getHeight();
     }
 
     @Override
     public void setWidth(Number width) {
-        boundsRect.setWidth(width);
+        boundingBox.setWidth(width);
     }
 
     @Override
     public void setHeight(Number height) {
-        boundsRect.setHeight(height);
+        boundingBox.setHeight(height);
     }
 
     @Override
     public void gravitate() {
-        boundsRect.gravitate();
+        boundingBox.gravitate();
     }
 
     @Override
     public void setX(Number x) {
-        boundsRect.setX(x);
+        boundingBox.setX(x);
+        if (x.intValue() > 0) {
+            moving = true;
+        }
     }
 
     @Override
     public void setY(Number y) {
-        boundsRect.setY(y);
+        boundingBox.setY(y);
+        if (y.intValue() > 0) {
+            moving = true;
+        }
     }
 
     @Override
     public void setVelocityX(Number velocityX) {
-        boundsRect.setVelocityX(velocityX);
+        boundingBox.setVelocityX(velocityX);
     }
 
     @Override
     public void setVelocityY(Number velocityY) {
-        boundsRect.setVelocityY(velocityY);
+        boundingBox.setVelocityY(velocityY);
     }
 
     @Override
     public void setAccelerationX(Number accelerationX) {
-        boundsRect.setAccelerationX(accelerationX);
+        boundingBox.setAccelerationX(accelerationX);
     }
 
     @Override
     public void setAccelerationY(Number accelerationY) {
-        boundsRect.setAccelerationY(accelerationY);
+        boundingBox.setAccelerationY(accelerationY);
     }
 
     @Override
     public void setDragX(Number dragX) {
-        boundsRect.setDragX(dragX);
+        boundingBox.setDragX(dragX);
     }
 
     @Override
     public void setDragY(Number dragY) {
-        boundsRect.setDragY(dragY);
+        boundingBox.setDragY(dragY);
     }
 
     @Override
     public Number getDragX() {
-        return boundsRect.getDragX();
+        return boundingBox.getDragX();
     }
 
     @Override
     public Number getDragY() {
-        return boundsRect.getDragY();
+        return boundingBox.getDragY();
     }
 
     @Override
     public Number getVelocityX() {
-        return boundsRect.getVelocityX();
+        return boundingBox.getVelocityX();
     }
 
     @Override
     public Number getVelocityY() {
-        return boundsRect.getVelocityY();
+        return boundingBox.getVelocityY();
     }
 
     @Override
     public Number getAccelerationX() {
-        return boundsRect.getAccelerationX();
+        return boundingBox.getAccelerationX();
     }
 
     @Override
     public Number getAccelerationY() {
-        return boundsRect.getAccelerationY();
+        return boundingBox.getAccelerationY();
     }
 
 
     @Override
     public void setWorldAngle(int worldAngle) {
-        boundsRect.setWorldAngle(worldAngle);
+        boundingBox.setWorldAngle(worldAngle);
     }
 
     @Override
     public int getWorldAngle() {
-        return boundsRect.getWorldAngle();
+        return boundingBox.getWorldAngle();
     }
 
     @Override
     public Number getSinAngle() {
-        return boundsRect.getSinAngle();
+        return boundingBox.getSinAngle();
     }
 
     @Override
     public Number getCosAngle() {
-        return boundsRect.getCosAngle();
+        return boundingBox.getCosAngle();
+    }
+
+    //endregion
+
+    public enum Direction {
+        UP, DOWN, LEFT, RIGHT;
+
+        public static Direction parse(String direction) {
+            return Direction.valueOf(direction.toUpperCase());
+        }
     }
 }

@@ -42,6 +42,12 @@ public abstract class SpriteSheet
     protected CollisionDetection circle;
 
 
+    //region Abstract Methods
+
+    protected abstract void setupImages();
+
+    //endregion
+
     public SpriteSheet() throws IOException {
         initializeSheet();
         setupImages();
@@ -55,8 +61,6 @@ public abstract class SpriteSheet
         }
         return images;
     }
-
-    protected abstract void setupImages();
 
     protected void validate() {
         if (currentColumn >= subImages[pose].length) {

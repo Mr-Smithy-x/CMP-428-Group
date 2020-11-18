@@ -1,58 +1,41 @@
 package groupproject.containers.zelda.models;
 
 
+import groupproject.gameengine.sprite.Animation;
+import groupproject.gameengine.sprite.Sprite;
 import groupproject.gameengine.sprite.SpriteSheet;
-import groupproject.gameengine.sprite.SubImage;
 
-import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Link extends SpriteSheet {
+public class Link extends Sprite {
 
     boolean attacking = false;
 
-    public Link() throws IOException {
-        this(200, 200, 1);
-    }
-
-    public Link(int duration) throws IOException {
-        this(200, 200, duration);
-    }
-
     public Link(int position_x, int position_y, int duration) throws IOException {
-        super();
-        shiftRight = 12;
-        shiftDown = 6;
-        this.duration = duration;
-        setWorld(position_x, position_y);
+        super("link.png", position_x, position_y, 3, duration);
     }
 
-    public void spin() {
-        attacking = true;
-        pose = SPIN_ATTACK;
-        nextImageColumn();
-    }
-
-
-    public void hit(SpriteSheet obj) {
+    public void hit(Sprite obj) {
         double speed = 2000;
         double cosAngle = speed * getCosAngle().doubleValue();
         double sinAngle = speed * getSinAngle().doubleValue();
-        switch (getPose()) {
-            case ATTACK_UP:
+        switch (getSpriteDirection()) {
+            case UP:
                 sinAngle *= 1;
                 cosAngle = 0;
                 break;
-            case ATTACK_DOWN:
+            case DOWN:
                 sinAngle *= -1;
                 cosAngle = 0;
                 break;
-            case ATTACK_LEFT:
+            case LEFT:
                 sinAngle = 0;
                 cosAngle *= -1;
                 break;
-            case ATTACK_RIGHT:
+            case RIGHT:
                 sinAngle = 0;
                 cosAngle *= 1;
                 break;
@@ -64,41 +47,23 @@ public class Link extends SpriteSheet {
         this.attack();
     }
 
-    public void attack() {
-        attacking = true;
-        switch (pose) {
-            case UP:
-                pose = ATTACK_UP;
-                break;
-            case LEFT:
-                pose = ATTACK_LEFT;
-                break;
-            case RIGHT:
-                pose = ATTACK_RIGHT;
-                break;
-            case DOWN:
-            case SPIN_ATTACK:
-                pose = ATTACK_DOWN;
-                break;
-        }
-        nextImageColumn();
-    }
-
-
     @Override
-    protected void setupImages() {
-        this.subImages = new SubImage[16][];
-        this.stillImages = new SubImage[16];
-        subImages[UP] = initAnimation(0, 4, 30, 30, 8);
-        subImages[DOWN] = initAnimation(0, 1, 30, 30, 8);
-        subImages[LEFT] = initAnimation(8, 1, 30, 30, 6);
-        subImages[RIGHT] = initAnimation(8, 4, 30, 30, 6);
-        stillImages[UP] = initAnimation(2, 0, 30, 30, 1)[0];
-        stillImages[DOWN] = initAnimation(1, 0, 30, 30, 1)[0];
-        stillImages[LEFT] = initAnimation(5, 0, 30, 30, 1)[0];
-        stillImages[RIGHT] = initAnimation(11, 4, 30, 30, 1)[0];
+    protected HashMap<Direction, Animation> setupImages(BufferedImage image, int delay) {
+        HashMap<Direction, Animation> map = super.setupImages(image, delay);
+        //this.subImages = new SubImage[16][];
+        //this.stillImages = new SubImage[16];
+        map.put(Direction.UP, getAnimation(image, 0, 4, 30, 30, 8, delay));
+        map.put(Direction.DOWN, getAnimation(image, 0, 1, 30, 30, 8, delay));
+        map.put(Direction.LEFT, getAnimation(image, 8, 1, 30, 30, 6, delay));
+        map.put(Direction.RIGHT, getAnimation(image, 8, 4, 30, 30, 6, delay));
+
+        map.get(Direction.UP).setFirstFrame(pluck(image, 2, 0, 30, 30));
+        map.get(Direction.DOWN).setFirstFrame(pluck(image, 1, 0, 30, 30));
+        map.get(Direction.LEFT).setFirstFrame(pluck(image, 5, 0, 30, 30));
+        map.get(Direction.RIGHT).setFirstFrame(pluck(image, 11, 4, 30, 30));
 
 
+        /*
         subImages[ATTACK_UP] = new SubImage[]{
                 new SubImage(0, 180, 22, 25),
                 new SubImage(30, 177, 22, 30),
@@ -138,22 +103,40 @@ public class Link extends SpriteSheet {
                 /*subImages[ATTACK_UP] = initAnimation(0, 6, 30, 30, 5);
                 subImages[ATTACK_DOWN] = initAnimation(0, 3, 28, 28, 6);
                 subImages[ATTACK_LEFT] = initAnimation(8, 3, 29, 30, 5);
-                subImages[ATTACK_RIGHT] = initAnimation(8, 6, 29, 30, 5);*/
+                subImages[ATTACK_RIGHT] = initAnimation(8, 6, 29, 30, 5);
 
         stillImages[ATTACK_UP] = initAnimation(2, 0, 30, 30, 1)[0];
         stillImages[ATTACK_DOWN] = initAnimation(1, 0, 30, 30, 1)[0];
         stillImages[ATTACK_LEFT] = initAnimation(5, 0, 30, 30, 1)[0];
         stillImages[ATTACK_RIGHT] = initAnimation(11, 4, 30, 30, 1)[0];
         stillImages[SPIN_ATTACK] = stillImages[DOWN];
+
+        */
+        return map;
     }
 
-    @Override
-    public void render(Graphics g) {
-        if (attacking) {
-            moving = attacking;
+    public void attack() {
+        attacking = true;
+        switch (getSpriteDirection()) {
+            case UP:
+                currentDirection = Direction.UP;
+                break;
+            case LEFT:
+                currentDirection = Direction.LEFT;
+                break;
+            case RIGHT:
+                currentDirection = Direction.RIGHT;
+                break;
+            case DOWN:
+                currentDirection = Direction.DOWN;
+                break;
         }
-        super.render(g);
-        attacking = false;
+    }
+
+
+    @Override
+    protected void initAnimations() {
+        animDict.values().forEach( a -> a.scale(scaled));
     }
 
 }

@@ -110,7 +110,7 @@ public class PacmanContainer extends GameContainer {
 
     @Override
     protected void onPlay() {
-        String direction = player.getSpriteDirection();
+        String direction = player.getSpriteDirection().name().toLowerCase();
         boolean allowMove = false;
 
         if (pressedKey[KeyEvent.VK_W] && !isSpriteCollidingWithMap(player, "up")) {
@@ -134,7 +134,7 @@ public class PacmanContainer extends GameContainer {
         }
 
         if (allowMove || !isSpriteCollidingWithMap(player, direction)) {
-            player.setSpriteDirection(direction);
+            player.setSpriteDirection(Sprite.Direction.parse(direction));
             player.move();
             //Its important to note that when using the camera with tilemap call this method
             //do not use getWidth or getHeight of the component window when using it with the tilemap

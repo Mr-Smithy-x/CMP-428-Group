@@ -2,6 +2,10 @@ package groupproject.gameengine.contracts;
 
 public interface CollisionDetection extends Gravitation {
 
+    /**
+     * Push objects, use this so that we can push objects to the side.
+     * @param contract
+     */
     default void pushes(Movable contract) {
         double dx = getX().doubleValue() - contract.getX().doubleValue();
         double dy = getY().doubleValue() - contract.getY().doubleValue();
@@ -19,6 +23,11 @@ public interface CollisionDetection extends Gravitation {
         contract.setWorld(set_pos_x, set_pos_y);
     }
 
+    /**
+     * Does the object overlaps?
+     * @param movable
+     * @return
+     */
     default boolean overlaps(Movable movable) {
         double dx = getX().doubleValue() - movable.getX().doubleValue();
         double dy = getY().doubleValue() - movable.getY().doubleValue();
@@ -27,29 +36,21 @@ public interface CollisionDetection extends Gravitation {
         return d2 <= ri * ri;
     }
 
+    /**
+     * How far is the object from you?
+     * @param movable
+     * @return
+     */
     default double distanceBetween(Movable movable) {
         double dx = movable.getX().doubleValue() - getX().doubleValue();
         double dy = movable.getY().doubleValue() - getY().doubleValue();
         return Math.sqrt(dx * dx + dy + dy);
     }
 
-    default boolean overlaps(BoundingContractLine line) {
-        double distance = line.distanceTo(getX().doubleValue(), getY().doubleValue()).doubleValue();
-        double v = getRadius().doubleValue();
-        //System.out.printf("DISTANCE: %s, Radius: %s\n", distance, v);
-        return distance * distance < v * v;
-    }
-
-    default void pushedBackBy(BoundingContractLine line) {
-        double distance = line.distanceTo(getX().doubleValue(), getY().doubleValue()).doubleValue();
-        double p = getRadius().doubleValue() - distance;
-        setWorld(
-                getX().doubleValue() + p * line.getNormalX().doubleValue(),
-                getY().doubleValue() + p * line.getNormalY().doubleValue()
-        );
-    }
-
-
+    /**
+     * Maybe we migh t want o bound off a tile?
+     * @param gravitational
+     */
     default void bounceOff(Gravitation gravitational) {
         double dx = gravitational.getX().doubleValue() - getX().doubleValue();
         double dy = gravitational.getY().doubleValue() - getY().doubleValue();
@@ -66,19 +67,6 @@ public interface CollisionDetection extends Gravitation {
         gravitational.setVelocity(.9 * (ct * tx + u * ux), .9 * (ct * ty + u * uy));
     }
 
-    default void bounceOffLine(BoundingContractLine line) {
-        double d = line.distanceTo(getX().doubleValue(), getY().doubleValue()).doubleValue();
-        double p = getRadius().doubleValue() - d;
-        setWorld(
-                getX().doubleValue() + 1.9 * (p * line.getNormalX().doubleValue()),
-                getY().doubleValue() + 1.9 * (p * line.getNormalY().doubleValue())
-        );
-        double mag = 1.9 * (getVelocityX().doubleValue() * line.getNormalX().doubleValue() + getVelocityY().doubleValue() * line.getNormalY().doubleValue());
-        double tx = mag * line.getNormalX().doubleValue();
-        double ty = mag * line.getNormalY().doubleValue();
-        setVelocity(getVelocityX().doubleValue() - tx, getVelocityY().doubleValue() - ty);
-        pushedBackBy(line); //fixes issue overlaping
-    }
 
 
 }
