@@ -34,7 +34,7 @@ public class NewMapDialog extends JPanel {
         setupPanelLayout(tileWidth, tileHeight, mapRows, mapColumns);
 
         int result = JOptionPane.showConfirmDialog(null, this, "Create Map", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if(result == JOptionPane.OK_OPTION)
+        if (result == JOptionPane.OK_OPTION)
             try {
                 this.editorController.createTileMap(tileSetImageFile, Integer.parseInt(tileWidth.getText()),
                         Integer.parseInt(tileHeight.getText()), Integer.parseInt(mapRows.getText()), Integer.parseInt(mapColumns.getText()));

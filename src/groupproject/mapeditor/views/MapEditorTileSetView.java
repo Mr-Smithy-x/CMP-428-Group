@@ -11,8 +11,8 @@ import java.awt.event.MouseEvent;
 
 public class MapEditorTileSetView extends JPanel {
     private final transient MapEditorController editorController;
-    private MapEditorTileButton selectedTileButton;
     private final JPanel tilesInSet;
+    private MapEditorTileButton selectedTileButton;
 
     public MapEditorTileSetView(MapEditorController controller) {
         this.editorController = controller;
@@ -40,7 +40,7 @@ public class MapEditorTileSetView extends JPanel {
                 });
                 constraints.gridx = col;
                 constraints.gridy = row;
-                constraints.insets = new Insets(0, 0, 1 , 1);
+                constraints.insets = new Insets(0, 0, 1, 1);
                 tilesInSet.add(button, constraints);
             }
         }
@@ -49,7 +49,7 @@ public class MapEditorTileSetView extends JPanel {
     }
 
     private void setTileSelected(MapEditorTileButton button) {
-        if(this.selectedTileButton != null) {
+        if (this.selectedTileButton != null) {
             this.selectedTileButton.setBorder(UIManager.getBorder("Label.border"));
         }
         this.selectedTileButton = button;

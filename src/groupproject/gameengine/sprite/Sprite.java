@@ -1,121 +1,291 @@
 package groupproject.gameengine.sprite;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import groupproject.gameengine.camera.GlobalCamera;
+import groupproject.gameengine.contracts.CameraContract;
+import groupproject.gameengine.contracts.CollisionDetection;
+import groupproject.gameengine.contracts.Renderable;
+import groupproject.gameengine.models.BoundingBox;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import groupproject.gameengine.Rect;
+public abstract class Sprite implements Renderable, CameraContract, CollisionDetection {
 
-public abstract class Sprite {
-	private static final String SPRITE_FOLDER = "assets/sprites/";
-	protected int x;
-	protected int y;
-	protected Logger logger = Logger.getLogger("GameEngine", null);
-	protected String currentDirection = "";
-	protected HashMap<String, Animation> animDict = new HashMap<>();
-	protected Rect boundsRect;
-	protected int velocity;
+    private static final String SPRITE_FOLDER = "assets/sprites/";
+    private static final String SPRITE_SHEET_FOLDER = "assets/sheets/";
+    protected Logger logger = Logger.getLogger("GameEngine", null);
+    protected Pose currentPose = Pose.RIGHT;
+    protected EnumMap<Pose, Animation> animDict = new EnumMap<>(Pose.class);
+    protected CollisionDetection bounds;
+    protected int velocity;
+    protected int scaled = 1;
+    protected boolean moving = false;
 
-	public Sprite(int x, int y, String spritePrefix, int delay) {
-		this.x = x;
-		this.y = y;
-		velocity = 1;
-		loadBaseAnimations(spritePrefix, delay);
-		initAnimations();
-		this.boundsRect = new Rect(this.x, this.y,
-				getFirstAnimation().getCurrentFrame().getWidth(),
-				getFirstAnimation().getCurrentFrame().getHeight());
-	}
+    public Sprite(int x, int y, String spritePrefix, int delay) {
+        velocity = 1;
+        loadBaseAnimations(spritePrefix, delay);
+        initAnimations();
+        setupBox(x, y);
+    }
 
-	// For initializing anymore animations besides 4 basic ones for the sprite.
-	protected abstract void initAnimations();
+    public enum Pose {
+        UP, DOWN, LEFT, RIGHT, ALL, JUMP, ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, SPIN_ATTACK;
 
-	// Takes care of initializing animations for the 4 basic directions the sprite would face.
-	// Can always override this to fit the needs of your sprite.
-	protected void loadBaseAnimations(String prefix, int delay) {
-		String[] directions = {"up", "down", "left", "right"};
-		for (int i = 0; i < directions.length; i++) {
-			Animation anim = new Animation(delay, String.join("_", prefix, directions[i]), getSpriteDirectory());
-			animDict.put(directions[i], anim);
-		}
-	}
+        public static Pose parse(String pose) {
+            return Pose.valueOf(pose.toUpperCase());
+        }
+    }
 
-	// Draws the sprite's current image based on its current state.
-	public void draw(Graphics g) {
-		if (animDict.containsKey(currentDirection)) {
-			g.drawImage(animDict.get(currentDirection).getCurrentFrame(), x, y, null);
-		} else {
-			Animation firstAnim = getFirstAnimation();
-			g.drawImage(firstAnim.getCurrentFrame(), x, y, null);
-		}
+    // Takes care of initializing animations for the 4 basic directions the sprite would face.
+    // Can always override this to fit the needs of your sprite.
+    protected void loadBaseAnimations(String prefix, int delay) {
+        String[] directions = Arrays.stream(Pose.values()).map(d -> d.name().toLowerCase()).toArray(String[]::new);
+        for (String direction : directions) {
+            Animation anim = new Animation(delay, String.join("_", prefix, direction), getSpriteDirectory());
+            animDict.put(Pose.parse(direction), anim);
+        }
+    }
 
-		// For debug purposes, draw the bounding box of the sprite.
-		g.setColor(Color.blue);
-		boundsRect.draw(g);
-	}
+    // For initializing anymore animations besides 4 basic ones for the sprite.
+    protected abstract void initAnimations();
 
-	private Animation getFirstAnimation() {
-		Optional<Animation> firstAnim = animDict.values().stream().findFirst();
-		if (firstAnim.isPresent()) {
-			return firstAnim.get();
-		} else {
-			logger.log(Level.SEVERE, "No animations created for {0}!", this.getClass().getSimpleName());
-			throw new NoSuchElementException();
-		}
-	}
+    private void setupBox(int x, int y) {
+        Image currentFrame = getFirstAnimation().getCurrentFrame();
+        this.bounds = new BoundingBox(x, y, currentFrame.getWidth(null) / scaled, currentFrame.getHeight(null) / scaled);
+    }
 
-	public void move() {
-		switch(currentDirection) {
-		case "up":
-			y -= velocity;
-			boundsRect.move(0, -velocity);
-			break;
-		case "down":
-			y += velocity;
-			boundsRect.move(0, +velocity);
-			break;
-		case "left":
-			x -= velocity;
-			boundsRect.move(-velocity, 0);
-			break;
-		case "right":
-			x += velocity;
-			boundsRect.move(velocity, 0);
-			break;
-		default:
-			break;
-		}
-	}
+    public String getSpriteDirectory() {
+        return SPRITE_FOLDER + this.getClass().getSimpleName().toLowerCase();
+    }
 
-	public Rect getBounds() {
-		return boundsRect;
-	}
+    private Animation getFirstAnimation() {
+        Optional<Animation> firstAnim = animDict.values().stream().findFirst();
+        if (firstAnim.isPresent()) {
+            return firstAnim.get();
+        } else {
+            logger.log(Level.SEVERE, "No animations created for {0}!", this.getClass().getSimpleName());
+            throw new NoSuchElementException();
+        }
+    }
 
-	public String getSpriteDirectory() {
-		return SPRITE_FOLDER + this.getClass().getSimpleName().toLowerCase();
-	}
+    public Sprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
+        this.scaled = scaled;
+        animDict.putAll(setupImages(initializeSheet(spriteSheet), delay));
+        initAnimations();
+        setupBox(x, y);
+    }
 
-	public String getSpriteDirection() {
-		return currentDirection;
-	}
+    @SuppressWarnings("java:S1172")
+    protected EnumMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
+        return new EnumMap<>(Pose.class);
+    }
 
-	public void setSpriteDirection(String currentDirection) {
-		this.currentDirection = currentDirection;
-	}
+    protected BufferedImage initializeSheet(String spriteSheet) throws IOException {
+        return ImageIO.read(new File(String.format("%s%s", getSpriteSheetDirectory(), spriteSheet)));
+    }
 
-	public int getVelocity() {
-		return velocity;
-	}
+    public String getSpriteSheetDirectory() {
+        return SPRITE_SHEET_FOLDER;
+    }
 
-	public int getX() {
-		return x;
-	}
+    protected BufferedImage pluck(BufferedImage image, int column, int row, int width, int height) {
+        return image.getSubimage((column * width), row * height, width, height);
+    }
 
-	public int getY() {
-		return y;
-	}
+    protected Animation getAnimation(BufferedImage image, int column, int row, int width, int height, int count, int delay) {
+        Animation images = Animation.with(delay);
+        for (int i = 0; i < count; i++) {
+            int x = (column * width) + (i * width);
+            int y = row * height;
+            images.addFrame(image.getSubimage(x, y, width, height));
+        }
+        return images;
+    }
+
+    // Draws the sprite's current image based on its current state.
+    @Override
+    public void render(Graphics g) {
+        if (animDict.containsKey(currentPose)) {
+            Image currentFrame;
+            if (moving) {
+                currentFrame = animDict.get(currentPose).getCurrentFrame();
+            } else {
+                currentFrame = animDict.get(currentPose).getFirstFrame();
+            }
+            g.drawImage(currentFrame,
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4, null);
+
+            moving = false;
+        } else {
+            Animation firstAnim = getFirstAnimation();
+            Image currentFrame = firstAnim.getCurrentFrame();
+            g.drawImage(currentFrame,
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
+                    null);
+        }
+    }
+
+    public void drawBounds(Graphics g) {
+        // For debug purposes, draw the bounding box of the sprite.
+        g.setColor(Color.blue);
+        ((Renderable) bounds).render(g);
+    }
+
+    public void move() {
+        switch (currentPose) {
+        case UP:
+            moveUp(velocity);
+            break;
+        case DOWN:
+            moveDown(velocity);
+            break;
+        case LEFT:
+            moveLeft(velocity);
+            break;
+        case RIGHT:
+            moveRight(velocity);
+            break;
+        default:
+            break;
+        }
+    }
+
+    public CollisionDetection getBounds() {
+        return bounds;
+    }
+
+    public Pose getSpritePose() {
+        return currentPose;
+    }
+
+    public void setSpritePose(Pose currentPose) {
+        this.currentPose = currentPose;
+    }
+
+    public int getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(int velocity) {
+        this.velocity = velocity;
+    }
+
+    @Override
+    public Number getX() {
+        return bounds.getX();
+    }
+
+    @Override
+    public Number getY() {
+        return bounds.getY();
+    }
+
+    @Override
+    public Number getWidth() {
+        return bounds.getWidth();
+    }
+
+    @Override
+    public Number getHeight() {
+        return bounds.getHeight();
+    }
+
+    @Override
+    public void setHeight(Number height) {
+        bounds.setHeight(height);
+    }
+
+    @Override
+    public void setWidth(Number width) {
+        bounds.setWidth(width);
+    }
+
+    @Override
+    public void setY(Number y) {
+        bounds.setY(y);
+        if (y.intValue() > 0) {
+            moving = true;
+        }
+    }
+
+    @Override
+    public void setX(Number x) {
+        bounds.setX(x);
+        if (x.intValue() > 0) {
+            moving = true;
+        }
+    }
+
+    @Override
+    public void gravitate() {
+        bounds.gravitate();
+    }
+
+    @Override
+    public void setVelocityX(Number velocityX) {
+        bounds.setVelocityX(velocityX);
+    }
+
+    @Override
+    public void setVelocityY(Number velocityY) {
+        bounds.setVelocityY(velocityY);
+    }
+
+    @Override
+    public void setAccelerationX(Number accelerationX) {
+        bounds.setAccelerationX(accelerationX);
+    }
+
+    @Override
+    public void setAccelerationY(Number accelerationY) {
+        bounds.setAccelerationY(accelerationY);
+    }
+
+    @Override
+    public void setDragX(Number dragX) {
+        bounds.setDragX(dragX);
+    }
+
+    @Override
+    public void setDragY(Number dragY) {
+        bounds.setDragY(dragY);
+    }
+
+    @Override
+    public Number getDragX() {
+        return bounds.getDragX();
+    }
+
+    @Override
+    public Number getDragY() {
+        return bounds.getDragY();
+    }
+
+    @Override
+    public Number getVelocityX() {
+        return bounds.getVelocityX();
+    }
+
+    @Override
+    public Number getVelocityY() {
+        return bounds.getVelocityY();
+    }
+
+    @Override
+    public Number getAccelerationX() {
+        return bounds.getAccelerationX();
+    }
+
+    @Override
+    public Number getAccelerationY() {
+        return bounds.getAccelerationY();
+    }
 }

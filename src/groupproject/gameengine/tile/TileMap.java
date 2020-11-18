@@ -1,5 +1,9 @@
 package groupproject.gameengine.tile;
 
+import groupproject.gameengine.contracts.CameraContract;
+import groupproject.gameengine.contracts.Renderable;
+import groupproject.gameengine.sprite.Sprite;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -7,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class TileMap {
+public class TileMap implements CameraContract, Renderable {
     private final TileMapModel mapModel;
     private final TileSet tileSet;
     private final int mapWidth;
@@ -30,59 +34,66 @@ public class TileMap {
                 BufferedImage tileImage = tileSet.getTileImageList().get(mapModel.getMapLayout()[row][col]);
                 Tile currentTile = new Tile(tileImage);
                 currentTile.setCollisionEnabled(mapModel.getCollisionMap()[row][col]);
-                if(mapModel.getObjectMap()[row][col] != -1) {
+                if (mapModel.getObjectMap()[row][col] != -1) {
                     Tile objectTile = new Tile(tileSet.getTileImageList().get(mapModel.getObjectMap()[row][col]));
-                    objectTile.setX(mapModel.getPerTileWidth()*col);
-                    objectTile.setY(mapModel.getPerTileHeight()*row);
+                    objectTile.setX(mapModel.getPerTileWidth() * col);
+                    objectTile.setY(mapModel.getPerTileHeight() * row);
                     objectLayerTiles[row][col] = objectTile;
                 }
-                currentTile.setX(mapModel.getPerTileWidth()*col);
-                currentTile.setY(mapModel.getPerTileHeight()*row);
+                currentTile.setX(mapModel.getPerTileWidth() * col);
+                currentTile.setY(mapModel.getPerTileHeight() * row);
                 currentTile.initBoundsRect();
                 mainLayerTiles[row][col] = currentTile;
             }
         }
     }
 
-    public void drawMap(Graphics g) {
+    @Override
+    public void render(Graphics g) {
         BufferedImage map = new BufferedImage(mapWidth, mapHeight, BufferedImage.TYPE_INT_RGB);
         Graphics gMap = map.getGraphics();
         for (int row = 0; row < mapModel.getMapRows(); row++) {
             for (int col = 0; col < mapModel.getMapColumns(); col++) {
                 Tile currentTile = mainLayerTiles[row][col];
-                currentTile.draw(gMap);
-                if(objectLayerTiles[row][col] != null) objectLayerTiles[row][col].draw(gMap);
+                currentTile.render(gMap);
+                if (objectLayerTiles[row][col] != null) objectLayerTiles[row][col].render(gMap);
             }
         }
+        //These coords stay the same in regards to the camera, changing this would be catastrophic
         g.drawImage(map, 0, 0, null);
     }
 
-    public List<Tile> getSurroundingTiles(int x, int y, String direction) {
+    public List<Tile> getSurroundingTiles(Sprite movable) {
+        return getSurroundingTiles(movable.getX().intValue(), movable.getY().intValue(), movable.getSpritePose());
+    }
+
+    @SuppressWarnings("java:S1854")
+    public List<Tile> getSurroundingTiles(int x, int y, Sprite.Pose pose) {
         int row = y / mapModel.getPerTileHeight();
         int col = x / mapModel.getPerTileWidth();
         List<Tile> tiles = new ArrayList<>();
-        switch(direction) {
-        case "up":
+        switch (pose) {
+        case UP:
             for (int i : new int[]{col, col + 1, col - 1})
-                tiles.add(getMainLayerTileAt(row-1, i));
+                tiles.add(getMainLayerTileAt(row - 1, i));
             break;
-        case "down":
+        case DOWN:
             for (int i : new int[]{col, col + 1, col - 1})
-                tiles.add(getMainLayerTileAt(row+1, i));
+                tiles.add(getMainLayerTileAt(row + 1, i));
             break;
-        case "left":
+        case LEFT:
             for (int i : new int[]{row - 1, row, row + 1})
-                tiles.add(getMainLayerTileAt(i, col-1));
+                tiles.add(getMainLayerTileAt(i, col - 1));
             break;
-        case "right":
+        case RIGHT:
             for (int i : new int[]{row - 1, row, row + 1})
-                tiles.add(getMainLayerTileAt(i, col+1));
+                tiles.add(getMainLayerTileAt(i, col + 1));
             break;
-        case "all":
+        case ALL:
             for (int i : new int[]{row - 1, row + 1}) {
                 tiles.add(getMainLayerTileAt(i, col));
-                tiles.add(getMainLayerTileAt(i, col+1));
-                tiles.add(getMainLayerTileAt(i, col-1));
+                tiles.add(getMainLayerTileAt(i, col + 1));
+                tiles.add(getMainLayerTileAt(i, col - 1));
             }
             for (int i : new int[]{col - 1, col + 1})
                 tiles.add(getMainLayerTileAt(row, i));
@@ -100,5 +111,46 @@ public class TileMap {
             return null;
         }
     }
+
+    @Override
+    public Number getX() {
+        return 0;
+    }
+
+    @Override
+    public Number getY() {
+        return 0;
+    }
+
+    @Override
+    public Number getWidth() {
+        return mapWidth;
+    }
+
+    @Override
+    public Number getHeight() {
+        return mapHeight;
+    }
+
+    @Override
+    public void setHeight(Number height) {
+        //Do Nothing
+    }
+
+    @Override
+    public void setWidth(Number width) {
+        //Do Nothing
+    }
+
+    @Override
+    public void setY(Number y) {
+        //Do Nothing
+    }
+
+    @Override
+    public void setX(Number x) {
+        //Do Nothing
+    }
+
 }
 
