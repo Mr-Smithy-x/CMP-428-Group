@@ -6,8 +6,6 @@ public abstract class MovableObject implements Movable {
 
     protected double x, y;
     protected double width, height;
-    protected int worldAngle;
-
 
     @Override
     public Number getX() {
@@ -27,26 +25,6 @@ public abstract class MovableObject implements Movable {
     @Override
     public Number getHeight() {
         return height;
-    }
-
-    @Override
-    public Number getSinAngle() {
-        return sin[worldAngle];
-    }
-
-    @Override
-    public Number getCosAngle() {
-        return cos[worldAngle];
-    }
-
-    @Override
-    public int getWorldAngle() {
-        return worldAngle;
-    }
-
-    @Override
-    public void setWorldAngle(int worldAngle) {
-        this.worldAngle = worldAngle;
     }
 
     @Override

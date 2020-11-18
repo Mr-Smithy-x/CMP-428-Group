@@ -18,6 +18,8 @@ public class Link extends Sprite {
         super("link.png", position_x, position_y, 3, duration);
     }
 
+    /*
+    This can be reimplemented when actually needed, base it off the tile map rather than angles.
     public void hit(Sprite obj) {
         double speed = 2000;
         double cosAngle = speed * getCosAngle().doubleValue();
@@ -41,7 +43,7 @@ public class Link extends Sprite {
                 break;
         }
         obj.setVelocity(cosAngle, sinAngle);
-    }
+    }*/
 
     public void attack(ArrayList<Sprite> objects) {
         this.attack();

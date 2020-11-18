@@ -285,27 +285,6 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         return bounds.getAccelerationY();
     }
 
-
-    @Override
-    public void setWorldAngle(int worldAngle) {
-        bounds.setWorldAngle(worldAngle);
-    }
-
-    @Override
-    public int getWorldAngle() {
-        return bounds.getWorldAngle();
-    }
-
-    @Override
-    public Number getSinAngle() {
-        return bounds.getSinAngle();
-    }
-
-    @Override
-    public Number getCosAngle() {
-        return bounds.getCosAngle();
-    }
-
     //endregion
 
     public enum Pose {
