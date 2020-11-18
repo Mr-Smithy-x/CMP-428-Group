@@ -2,11 +2,6 @@ package groupproject.gameengine.contracts;
 
 public interface Gravitation extends Movable {
 
-    default void setVelocity(Number velocityX, Number velocityY) {
-        setVelocityX(velocityX);
-        setVelocityY(velocityY);
-    }
-
     default void setAcceleration(Number accelerateX, Number accelerateY) {
         setAccelerationX(accelerateX);
         setAccelerationY(accelerateY);
@@ -15,34 +10,6 @@ public interface Gravitation extends Movable {
     default void setDrag(Number dragX, Number dragY) {
         setDragX(dragX);
         setDragY(dragY);
-    }
-
-    void setVelocityX(Number velocityX);
-
-    void setVelocityY(Number velocityY);
-
-    void setAccelerationX(Number accelerationX);
-
-    void setAccelerationY(Number accelerationY);
-
-    void setDragX(Number dragX);
-
-    void setDragY(Number dragY);
-
-    Number getDragX();
-
-    Number getDragY();
-
-    Number getVelocityX();
-
-    Number getVelocityY();
-
-    Number getAccelerationX();
-
-    Number getAccelerationY();
-
-    default boolean isDraggable() {
-        return false;
     }
 
     default void gravitate() {
@@ -64,5 +31,36 @@ public interface Gravitation extends Movable {
         }
     }
 
+    default void setVelocity(Number velocityX, Number velocityY) {
+        setVelocityX(velocityX);
+        setVelocityY(velocityY);
+    }
 
+    Number getVelocityX();
+
+    void setVelocityX(Number velocityX);
+
+    Number getAccelerationX();
+
+    void setAccelerationX(Number accelerationX);
+
+    Number getVelocityY();
+
+    void setVelocityY(Number velocityY);
+
+    Number getAccelerationY();
+
+    void setAccelerationY(Number accelerationY);
+
+    default boolean isDraggable() {
+        return false;
+    }
+
+    Number getDragX();
+
+    void setDragX(Number dragX);
+
+    Number getDragY();
+
+    void setDragY(Number dragY);
 }

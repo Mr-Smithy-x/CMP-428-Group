@@ -1,7 +1,9 @@
 package groupproject.gameengine.models;
 
 import groupproject.gameengine.camera.GlobalCamera;
-import groupproject.gameengine.contracts.*;
+import groupproject.gameengine.contracts.CameraContract;
+import groupproject.gameengine.contracts.CollisionDetection;
+import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.base.GravitationObject;
 
 import java.awt.*;

@@ -1,5 +1,6 @@
 package groupproject.gameengine.sprite;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,14 +12,12 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.imageio.ImageIO;
 
 public class Animation {
 
     private final Logger logger = Logger.getLogger("GameEngine", null);
-    private List<Image> frames = new ArrayList<>();
     private final Timer timer;
-    private int delay = 500;
+    private List<Image> frames = new ArrayList<>();
     private int currentFrame = 0;
 
     public Animation(int delay, String prefix, String directory) {
@@ -27,14 +26,9 @@ public class Animation {
     }
 
     private Animation(int delay) {
-        this.delay = delay;
         timer = new Timer();
         AnimateTask task = new AnimateTask();
-        timer.scheduleAtFixedRate(task, 0, this.delay);
-    }
-
-    public static Animation with(int delay) {
-        return new Animation(delay);
+        timer.scheduleAtFixedRate(task, 0, delay);
     }
 
     public void loadFrames(String prefix, String folder) {
@@ -61,6 +55,10 @@ public class Animation {
         frames.add(image);
     }
 
+    public static Animation with(int delay) {
+        return new Animation(delay);
+    }
+
     public Image getCurrentFrame() {
         try {
             return frames.get(currentFrame);
@@ -68,10 +66,6 @@ public class Animation {
             logger.log(Level.SEVERE, "No image files loaded for the current animation!");
             return null;
         }
-    }
-
-    public void setFirstFrame(Image image) {
-        frames.add(0, image);
     }
 
     public void scale(int scale) {
@@ -85,6 +79,10 @@ public class Animation {
             return frames.get(0);
         }
         return null;
+    }
+
+    public void setFirstFrame(Image image) {
+        frames.add(0, image);
     }
 
     private class AnimateTask extends TimerTask {

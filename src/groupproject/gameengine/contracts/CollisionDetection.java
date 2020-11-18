@@ -4,6 +4,7 @@ public interface CollisionDetection extends Gravitation {
 
     /**
      * Push objects, use this so that we can push objects to the side.
+     *
      * @param contract
      */
     default void pushes(Movable contract) {
@@ -40,6 +41,7 @@ public interface CollisionDetection extends Gravitation {
 
     /**
      * How far is the object from you?
+     *
      * @param movable
      * @return
      */
@@ -48,6 +50,4 @@ public interface CollisionDetection extends Gravitation {
         double dy = movable.getY().doubleValue() - getY().doubleValue();
         return Math.sqrt(dx * dx + dy + dy);
     }
-
-
 }

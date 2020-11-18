@@ -49,6 +49,25 @@ public class Link extends Sprite {
         this.attack();
     }
 
+    public void attack() {
+        attacking = true;
+        switch (getSpritePose()) {
+        case UP:
+            currentPose = Pose.ATTACK_UP;
+            break;
+        case LEFT:
+            currentPose = Pose.ATTACK_LEFT;
+            break;
+        case RIGHT:
+            currentPose = Pose.ATTACK_RIGHT;
+            break;
+        case SPIN_ATTACK:
+        case DOWN:
+            currentPose = Pose.ATTACK_DOWN;
+            break;
+        }
+    }
+
     @Override
     protected HashMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
         HashMap<Pose, Animation> map = super.setupImages(image, delay);
@@ -109,44 +128,13 @@ public class Link extends Sprite {
         spinAttack.addFrame(image.getSubimage(359, 176, 382 - 359, 31));
         spinAttack.setFirstFrame(map.get(Pose.UP).getFirstFrame());
         map.put(Pose.SPIN_ATTACK, spinAttack);
-
-
-
-
-
-                /*subImages[ATTACK_UP] = initAnimation(0, 6, 30, 30, 5);
-                subImages[ATTACK_DOWN] = initAnimation(0, 3, 28, 28, 6);
-                subImages[ATTACK_LEFT] = initAnimation(8, 3, 29, 30, 5);
-                subImages[ATTACK_RIGHT] = initAnimation(8, 6, 29, 30, 5);*/
-/*
-        stillImages[ATTACK_UP] = initAnimation(2, 0, 30, 30, 1)[0];
-        stillImages[ATTACK_DOWN] = initAnimation(1, 0, 30, 30, 1)[0];
-        stillImages[ATTACK_LEFT] = initAnimation(5, 0, 30, 30, 1)[0];
-        stillImages[ATTACK_RIGHT] = initAnimation(11, 4, 30, 30, 1)[0];
-        stillImages[SPIN_ATTACK] = stillImages[DOWN];*/
-
         return map;
     }
 
-    public void attack() {
-        attacking = true;
-        switch (getSpritePose()) {
-            case UP:
-                currentPose = Pose.ATTACK_UP;
-                break;
-            case LEFT:
-                currentPose = Pose.ATTACK_LEFT;
-                break;
-            case RIGHT:
-                currentPose = Pose.ATTACK_RIGHT;
-                break;
-            case SPIN_ATTACK:
-            case DOWN:
-                currentPose = Pose.ATTACK_DOWN;
-                break;
-        }
+    @Override
+    protected void initAnimations() {
+        animDict.values().forEach(a -> a.scale(scaled));
     }
-
 
     @Override
     public void render(Graphics g) {
@@ -155,11 +143,6 @@ public class Link extends Sprite {
         }
         super.render(g);
         attacking = false;
-    }
-
-    @Override
-    protected void initAnimations() {
-        animDict.values().forEach(a -> a.scale(scaled));
     }
 
     public void spin() {

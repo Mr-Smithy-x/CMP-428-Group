@@ -31,7 +31,7 @@ public class TileSet {
         int columns = tileSetImage.getWidth() / perTileWidth;
         for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columns; columnIndex++) {
-                BufferedImage newTileImage = tileSetImage.getSubimage(columnIndex*perTileWidth, rowIndex*perTileHeight,
+                BufferedImage newTileImage = tileSetImage.getSubimage(columnIndex * perTileWidth, rowIndex * perTileHeight,
                         perTileWidth, perTileHeight);
                 tileImageList.add(newTileImage);
             }

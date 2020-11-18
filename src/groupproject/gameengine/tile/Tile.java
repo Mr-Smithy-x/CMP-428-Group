@@ -9,14 +9,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Tile implements Renderable, CameraContract {
+    private final int width;
+    private final int height;
+    private final BufferedImage tileImage;
     private int x;
     private int y;
     private BoundingBox boundsRect;
-    private final int width;
-    private final int height;
     private boolean collisionEnabled = false;
     private boolean isObject = false;
-    private final BufferedImage tileImage;
 
     public Tile(BufferedImage image) {
         this.tileImage = image;
@@ -33,7 +33,7 @@ public class Tile implements Renderable, CameraContract {
     }
 
     public void drawBoundsRect(Graphics g) {
-        if(collisionEnabled) g.setColor(Color.red);
+        if (collisionEnabled) g.setColor(Color.red);
         else g.setColor(Color.green);
         boundsRect.render(g);
     }
@@ -59,13 +59,13 @@ public class Tile implements Renderable, CameraContract {
     }
 
     @Override
-    public void setWidth(Number width) {
-        //this.width = width.intValue();
+    public void setHeight(Number height) {
+
     }
 
     @Override
-    public void setHeight(Number height) {
-        //this.height = height.intValue();
+    public void setWidth(Number width) {
+
     }
 
     @Override

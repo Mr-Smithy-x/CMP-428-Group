@@ -6,23 +6,19 @@ import groupproject.gameengine.tile.TileMap;
 
 import java.awt.*;
 
-public abstract class BaseCamera  {
+public abstract class BaseCamera {
 
+    public static boolean DEBUG = true;
     protected double x, y;
     protected double vx, vy;
     protected double ay, av;
     protected double xOrigin, yOrigin;
     protected int scaling = 1;
     protected int gravity = 1;
-    public static boolean DEBUG = true;
 
-    //region Setters
-    public void setGravity(int gravity) {
-        this.gravity = gravity;
-    }
-
-    public void setScaling(int scaling) {
-        this.scaling = scaling;
+    public BaseCamera(double xOrigin, double yOrigin) {
+        this.xOrigin = xOrigin;
+        this.yOrigin = yOrigin;
     }
 
     public void setOrigin(BoundingContract e, TileMap map) {
@@ -66,40 +62,49 @@ public abstract class BaseCamera  {
         this.y = y;
     }
 
-    public void setXOrigin(double x_offset) {
-        this.xOrigin = x_offset;
-    }
-
-    public void setYOrigin(double y_offset) {
-        this.yOrigin = y_offset;
-    }
-    //endregion
-
     //region Getters
     public double getXOrigin() {
         return xOrigin;
     }
 
+    public void setXOrigin(double x_offset) {
+        this.xOrigin = x_offset;
+    }
+
     public double getYOrigin() {
         return yOrigin;
+    }
+    //endregion
+
+    public void setYOrigin(double y_offset) {
+        this.yOrigin = y_offset;
     }
 
     public int getScaling() {
         return scaling;
     }
 
+    public void setScaling(int scaling) {
+        this.scaling = scaling;
+    }
+
     public int getGravity() {
         return gravity;
+    }
+
+    //region Setters
+    public void setGravity(int gravity) {
+        this.gravity = gravity;
     }
 
     public double getX() {
         return x;
     }
+    //endregion
 
     public double getY() {
         return y;
     }
-    //endregion
 
     //region Helpers
     public void moveBy(double dx, double dy) {
@@ -122,28 +127,22 @@ public abstract class BaseCamera  {
     public void moveRight(double dist) {
         x += dist;
     }
+    //endregion
 
     public void moveOrigin(double xamt, double yamt) {
         xOrigin += xamt;
         yOrigin += yamt;
     }
-    //endregion
 
-    public BaseCamera(double xOrigin, double yOrigin) {
-        this.xOrigin = xOrigin;
-        this.yOrigin = yOrigin;
-    }
-
-    public void render(Graphics g,  Component frame) {
+    public void render(Graphics g, Component frame) {
         render(g, frame.getWidth(), frame.getHeight());
     }
 
-    public void render(Graphics g, int width, int height){
+    public void render(Graphics g, int width, int height) {
         g.setColor(Color.pink);
         int x = (width / 2);
         int y = (height / 2);
         g.drawLine(x - 5, y, x + 5, y);
         g.drawLine(x, y - 5, x, y + 5);
     }
-
 }

@@ -18,94 +18,20 @@ public class PacmanContainer extends GameContainer {
 
     private static final int WINDOW_HEIGHT = 768;
     private static final int WINDOW_WIDTH = 672;
-    private final transient Pacman player = new Pacman(3, 11);
-    private final transient Ghost redGhost = new Ghost(80, 11, "red", 100);
-    private final transient List<TileMap> maps = new ArrayList<>();
+    private final Pacman player = new Pacman(3, 11);
+    private final Ghost redGhost = new Ghost(80, 11, "red", 100);
+    private final List<TileMap> maps = new ArrayList<>();
 
-    @Override
-    protected void onPausePaint(Graphics g) {
-        g.setColor(new Color(1f, 1f, 1f, 0.3f));
-        g.fillRect(0, 0, getWidth(), getHeight());
-        String paused = "Paused";
-        int width = g.getFontMetrics().stringWidth(paused) / 2;
-        g.setColor(new Color(0f, 0f, 0f, 0.7f));
-        g.drawString(paused, getWidth() / 2 - width, getHeight() / 2 +  g.getFontMetrics().getHeight() / 2);
+    protected PacmanContainer(JFrame container, Canvas canvas) {
+        super(container, canvas);
     }
 
-    // Basic collision detection based on the 8 map tiles surrounding a sprite.
-    private boolean isSpriteCollidingWithMap(Sprite sprite, Sprite.Pose pose) {
-        boolean isColliding = false;
-        int velocity = sprite.getVelocity();
-
-        switch (pose) {
-            case RIGHT:
-                for (Tile tile : maps.get(0).getSurroundingTiles(
-                        sprite.getBounds().getX().intValue(),
-                        sprite.getBounds().getY().intValue(),
-                        Sprite.Pose.RIGHT))
-                    if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), velocity, 0))
-                        isColliding = true;
-                break;
-            case LEFT:
-                for (Tile tile : maps.get(0).getSurroundingTiles(
-                        sprite.getBounds().getX().intValue(),
-                        sprite.getBounds().getY().intValue(),
-                        Sprite.Pose.LEFT))
-                    if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), -velocity, 0))
-                        isColliding = true;
-                break;
-            case UP:
-                for (Tile tile : maps.get(0).getSurroundingTiles(
-                        sprite.getBounds().getX().intValue(),
-                        sprite.getBounds().getY().intValue(),
-                        Sprite.Pose.UP))
-                    if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, -velocity))
-                        isColliding = true;
-                break;
-            case DOWN:
-                for (Tile tile : maps.get(0).getSurroundingTiles(
-                        sprite.getBounds().getX().intValue(),
-                        sprite.getBounds().getY().intValue(),
-                        Sprite.Pose.DOWN))
-                    if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, velocity))
-                        isColliding = true;
-                break;
-            default:
-                break;
-        }
-
-        return isColliding;
-    }
-
-
-    /**
-     * Will scale the image up or down to the current map
-     * @return
-     */
-    @Override
-    public int getWidth() {
-        return maps.get(0).getWidth().intValue();
-    }
-
-
-    /**
-     * Will scale the image up or down to the current map
-     * @return
-     */
-    @Override
-    public int getHeight() {
-        return maps.get(0).getHeight().intValue();
-    }
-
-    @Override
-    protected void onInitialize() {
-        try {
-            maps.add(loadTileMap("pacman.tilemap"));
-            maps.get(0).initializeMap();
-            GlobalCamera.getInstance().setOrigin(player.getBounds(), maps.get(0));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static GameContainer frame() {
+        JFrame frame = make("Pacman Test Game", WINDOW_WIDTH, WINDOW_HEIGHT);
+        Canvas canvas = make(WINDOW_WIDTH, WINDOW_HEIGHT);
+        frame.add(canvas);
+        frame.pack();
+        return new PacmanContainer(frame, canvas);
     }
 
     @Override
@@ -143,6 +69,51 @@ public class PacmanContainer extends GameContainer {
         }
     }
 
+    // Basic collision detection based on the 8 map tiles surrounding a sprite.
+    private boolean isSpriteCollidingWithMap(Sprite sprite, Sprite.Pose pose) {
+        boolean isColliding = false;
+        int velocity = sprite.getVelocity();
+
+        switch (pose) {
+        case RIGHT:
+            for (Tile tile : maps.get(0).getSurroundingTiles(
+                    sprite.getBounds().getX().intValue(),
+                    sprite.getBounds().getY().intValue(),
+                    Sprite.Pose.RIGHT))
+                if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), velocity, 0))
+                    isColliding = true;
+            break;
+        case LEFT:
+            for (Tile tile : maps.get(0).getSurroundingTiles(
+                    sprite.getBounds().getX().intValue(),
+                    sprite.getBounds().getY().intValue(),
+                    Sprite.Pose.LEFT))
+                if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), -velocity, 0))
+                    isColliding = true;
+            break;
+        case UP:
+            for (Tile tile : maps.get(0).getSurroundingTiles(
+                    sprite.getBounds().getX().intValue(),
+                    sprite.getBounds().getY().intValue(),
+                    Sprite.Pose.UP))
+                if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, -velocity))
+                    isColliding = true;
+            break;
+        case DOWN:
+            for (Tile tile : maps.get(0).getSurroundingTiles(
+                    sprite.getBounds().getX().intValue(),
+                    sprite.getBounds().getY().intValue(),
+                    Sprite.Pose.DOWN))
+                if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, velocity))
+                    isColliding = true;
+            break;
+        default:
+            break;
+        }
+
+        return isColliding;
+    }
+
     @Override
     protected void onPaint(Graphics g) {
         if (!maps.isEmpty()) {
@@ -157,17 +128,44 @@ public class PacmanContainer extends GameContainer {
         GlobalCamera.getInstance().render(g, getContainer());
     }
 
-
-    public static GameContainer frame() {
-        JFrame frame = make("Pacman Test Game", WINDOW_WIDTH, WINDOW_HEIGHT);
-        Canvas canvas = make(WINDOW_WIDTH, WINDOW_HEIGHT);
-        frame.add(canvas);
-        frame.pack();
-        return new PacmanContainer(frame, canvas);
+    @Override
+    protected void onInitialize() {
+        try {
+            maps.add(loadTileMap("pacman.tilemap"));
+            maps.get(0).initializeMap();
+            GlobalCamera.getInstance().setOrigin(player.getBounds(), maps.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    protected PacmanContainer(JFrame container, Canvas canvas) {
-        super(container, canvas);
+    @Override
+    protected void onPausePaint(Graphics g) {
+        g.setColor(new Color(1f, 1f, 1f, 0.3f));
+        g.fillRect(0, 0, getWidth(), getHeight());
+        String paused = "Paused";
+        int width = g.getFontMetrics().stringWidth(paused) / 2;
+        g.setColor(new Color(0f, 0f, 0f, 0.7f));
+        g.drawString(paused, getWidth() / 2 - width, getHeight() / 2 + g.getFontMetrics().getHeight() / 2);
     }
 
+    /**
+     * Will scale the image up or down to the current map
+     *
+     * @return
+     */
+    @Override
+    public int getWidth() {
+        return maps.get(0).getWidth().intValue();
+    }
+
+    /**
+     * Will scale the image up or down to the current map
+     *
+     * @return
+     */
+    @Override
+    public int getHeight() {
+        return maps.get(0).getHeight().intValue();
+    }
 }

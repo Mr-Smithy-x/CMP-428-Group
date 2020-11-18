@@ -16,13 +16,16 @@ public class ZeldaContainer extends GameContainer {
     Link link;
     Dog dog;
 
-    @Override
-    protected void onInitialize() throws IOException {
-        link = new Link(getWidth() / 2, getHeight() / 2, 1000/16);
-        dog = new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2);
-        link.setVelocity(10);
-        dog.setVelocity(10);
-        GlobalCamera.getInstance().setOrigin(link, getWidth(), getHeight());
+    protected ZeldaContainer(JFrame container, Canvas canvas) {
+        super(container, canvas);
+    }
+
+    public static GameContainer frame(int width, int height) {
+        JFrame frame = make("Zelda Test Game", width, height);
+        Canvas canvas = make(width, height);
+        frame.add(canvas);
+        frame.pack();
+        return new ZeldaContainer(frame, canvas);
     }
 
     @Override
@@ -36,15 +39,15 @@ public class ZeldaContainer extends GameContainer {
         } else if (pressedKey[KeyEvent.VK_UP]) {
             link.setSpritePose(Sprite.Pose.UP);
             link.move();
-        }else if (pressedKey[KeyEvent.VK_DOWN]) {
+        } else if (pressedKey[KeyEvent.VK_DOWN]) {
             link.setSpritePose(Sprite.Pose.DOWN);
             link.move();
-        }else if(pressedKey[KeyEvent.VK_Z]){
+        } else if (pressedKey[KeyEvent.VK_Z]) {
             link.spin();
-        }else if(pressedKey[KeyEvent.VK_SPACE]){
+        } else if (pressedKey[KeyEvent.VK_SPACE]) {
             link.attack();
         }
-        if(link.isOverlapping(dog)){
+        if (link.isOverlapping(dog)) {
             link.pushes(dog);
         }
         GlobalCamera.getInstance().setOrigin(link, getWidth(), getHeight());
@@ -59,17 +62,12 @@ public class ZeldaContainer extends GameContainer {
         GlobalCamera.getInstance().render(g, getContainer());
     }
 
-
-    public static GameContainer frame(int width, int height) {
-        JFrame frame = make("Zelda Test Game", width, height);
-        Canvas canvas = make(width, height);
-        frame.add(canvas);
-        frame.pack();
-        return new ZeldaContainer(frame, canvas);
+    @Override
+    protected void onInitialize() throws IOException {
+        link = new Link(getWidth() / 2, getHeight() / 2, 1000 / 16);
+        dog = new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2);
+        link.setVelocity(10);
+        dog.setVelocity(10);
+        GlobalCamera.getInstance().setOrigin(link, getWidth(), getHeight());
     }
-
-    protected ZeldaContainer(JFrame container, Canvas canvas) {
-        super(container, canvas);
-    }
-
 }

@@ -8,7 +8,7 @@ public class NumberInputVerifier extends InputVerifier {
         String text = ((JTextField) input).getText();
         try {
             return Integer.parseInt(text) > 0;
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }

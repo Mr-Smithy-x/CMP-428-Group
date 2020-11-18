@@ -28,13 +28,8 @@ public abstract class MovableObject implements Movable {
     }
 
     @Override
-    public void setX(Number x) {
-        this.x = x.doubleValue();
-    }
-
-    @Override
-    public void setY(Number y) {
-        this.y = y.doubleValue();
+    public void setHeight(Number height) {
+        this.height = height.intValue();
     }
 
     @Override
@@ -43,7 +38,12 @@ public abstract class MovableObject implements Movable {
     }
 
     @Override
-    public void setHeight(Number height) {
-        this.height = height.intValue();
+    public void setX(Number x) {
+        this.x = x.doubleValue();
+    }
+
+    @Override
+    public void setY(Number y) {
+        this.y = y.doubleValue();
     }
 }

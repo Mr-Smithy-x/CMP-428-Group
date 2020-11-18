@@ -2,11 +2,11 @@ package groupproject.mapeditor;
 
 import groupproject.gameengine.tile.TileMapModel;
 import groupproject.gameengine.tile.TileSet;
-import groupproject.mapeditor.model.EditorMode;
-import groupproject.mapeditor.views.MapEditorView;
 import groupproject.mapeditor.components.MapEditorMenuBar;
-import groupproject.mapeditor.views.MapEditorTileSetView;
+import groupproject.mapeditor.model.EditorMode;
 import groupproject.mapeditor.model.MapEditorModel;
+import groupproject.mapeditor.views.MapEditorTileSetView;
+import groupproject.mapeditor.views.MapEditorView;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -44,25 +44,6 @@ public class MapEditorController {
         }
     }
 
-    public void createTileMap(String file, int perTileWidth, int perTileHeight, int mapRows, int mapColumns) {
-        model.setMapModel(new TileMapModel(file, perTileWidth, perTileHeight, mapRows, mapColumns));
-        initializeViews();
-        loadedFile = null;
-        mapNeedsSaving = true;
-    }
-
-    public void saveTileMap(String mapFile) {
-        if(!mapFile.endsWith(".tilemap")) {
-            mapFile += ".tilemap";
-        }
-        try (FileOutputStream fos = new FileOutputStream(mapFile); ObjectOutputStream os = new ObjectOutputStream(fos)) {
-            os.writeObject(model.getMapModel());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        loadedFile = mapFile;
-    }
-
     private void initializeViews() {
         model.setTileSet(new TileSet(model.getMapModel().getPerTileWidth(), model.getMapModel().getPerTileHeight(),
                 model.getMapModel().getTileSetFile()));
@@ -73,26 +54,29 @@ public class MapEditorController {
         this.selectedTile = null;
     }
 
-    public void updateTileInMap(int row, int col, boolean setEmpty) {
-        if(!setEmpty) model.getMapModel().getMapLayout()[row][col] = model.getTileSet().getTileImageList().indexOf(selectedTile);
-        else model.getMapModel().getMapLayout()[row][col] = -1;
+    public void createTileMap(String file, int perTileWidth, int perTileHeight, int mapRows, int mapColumns) {
+        model.setMapModel(new TileMapModel(file, perTileWidth, perTileHeight, mapRows, mapColumns));
+        initializeViews();
+        loadedFile = null;
+        mapNeedsSaving = true;
     }
 
-    public void updateTileInObjectMap(int row, int col, boolean setEmpty) {
-        if(!setEmpty) model.getMapModel().getObjectMap()[row][col] = model.getTileSet().getTileImageList().indexOf(selectedTile);
-        else model.getMapModel().getObjectMap()[row][col] = -1;
-    }
-
-    public boolean updateCollisionTileInMap(int row, int col) {
-        boolean currentValue = model.getMapModel().getCollisionMap()[row][col];
-        model.getMapModel().getCollisionMap()[row][col] = !currentValue;
-        return !currentValue;
+    public void saveTileMap(String mapFile) {
+        if (!mapFile.endsWith(".tilemap")) {
+            mapFile += ".tilemap";
+        }
+        try (FileOutputStream fos = new FileOutputStream(mapFile); ObjectOutputStream os = new ObjectOutputStream(fos)) {
+            os.writeObject(model.getMapModel());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        loadedFile = mapFile;
     }
 
     public void fillMapWithSelectedTile() {
-        for(int row = 0; row < model.getMapModel().getMapRows(); row++) {
-            for(int col = 0; col < model.getMapModel().getMapColumns(); col++) {
-                switch(editorMode) {
+        for (int row = 0; row < model.getMapModel().getMapRows(); row++) {
+            for (int col = 0; col < model.getMapModel().getMapColumns(); col++) {
+                switch (editorMode) {
                 case PAINT:
                     updateTileInMap(row, col, false);
                     break;
@@ -106,8 +90,14 @@ public class MapEditorController {
                 model.getTileSet().getTileImageList(), model.getMapModel());
     }
 
+    public void updateTileInMap(int row, int col, boolean setEmpty) {
+        if (!setEmpty)
+            model.getMapModel().getMapLayout()[row][col] = model.getTileSet().getTileImageList().indexOf(selectedTile);
+        else model.getMapModel().getMapLayout()[row][col] = -1;
+    }
+
     public void fillRowBasedOnEditorMode() {
-        for(int col = 0; col < model.getMapModel().getMapColumns(); col++) {
+        for (int col = 0; col < model.getMapModel().getMapColumns(); col++) {
             switch (editorMode) {
             case PAINT:
                 updateTileInMap(currentHoveredRow, col, false);
@@ -124,8 +114,20 @@ public class MapEditorController {
                 model.getTileSet().getTileImageList(), model.getMapModel());
     }
 
+    public boolean updateCollisionTileInMap(int row, int col) {
+        boolean currentValue = model.getMapModel().getCollisionMap()[row][col];
+        model.getMapModel().getCollisionMap()[row][col] = !currentValue;
+        return !currentValue;
+    }
+
+    public void updateTileInObjectMap(int row, int col, boolean setEmpty) {
+        if (!setEmpty)
+            model.getMapModel().getObjectMap()[row][col] = model.getTileSet().getTileImageList().indexOf(selectedTile);
+        else model.getMapModel().getObjectMap()[row][col] = -1;
+    }
+
     public void fillColumnBasedOnEditorMode() {
-        for(int row = 0; row < model.getMapModel().getMapRows(); row++) {
+        for (int row = 0; row < model.getMapModel().getMapRows(); row++) {
             switch (editorMode) {
             case PAINT:
                 updateTileInMap(row, currentHoveredColumn, false);

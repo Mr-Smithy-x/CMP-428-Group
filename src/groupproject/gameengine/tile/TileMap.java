@@ -63,45 +63,45 @@ public class TileMap implements CameraContract, Renderable {
         g.drawImage(map, 0, 0, null);
     }
 
+    public List<Tile> getSurroundingTiles(Sprite movable) {
+        return getSurroundingTiles(movable.getX().intValue(), movable.getY().intValue(), movable.getSpritePose());
+    }
+
     @SuppressWarnings("java:S1854")
     public List<Tile> getSurroundingTiles(int x, int y, Sprite.Pose pose) {
         int row = y / mapModel.getPerTileHeight();
         int col = x / mapModel.getPerTileWidth();
         List<Tile> tiles = new ArrayList<>();
         switch (pose) {
-            case UP:
-                for (int i : new int[]{col, col + 1, col - 1})
-                    tiles.add(getMainLayerTileAt(row - 1, i));
-                break;
-            case DOWN:
-                for (int i : new int[]{col, col + 1, col - 1})
-                    tiles.add(getMainLayerTileAt(row + 1, i));
-                break;
-            case LEFT:
-                for (int i : new int[]{row - 1, row, row + 1})
-                    tiles.add(getMainLayerTileAt(i, col - 1));
-                break;
-            case RIGHT:
-                for (int i : new int[]{row - 1, row, row + 1})
-                    tiles.add(getMainLayerTileAt(i, col + 1));
-                break;
-            case ALL:
-                for (int i : new int[]{row - 1, row + 1}) {
-                    tiles.add(getMainLayerTileAt(i, col));
-                    tiles.add(getMainLayerTileAt(i, col + 1));
-                    tiles.add(getMainLayerTileAt(i, col - 1));
-                }
-                for (int i : new int[]{col - 1, col + 1})
-                    tiles.add(getMainLayerTileAt(row, i));
-                break;
-            default:
-                break;
+        case UP:
+            for (int i : new int[]{col, col + 1, col - 1})
+                tiles.add(getMainLayerTileAt(row - 1, i));
+            break;
+        case DOWN:
+            for (int i : new int[]{col, col + 1, col - 1})
+                tiles.add(getMainLayerTileAt(row + 1, i));
+            break;
+        case LEFT:
+            for (int i : new int[]{row - 1, row, row + 1})
+                tiles.add(getMainLayerTileAt(i, col - 1));
+            break;
+        case RIGHT:
+            for (int i : new int[]{row - 1, row, row + 1})
+                tiles.add(getMainLayerTileAt(i, col + 1));
+            break;
+        case ALL:
+            for (int i : new int[]{row - 1, row + 1}) {
+                tiles.add(getMainLayerTileAt(i, col));
+                tiles.add(getMainLayerTileAt(i, col + 1));
+                tiles.add(getMainLayerTileAt(i, col - 1));
+            }
+            for (int i : new int[]{col - 1, col + 1})
+                tiles.add(getMainLayerTileAt(row, i));
+            break;
+        default:
+            break;
         }
         return tiles.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
-    }
-
-    public List<Tile> getSurroundingTiles(Sprite movable) {
-        return getSurroundingTiles(movable.getX().intValue(), movable.getY().intValue(), movable.getSpritePose());
     }
 
     private Tile getMainLayerTileAt(int row, int col) {
@@ -133,22 +133,22 @@ public class TileMap implements CameraContract, Renderable {
     }
 
     @Override
-    public void setWidth(Number width) {
-        //Do Nothing
-    }
-
-    @Override
     public void setHeight(Number height) {
         //Do Nothing
     }
 
     @Override
-    public void setX(Number x) {
+    public void setWidth(Number width) {
         //Do Nothing
     }
 
     @Override
     public void setY(Number y) {
+        //Do Nothing
+    }
+
+    @Override
+    public void setX(Number x) {
         //Do Nothing
     }
 

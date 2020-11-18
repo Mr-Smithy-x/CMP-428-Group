@@ -11,12 +11,12 @@ public class MapEditorModel {
         return mapModel;
     }
 
-    public TileSet getTileSet() {
-        return tileSet;
-    }
-
     public void setMapModel(TileMapModel mapModel) {
         this.mapModel = mapModel;
+    }
+
+    public TileSet getTileSet() {
+        return tileSet;
     }
 
     public void setTileSet(TileSet tileSet) {

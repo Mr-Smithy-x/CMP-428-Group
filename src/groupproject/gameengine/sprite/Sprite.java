@@ -37,6 +37,46 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         setupBox(x, y);
     }
 
+    public enum Pose {
+        UP, DOWN, LEFT, RIGHT, ALL, JUMP, ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, SPIN_ATTACK;
+
+        public static Pose parse(String pose) {
+            return Pose.valueOf(pose.toUpperCase());
+        }
+    }
+
+    // Takes care of initializing animations for the 4 basic directions the sprite would face.
+    // Can always override this to fit the needs of your sprite.
+    protected void loadBaseAnimations(String prefix, int delay) {
+        String[] directions = Arrays.stream(Pose.values()).map(d -> d.name().toLowerCase()).toArray(String[]::new);
+        for (String direction : directions) {
+            Animation anim = new Animation(delay, String.join("_", prefix, direction), getSpriteDirectory());
+            animDict.put(Pose.parse(direction), anim);
+        }
+    }
+
+    // For initializing anymore animations besides 4 basic ones for the sprite.
+    protected abstract void initAnimations();
+
+    private void setupBox(int x, int y) {
+        Image currentFrame = getFirstAnimation().getCurrentFrame();
+        this.bounds = new BoundingBox(x, y, currentFrame.getWidth(null) / scaled, currentFrame.getHeight(null) / scaled);
+    }
+
+    public String getSpriteDirectory() {
+        return SPRITE_FOLDER + this.getClass().getSimpleName().toLowerCase();
+    }
+
+    private Animation getFirstAnimation() {
+        Optional<Animation> firstAnim = animDict.values().stream().findFirst();
+        if (firstAnim.isPresent()) {
+            return firstAnim.get();
+        } else {
+            logger.log(Level.SEVERE, "No animations created for {0}!", this.getClass().getSimpleName());
+            throw new NoSuchElementException();
+        }
+    }
+
     public Sprite(String spritesheet, int x, int y, int scaled, int delay) throws IOException {
         this.scaled = scaled;
         animDict.putAll(setupImages(initializeSheet(spritesheet), delay));
@@ -44,9 +84,16 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         setupBox(x, y);
     }
 
-    private void setupBox(int x, int y) {
-        Image currentFrame = getFirstAnimation().getCurrentFrame();
-        this.bounds = new BoundingBox(x, y, currentFrame.getWidth(null) / scaled, currentFrame.getHeight(null) / scaled);
+    protected HashMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
+        return new HashMap<>();
+    }
+
+    protected BufferedImage initializeSheet(String spriteSheet) throws IOException {
+        return ImageIO.read(new File(String.format("%s%s", getSpriteSheetDirectory(), spriteSheet)));
+    }
+
+    public String getSpriteSheetDirectory() {
+        return SPRITE_SHEET_FOLDER;
     }
 
     protected BufferedImage pluck(BufferedImage image, int column, int row, int width, int height) {
@@ -61,31 +108,6 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
             images.addFrame(image.getSubimage(x, y, width, height));
         }
         return images;
-    }
-
-    protected BufferedImage initializeSheet(String spriteSheet) throws IOException {
-        return ImageIO.read(new File(String.format("%s%s", getSpriteSheetDirectory(), spriteSheet)));
-    }
-
-    protected HashMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
-        return new HashMap<>();
-    }
-
-    public String getSpriteSheetDirectory() {
-        return SPRITE_SHEET_FOLDER;
-    }
-
-    // For initializing anymore animations besides 4 basic ones for the sprite.
-    protected abstract void initAnimations();
-
-    // Takes care of initializing animations for the 4 basic directions the sprite would face.
-    // Can always override this to fit the needs of your sprite.
-    protected void loadBaseAnimations(String prefix, int delay) {
-        String[] directions = Arrays.stream(Pose.values()).map(d -> d.name().toLowerCase()).toArray(String[]::new);
-        for (String direction : directions) {
-            Animation anim = new Animation(delay, String.join("_", prefix, direction), getSpriteDirectory());
-            animDict.put(Pose.parse(direction), anim);
-        }
     }
 
     // Draws the sprite's current image based on its current state.
@@ -113,51 +135,33 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         }
     }
 
-    public void drawBounds(Graphics g){
+    public void drawBounds(Graphics g) {
         // For debug purposes, draw the bounding box of the sprite.
         g.setColor(Color.blue);
         ((Renderable) bounds).render(g);
     }
 
-    private Animation getFirstAnimation() {
-        Optional<Animation> firstAnim = animDict.values().stream().findFirst();
-        if (firstAnim.isPresent()) {
-            return firstAnim.get();
-        } else {
-            logger.log(Level.SEVERE, "No animations created for {0}!", this.getClass().getSimpleName());
-            throw new NoSuchElementException();
-        }
-    }
-
-    public void setVelocity(int velocity) {
-        this.velocity = velocity;
-    }
-
     public void move() {
         switch (currentPose) {
-            case UP:
-                moveUp(velocity);
-                break;
-            case DOWN:
-                moveDown(velocity);
-                break;
-            case LEFT:
-                moveLeft(velocity);
-                break;
-            case RIGHT:
-                moveRight(velocity);
-                break;
-            default:
-                break;
+        case UP:
+            moveUp(velocity);
+            break;
+        case DOWN:
+            moveDown(velocity);
+            break;
+        case LEFT:
+            moveLeft(velocity);
+            break;
+        case RIGHT:
+            moveRight(velocity);
+            break;
+        default:
+            break;
         }
     }
 
     public CollisionDetection getBounds() {
         return bounds;
-    }
-
-    public String getSpriteDirectory() {
-        return SPRITE_FOLDER + this.getClass().getSimpleName().toLowerCase();
     }
 
     public Pose getSpritePose() {
@@ -172,6 +176,9 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         return velocity;
     }
 
+    public void setVelocity(int velocity) {
+        this.velocity = velocity;
+    }
 
     //region Override
     @Override
@@ -195,18 +202,21 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     }
 
     @Override
-    public void setWidth(Number width) {
-        bounds.setWidth(width);
-    }
-
-    @Override
     public void setHeight(Number height) {
         bounds.setHeight(height);
     }
 
     @Override
-    public void gravitate() {
-        bounds.gravitate();
+    public void setWidth(Number width) {
+        bounds.setWidth(width);
+    }
+
+    @Override
+    public void setY(Number y) {
+        bounds.setY(y);
+        if (y.intValue() > 0) {
+            moving = true;
+        }
     }
 
     @Override
@@ -218,11 +228,8 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     }
 
     @Override
-    public void setY(Number y) {
-        bounds.setY(y);
-        if (y.intValue() > 0) {
-            moving = true;
-        }
+    public void gravitate() {
+        bounds.gravitate();
     }
 
     @Override
@@ -284,14 +291,5 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     public Number getAccelerationY() {
         return bounds.getAccelerationY();
     }
-
     //endregion
-
-    public enum Pose {
-        UP, DOWN, LEFT, RIGHT, ALL, JUMP, ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, SPIN_ATTACK;
-
-        public static Pose parse(String pose) {
-            return Pose.valueOf(pose.toUpperCase());
-        }
-    }
 }

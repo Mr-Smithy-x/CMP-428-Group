@@ -14,11 +14,6 @@ public class Dog extends Sprite {
     }
 
     @Override
-    protected void initAnimations() {
-        animDict.values().forEach(a -> a.scale(scaled));
-    }
-
-    @Override
     protected HashMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
         HashMap<Pose, Animation> map = super.setupImages(image, delay);
         map.put(Pose.DOWN, getAnimation(image, 0, 0, 32, 32, 4, delay));
@@ -26,5 +21,10 @@ public class Dog extends Sprite {
         map.put(Pose.UP, getAnimation(image, 0, 2, 32, 32, 4, delay));
         map.put(Pose.LEFT, getAnimation(image, 0, 3, 32, 32, 4, delay));
         return map;
+    }
+
+    @Override
+    protected void initAnimations() {
+        animDict.values().forEach(a -> a.scale(scaled));
     }
 }

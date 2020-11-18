@@ -1,7 +1,7 @@
 package groupproject.games;
 
-import groupproject.gameengine.GameContainer;
 import groupproject.containers.pacman.PacmanContainer;
+import groupproject.gameengine.GameContainer;
 
 import java.io.IOException;
 
