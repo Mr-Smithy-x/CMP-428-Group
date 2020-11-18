@@ -17,7 +17,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
 
     private boolean isRunning = true;
     protected final transient Logger logger = Logger.getLogger("GameEngine", null);
-    private Font mono = new Font(Font.MONOSPACED, Font.BOLD, 16);
+    private final Font mono = new Font(Font.MONOSPACED, Font.BOLD, 16);
 
     private Thread t;
     protected boolean[] pressedKey = new boolean[255];
@@ -28,7 +28,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
      */
     protected int mx = 0, my = 0;
     private Image off_screen_image;
-    private Component container;
+    private final Component container;
     protected Graphics off_g;
 
 
@@ -138,7 +138,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
             }
             onRepaint();
             try {
-                t.sleep(16); // should result in 60FPS.
+                Thread.sleep(16); // should result in 60FPS.
             } catch (InterruptedException x) {
                 logger.log(Level.SEVERE, x.getMessage());
                 break;

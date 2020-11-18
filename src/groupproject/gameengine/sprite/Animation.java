@@ -15,9 +15,9 @@ import javax.imageio.ImageIO;
 
 public class Animation {
 
-    private Logger logger = Logger.getLogger("GameEngine", null);
+    private final Logger logger = Logger.getLogger("GameEngine", null);
     private List<Image> frames = new ArrayList<>();
-    private Timer timer;
+    private final Timer timer;
     private int delay = 500;
     private int currentFrame = 0;
 

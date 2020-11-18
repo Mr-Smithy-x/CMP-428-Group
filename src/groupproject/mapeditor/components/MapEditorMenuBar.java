@@ -13,9 +13,9 @@ import java.io.File;
 
 public class MapEditorMenuBar extends JMenuBar {
     private final transient MapEditorController editorController;
-    private static JCheckBoxMenuItem paintMode = new JCheckBoxMenuItem("Paint Mode");
-    private static JCheckBoxMenuItem collisionMode = new JCheckBoxMenuItem("Collision Mode");
-    private static JCheckBoxMenuItem objectMode = new JCheckBoxMenuItem("Object Mode");
+    private static final JCheckBoxMenuItem paintMode = new JCheckBoxMenuItem("Paint Mode");
+    private static final JCheckBoxMenuItem collisionMode = new JCheckBoxMenuItem("Collision Mode");
+    private static final JCheckBoxMenuItem objectMode = new JCheckBoxMenuItem("Object Mode");
 
     public MapEditorMenuBar(MapEditorController controller) {
         this.editorController = controller;
