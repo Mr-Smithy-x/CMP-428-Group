@@ -25,7 +25,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     protected Logger logger = Logger.getLogger("GameEngine", null);
     protected Direction currentDirection = Direction.RIGHT;
     protected HashMap<Direction, Animation> animDict = new HashMap<>();
-    protected BoundingBox boundingBox;
+    protected CollisionDetection bounds;
     protected int velocity;
     protected int scaled = 1;
     protected boolean moving = false;
@@ -46,7 +46,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
 
     private void setupBox(int x, int y) {
         Image currentFrame = getFirstAnimation().getCurrentFrame();
-        this.boundingBox = new BoundingBox(x, y, currentFrame.getWidth(null) / scaled, currentFrame.getHeight(null) / scaled);
+        this.bounds = new BoundingBox(x, y, currentFrame.getWidth(null) / scaled, currentFrame.getHeight(null) / scaled);
     }
 
     protected BufferedImage pluck(BufferedImage image, int column, int row, int width, int height) {
@@ -95,6 +95,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
             Image currentFrame;
             if (moving) {
                 currentFrame = animDict.get(currentDirection).getCurrentFrame();
+                System.out.println(currentDirection);
             } else {
                 currentFrame = animDict.get(currentDirection).getFirstFrame();
             }
@@ -111,10 +112,12 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
                     getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
                     null);
         }
+    }
 
+    public void drawBounds(Graphics g){
         // For debug purposes, draw the bounding box of the sprite.
         g.setColor(Color.blue);
-        boundingBox.render(g);
+        ((Renderable) bounds).render(g);
     }
 
     private Animation getFirstAnimation() {
@@ -150,8 +153,8 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         }
     }
 
-    public BoundingBox getBounds() {
-        return boundingBox;
+    public CollisionDetection getBounds() {
+        return bounds;
     }
 
     public String getSpriteDirectory() {
@@ -174,42 +177,42 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     //region Override
     @Override
     public Number getX() {
-        return boundingBox.getX();
+        return bounds.getX();
     }
 
     @Override
     public Number getY() {
-        return boundingBox.getY();
+        return bounds.getY();
     }
 
     @Override
     public Number getWidth() {
-        return boundingBox.getWidth();
+        return bounds.getWidth();
     }
 
     @Override
     public Number getHeight() {
-        return boundingBox.getHeight();
+        return bounds.getHeight();
     }
 
     @Override
     public void setWidth(Number width) {
-        boundingBox.setWidth(width);
+        bounds.setWidth(width);
     }
 
     @Override
     public void setHeight(Number height) {
-        boundingBox.setHeight(height);
+        bounds.setHeight(height);
     }
 
     @Override
     public void gravitate() {
-        boundingBox.gravitate();
+        bounds.gravitate();
     }
 
     @Override
     public void setX(Number x) {
-        boundingBox.setX(x);
+        bounds.setX(x);
         if (x.intValue() > 0) {
             moving = true;
         }
@@ -217,7 +220,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
 
     @Override
     public void setY(Number y) {
-        boundingBox.setY(y);
+        bounds.setY(y);
         if (y.intValue() > 0) {
             moving = true;
         }
@@ -225,89 +228,89 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
 
     @Override
     public void setVelocityX(Number velocityX) {
-        boundingBox.setVelocityX(velocityX);
+        bounds.setVelocityX(velocityX);
     }
 
     @Override
     public void setVelocityY(Number velocityY) {
-        boundingBox.setVelocityY(velocityY);
+        bounds.setVelocityY(velocityY);
     }
 
     @Override
     public void setAccelerationX(Number accelerationX) {
-        boundingBox.setAccelerationX(accelerationX);
+        bounds.setAccelerationX(accelerationX);
     }
 
     @Override
     public void setAccelerationY(Number accelerationY) {
-        boundingBox.setAccelerationY(accelerationY);
+        bounds.setAccelerationY(accelerationY);
     }
 
     @Override
     public void setDragX(Number dragX) {
-        boundingBox.setDragX(dragX);
+        bounds.setDragX(dragX);
     }
 
     @Override
     public void setDragY(Number dragY) {
-        boundingBox.setDragY(dragY);
+        bounds.setDragY(dragY);
     }
 
     @Override
     public Number getDragX() {
-        return boundingBox.getDragX();
+        return bounds.getDragX();
     }
 
     @Override
     public Number getDragY() {
-        return boundingBox.getDragY();
+        return bounds.getDragY();
     }
 
     @Override
     public Number getVelocityX() {
-        return boundingBox.getVelocityX();
+        return bounds.getVelocityX();
     }
 
     @Override
     public Number getVelocityY() {
-        return boundingBox.getVelocityY();
+        return bounds.getVelocityY();
     }
 
     @Override
     public Number getAccelerationX() {
-        return boundingBox.getAccelerationX();
+        return bounds.getAccelerationX();
     }
 
     @Override
     public Number getAccelerationY() {
-        return boundingBox.getAccelerationY();
+        return bounds.getAccelerationY();
     }
 
 
     @Override
     public void setWorldAngle(int worldAngle) {
-        boundingBox.setWorldAngle(worldAngle);
+        bounds.setWorldAngle(worldAngle);
     }
 
     @Override
     public int getWorldAngle() {
-        return boundingBox.getWorldAngle();
+        return bounds.getWorldAngle();
     }
 
     @Override
     public Number getSinAngle() {
-        return boundingBox.getSinAngle();
+        return bounds.getSinAngle();
     }
 
     @Override
     public Number getCosAngle() {
-        return boundingBox.getCosAngle();
+        return bounds.getCosAngle();
     }
 
     //endregion
 
     public enum Direction {
-        UP, DOWN, LEFT, RIGHT;
+        UP, DOWN, LEFT, RIGHT, ALL, JUMP, ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, SPIN_ATTACK;
 
         public static Direction parse(String direction) {
             return Direction.valueOf(direction.toUpperCase());

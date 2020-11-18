@@ -7,15 +7,15 @@ import java.awt.image.BufferedImage;
 
 public class SubImage {
 
-    private final int spritePositionStartX;
-    private final int spritePositionStartY;
+    private final int x;
+    private final int y;
     private final int width;
     private final int height;
     private Image image;
 
     public SubImage(int x, int y, int width, int height) {
-        this.spritePositionStartX = x;
-        this.spritePositionStartY = y;
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
     }
@@ -31,7 +31,7 @@ public class SubImage {
 
     public void setImage(BufferedImage image, float scale_aspect) {
         if (this.image == null) {
-            BufferedImage subimage = image.getSubimage(spritePositionStartX, spritePositionStartY, width, height);
+            BufferedImage subimage = image.getSubimage(x, y, width, height);
             float aspectRatio = MathHelper.getAspectRatio(width, height);
             float width = MathHelper.newWidth(scale_aspect, aspectRatio);
             //float height = MathHelper.newHeight(scale_aspect, aspectRatio);
@@ -39,20 +39,20 @@ public class SubImage {
         }
     }
 
-    public int getSpritePositionStartX() {
-        return spritePositionStartX;
+    public int getX() {
+        return x;
     }
 
-    public int getSpritePositionStartY() {
-        return spritePositionStartY;
+    public int getY() {
+        return y;
     }
 
     public int getWidth() {
         return width;
     }
 
-
     public int getHeight() {
         return height;
     }
+
 }

@@ -2,8 +2,6 @@ package groupproject.containers.zelda.models;
 
 import groupproject.gameengine.sprite.Animation;
 import groupproject.gameengine.sprite.Sprite;
-import groupproject.gameengine.sprite.SpriteSheet;
-import groupproject.gameengine.sprite.SubImage;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

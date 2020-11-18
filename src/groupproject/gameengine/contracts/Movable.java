@@ -10,16 +10,27 @@ public interface Movable extends BoundingContract {
     default Number getSinAngle() {
         return 0;
     }
+
     default Number getCosAngle() {
         return 0;
     }
+
     default int getWorldAngle() {
         return 0;
+    }
+
+
+    default Number getDiagonalX() {
+        return getX2().intValue() - 1;
+    }
+
+    default Number getDiagonalY() {
+        return getY2().intValue() - 1;
     }
     //endregion
 
     //region Setters
-    default void setWorldAngle(int world_angle){
+    default void setWorldAngle(int world_angle) {
         //Nothing
     }
 
@@ -71,12 +82,15 @@ public interface Movable extends BoundingContract {
     default void moveLeft(Number speed) {
         moveBy(-speed.doubleValue(), 0);
     }
+
     default void moveRight(Number speed) {
         moveBy(speed.doubleValue(), 0);
     }
+
     default void moveDown(Number speed) {
         moveBy(0, speed.doubleValue());
     }
+
     default void moveUp(Number speed) {
         moveBy(0, -speed.doubleValue());
     }

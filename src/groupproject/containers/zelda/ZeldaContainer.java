@@ -1,11 +1,9 @@
 package groupproject.containers.zelda;
 
+import groupproject.containers.zelda.models.Dog;
 import groupproject.containers.zelda.models.Link;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
-import groupproject.gameengine.models.BoundingCircle;
-import groupproject.gameengine.models.BoundingLine;
-import groupproject.containers.zelda.models.Dog;
 import groupproject.gameengine.sprite.Sprite;
 
 import javax.swing.*;
@@ -20,7 +18,7 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onInitialize() throws IOException {
-        link = new Link(getWidth() / 2, getHeight() / 2, 100);
+        link = new Link(getWidth() / 2, getHeight() / 2, 1000/16);
         dog = new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2);
         link.setVelocity(10);
         dog.setVelocity(10);
@@ -41,13 +39,14 @@ public class ZeldaContainer extends GameContainer {
         }else if (pressedKey[KeyEvent.VK_DOWN]) {
             link.setSpriteDirection(Sprite.Direction.DOWN);
             link.move();
+        }else if(pressedKey[KeyEvent.VK_Z]){
+            link.spin();
+        }else if(pressedKey[KeyEvent.VK_SPACE]){
+            link.attack();
         }
-
-
-        if(link.overlaps(dog)){
+        if(link.isOverlapping(dog)){
             link.pushes(dog);
         }
-        //Assert that the camera follows the main user regardless of whether it was pushed by another object
         GlobalCamera.getInstance().setOrigin(link, getWidth(), getHeight());
     }
 

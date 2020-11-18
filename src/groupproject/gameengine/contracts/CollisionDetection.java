@@ -12,7 +12,7 @@ public interface CollisionDetection extends Gravitation {
         double d = Math.sqrt(dx * dx + dy * dy);
         double ux = dx / d;
         double uy = dy / d;
-        double ri = getRadius().doubleValue() + contract.getRadius().doubleValue();
+        double ri = getWidth().doubleValue() / 2 + contract.getWidth().doubleValue() / 2;
         double p = ri - d;
         setWorld(
                 getX().doubleValue() + ux * p / 2,
@@ -23,18 +23,20 @@ public interface CollisionDetection extends Gravitation {
         contract.setWorld(set_pos_x, set_pos_y);
     }
 
-    /**
-     * Does the object overlaps?
-     * @param movable
-     * @return
-     */
-    default boolean overlaps(Movable movable) {
-        double dx = getX().doubleValue() - movable.getX().doubleValue();
-        double dy = getY().doubleValue() - movable.getY().doubleValue();
-        double d2 = dx * dx + dy * dy;
-        double ri = getRadius().doubleValue() + movable.getRadius().doubleValue();
-        return d2 <= ri * ri;
+
+    default boolean isOverlapping(Movable box) {
+        return (box.getX().doubleValue() + box.getWidth().doubleValue() >= getX().doubleValue()) &&
+                (getX().doubleValue() + getWidth().doubleValue() >= box.getX().doubleValue()) &&
+                (box.getY().doubleValue() + box.getHeight().doubleValue() >= getY().doubleValue()) &&
+                (getY().doubleValue() + getHeight().doubleValue() >= box.getY().doubleValue());
     }
+
+
+    default boolean willOverlap(Movable r, int dx, int dy) {
+        return !(getX().intValue() + dx > r.getDiagonalX().intValue() || getY().intValue() + dy > r.getDiagonalY().intValue() ||
+                r.getX().intValue() > getDiagonalX().intValue() + dx || r.getY().intValue() > getDiagonalY().intValue() + dy);
+    }
+
 
     /**
      * How far is the object from you?
@@ -46,27 +48,6 @@ public interface CollisionDetection extends Gravitation {
         double dy = movable.getY().doubleValue() - getY().doubleValue();
         return Math.sqrt(dx * dx + dy + dy);
     }
-
-    /**
-     * Maybe we migh t want o bound off a tile?
-     * @param gravitational
-     */
-    default void bounceOff(Gravitation gravitational) {
-        double dx = gravitational.getX().doubleValue() - getX().doubleValue();
-        double dy = gravitational.getY().doubleValue() - getY().doubleValue();
-        double mag = Math.sqrt(dx * dx + dy * dy);
-        double ux = dx / mag; //in this case unit vector
-        double uy = dy / mag;
-        double tx = -uy; //tangent vector
-        double ty = ux;
-        double u = getVelocityX().doubleValue() * ux + getVelocityY().doubleValue() * uy;
-        double t = getVelocityX().doubleValue() * tx + getVelocityY().doubleValue() * ty;
-        double cu = gravitational.getVelocityX().doubleValue() * ux + gravitational.getVelocityY().doubleValue() * uy;
-        double ct = gravitational.getVelocityX().doubleValue() * tx + gravitational.getVelocityY().doubleValue() * ty;
-        setVelocity(.9 * (t * tx + cu * ux), .9 * (t * ty + cu * uy));
-        gravitational.setVelocity(.9 * (ct * tx + u * ux), .9 * (ct * ty + u * uy));
-    }
-
 
 
 }

@@ -3,8 +3,8 @@ package groupproject.containers.zelda.models;
 
 import groupproject.gameengine.sprite.Animation;
 import groupproject.gameengine.sprite.Sprite;
-import groupproject.gameengine.sprite.SpriteSheet;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class Link extends Sprite {
         obj.setVelocity(cosAngle, sinAngle);
     }
 
-    public void attack(ArrayList<SpriteSheet> objects) {
+    public void attack(ArrayList<Sprite> objects) {
         this.attack();
     }
 
@@ -63,55 +63,66 @@ public class Link extends Sprite {
         map.get(Direction.RIGHT).setFirstFrame(pluck(image, 11, 4, 30, 30));
 
 
-        /*
-        subImages[ATTACK_UP] = new SubImage[]{
-                new SubImage(0, 180, 22, 25),
-                new SubImage(30, 177, 22, 30),
-                new SubImage(61, 174, 20, 35),
-                new SubImage(89, 177, 24, 30),
-        };
-        subImages[ATTACK_DOWN] = new SubImage[]{
-                new SubImage(0, 90, 21, 23),
-                new SubImage(30, 90, 22, 23),
-                new SubImage(61, 85, 20, 32),
-                new SubImage(91, 85, 20, 32),
-                new SubImage(115, 87, 28, 29),
-        };
+        Animation attackUP = Animation.with(delay);
+        attackUP.addFrame(image.getSubimage(0, 180, 22, 25));
+        attackUP.addFrame(image.getSubimage(30, 177, 22, 30));
+        attackUP.addFrame(image.getSubimage(61, 174, 20, 35));
+        attackUP.addFrame(image.getSubimage(89, 177, 24, 30));
+        attackUP.setFirstFrame(map.get(Direction.UP).getFirstFrame());
+        map.put(Direction.ATTACK_UP, attackUP);
 
-        subImages[ATTACK_LEFT] = new SubImage[]{
-                new SubImage(242, 90, 260 - 242, 23),
-                new SubImage(268, 90, 294 - 268, 24),
-                new SubImage(295, 91, 326 - 295, 21),
-                new SubImage(327, 91, 355 - 327, 21),
-        };
 
-        subImages[ATTACK_RIGHT] = new SubImage[]{
+        Animation attackDown = Animation.with(delay);
+        attackDown.addFrame(image.getSubimage(0, 90, 21, 23));
+        attackDown.addFrame(image.getSubimage(30, 90, 22, 23));
+        attackDown.addFrame(image.getSubimage(61, 85, 20, 32));
+        attackDown.addFrame(image.getSubimage(91, 85, 20, 32));
+        attackDown.addFrame(image.getSubimage(115, 87, 28, 29));
+        attackDown.setFirstFrame(map.get(Direction.DOWN).getFirstFrame());
+        map.put(Direction.ATTACK_DOWN, attackDown);
 
-                new SubImage(242, 180, 260 - 242, 23),
-                new SubImage(268, 180, 294 - 268, 24),
-                new SubImage(295, 181, 326 - 295, 21),
-                new SubImage(327, 181, 355 - 327, 21)
-        };
 
-        subImages[SPIN_ATTACK] = new SubImage[]{
-                new SubImage(115, 180, 32, 23), // Up
-                new SubImage(359, 86, 382 - 359, 31), //LEFT,
-                new SubImage(145, 88, 31, 27), // Down
-                new SubImage(359, 176, 382 - 359, 31), // RIGHT
-        };
+        Animation attackLeft = Animation.with(delay);
+        attackLeft.addFrame(image.getSubimage(242, 90, 260 - 242, 23));
+        attackLeft.addFrame(image.getSubimage(268, 90, 294 - 268, 24));
+        attackLeft.addFrame(image.getSubimage(295, 91, 326 - 295, 21));
+        attackLeft.addFrame(image.getSubimage(327, 91, 355 - 327, 21));
+        attackLeft.setFirstFrame(map.get(Direction.LEFT).getFirstFrame());
+        map.put(Direction.ATTACK_LEFT, attackLeft);
+
+
+        Animation attackRight = Animation.with(delay);
+        attackRight.addFrame(image.getSubimage(242, 180, 260 - 242, 23));
+        attackRight.addFrame(image.getSubimage(268, 180, 294 - 268, 24));
+        attackRight.addFrame(image.getSubimage(295, 181, 326 - 295, 21));
+        attackRight.addFrame(image.getSubimage(327, 181, 355 - 327, 21));
+        attackRight.setFirstFrame(map.get(Direction.RIGHT).getFirstFrame());
+        map.put(Direction.ATTACK_RIGHT, attackRight);
+
+
+        Animation spinAttack = Animation.with(delay);
+        spinAttack.addFrame(image.getSubimage(115, 180, 32, 23));
+        spinAttack.addFrame(image.getSubimage(359, 86, 382 - 359, 31));
+        spinAttack.addFrame(image.getSubimage(145, 88, 31, 27));
+        spinAttack.addFrame(image.getSubimage(359, 176, 382 - 359, 31));
+        spinAttack.setFirstFrame(map.get(Direction.UP).getFirstFrame());
+        map.put(Direction.SPIN_ATTACK, spinAttack);
+
+
+
+
 
                 /*subImages[ATTACK_UP] = initAnimation(0, 6, 30, 30, 5);
                 subImages[ATTACK_DOWN] = initAnimation(0, 3, 28, 28, 6);
                 subImages[ATTACK_LEFT] = initAnimation(8, 3, 29, 30, 5);
-                subImages[ATTACK_RIGHT] = initAnimation(8, 6, 29, 30, 5);
-
+                subImages[ATTACK_RIGHT] = initAnimation(8, 6, 29, 30, 5);*/
+/*
         stillImages[ATTACK_UP] = initAnimation(2, 0, 30, 30, 1)[0];
         stillImages[ATTACK_DOWN] = initAnimation(1, 0, 30, 30, 1)[0];
         stillImages[ATTACK_LEFT] = initAnimation(5, 0, 30, 30, 1)[0];
         stillImages[ATTACK_RIGHT] = initAnimation(11, 4, 30, 30, 1)[0];
-        stillImages[SPIN_ATTACK] = stillImages[DOWN];
+        stillImages[SPIN_ATTACK] = stillImages[DOWN];*/
 
-        */
         return map;
     }
 
@@ -119,24 +130,38 @@ public class Link extends Sprite {
         attacking = true;
         switch (getSpriteDirection()) {
             case UP:
-                currentDirection = Direction.UP;
+                currentDirection = Direction.ATTACK_UP;
                 break;
             case LEFT:
-                currentDirection = Direction.LEFT;
+                currentDirection = Direction.ATTACK_LEFT;
                 break;
             case RIGHT:
-                currentDirection = Direction.RIGHT;
+                currentDirection = Direction.ATTACK_RIGHT;
                 break;
+            case SPIN_ATTACK:
             case DOWN:
-                currentDirection = Direction.DOWN;
+                currentDirection = Direction.ATTACK_DOWN;
                 break;
         }
     }
 
 
     @Override
-    protected void initAnimations() {
-        animDict.values().forEach( a -> a.scale(scaled));
+    public void render(Graphics g) {
+        if (attacking) {
+            moving = attacking;
+        }
+        super.render(g);
+        attacking = false;
     }
 
+    @Override
+    protected void initAnimations() {
+        animDict.values().forEach(a -> a.scale(scaled));
+    }
+
+    public void spin() {
+        attacking = true;
+        setSpriteDirection(Direction.SPIN_ATTACK);
+    }
 }

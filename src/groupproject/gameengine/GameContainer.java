@@ -5,7 +5,6 @@ import groupproject.gameengine.tile.TileMap;
 import groupproject.gameengine.tile.TileMapModel;
 
 import javax.swing.*;
-import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
@@ -35,14 +34,6 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
 
     protected GameContainer(JFrame container, Canvas canvas) {
         this.container = canvas;
-        container.requestFocus();
-        container.addKeyListener(this);
-        container.addMouseListener(this);
-        container.addMouseMotionListener(this);
-    }
-
-    protected GameContainer(Applet container) {
-        this.container = container;
         container.requestFocus();
         container.addKeyListener(this);
         container.addMouseListener(this);

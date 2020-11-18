@@ -70,7 +70,7 @@ public class Animation {
         }
     }
 
-    public void setFirstFrame(BufferedImage image) {
+    public void setFirstFrame(Image image) {
         frames.add(0, image);
     }
 

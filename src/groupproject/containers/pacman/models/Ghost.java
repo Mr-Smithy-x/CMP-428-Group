@@ -7,7 +7,7 @@ public class Ghost extends Sprite {
 
 	public Ghost(int x, int y, String spritePrefix, int delay) {
 		super(x, y, spritePrefix, delay);
-		this.boundingBox = new BoundingBox(x+4, y+5, 8, 8);
+		this.bounds = new BoundingBox(x+4, y+5, 8, 8);
 	}
 
 	@Override
