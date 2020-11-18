@@ -23,8 +23,8 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     private static final String SPRITE_FOLDER = "assets/sprites/";
     private static final String SPRITE_SHEET_FOLDER = "assets/sheets/";
     protected Logger logger = Logger.getLogger("GameEngine", null);
-    protected Direction currentDirection = Direction.RIGHT;
-    protected HashMap<Direction, Animation> animDict = new HashMap<>();
+    protected Pose currentPose = Pose.RIGHT;
+    protected HashMap<Pose, Animation> animDict = new HashMap<>();
     protected CollisionDetection bounds;
     protected int velocity;
     protected int scaled = 1;
@@ -67,7 +67,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         return ImageIO.read(new File(String.format("%s%s", getSpriteSheetDirectory(), spriteSheet)));
     }
 
-    protected HashMap<Direction, Animation> setupImages(BufferedImage image, int delay) {
+    protected HashMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
         return new HashMap<>();
     }
 
@@ -81,23 +81,22 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     // Takes care of initializing animations for the 4 basic directions the sprite would face.
     // Can always override this to fit the needs of your sprite.
     protected void loadBaseAnimations(String prefix, int delay) {
-        String[] directions = Arrays.stream(Direction.values()).map(d -> d.name().toLowerCase()).toArray(String[]::new);
+        String[] directions = Arrays.stream(Pose.values()).map(d -> d.name().toLowerCase()).toArray(String[]::new);
         for (String direction : directions) {
             Animation anim = new Animation(delay, String.join("_", prefix, direction), getSpriteDirectory());
-            animDict.put(Direction.parse(direction), anim);
+            animDict.put(Pose.parse(direction), anim);
         }
     }
 
     // Draws the sprite's current image based on its current state.
     @Override
     public void render(Graphics g) {
-        if (animDict.containsKey(currentDirection)) {
+        if (animDict.containsKey(currentPose)) {
             Image currentFrame;
             if (moving) {
-                currentFrame = animDict.get(currentDirection).getCurrentFrame();
-                System.out.println(currentDirection);
+                currentFrame = animDict.get(currentPose).getCurrentFrame();
             } else {
-                currentFrame = animDict.get(currentDirection).getFirstFrame();
+                currentFrame = animDict.get(currentPose).getFirstFrame();
             }
             g.drawImage(currentFrame,
                     getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
@@ -135,7 +134,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     }
 
     public void move() {
-        switch (currentDirection) {
+        switch (currentPose) {
             case UP:
                 moveUp(velocity);
                 break;
@@ -161,12 +160,12 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         return SPRITE_FOLDER + this.getClass().getSimpleName().toLowerCase();
     }
 
-    public Direction getSpriteDirection() {
-        return currentDirection;
+    public Pose getSpritePose() {
+        return currentPose;
     }
 
-    public void setSpriteDirection(Direction currentDirection) {
-        this.currentDirection = currentDirection;
+    public void setSpritePose(Pose currentPose) {
+        this.currentPose = currentPose;
     }
 
     public int getVelocity() {
@@ -309,11 +308,11 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
 
     //endregion
 
-    public enum Direction {
+    public enum Pose {
         UP, DOWN, LEFT, RIGHT, ALL, JUMP, ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, SPIN_ATTACK;
 
-        public static Direction parse(String direction) {
-            return Direction.valueOf(direction.toUpperCase());
+        public static Pose parse(String pose) {
+            return Pose.valueOf(pose.toUpperCase());
         }
     }
 }

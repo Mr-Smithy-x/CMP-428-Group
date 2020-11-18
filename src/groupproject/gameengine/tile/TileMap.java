@@ -63,11 +63,12 @@ public class TileMap implements CameraContract, Renderable {
         g.drawImage(map, 0, 0, null);
     }
 
-    public List<Tile> getSurroundingTiles(int x, int y, Sprite.Direction direction) {
+    @SuppressWarnings("java:S1854")
+    public List<Tile> getSurroundingTiles(int x, int y, Sprite.Pose pose) {
         int row = y / mapModel.getPerTileHeight();
         int col = x / mapModel.getPerTileWidth();
         List<Tile> tiles = new ArrayList<>();
-        switch (direction) {
+        switch (pose) {
             case UP:
                 for (int i : new int[]{col, col + 1, col - 1})
                     tiles.add(getMainLayerTileAt(row - 1, i));
@@ -100,7 +101,7 @@ public class TileMap implements CameraContract, Renderable {
     }
 
     public List<Tile> getSurroundingTiles(Sprite movable) {
-        return getSurroundingTiles(movable.getX().intValue(), movable.getY().intValue(), movable.getSpriteDirection());
+        return getSurroundingTiles(movable.getX().intValue(), movable.getY().intValue(), movable.getSpritePose());
     }
 
     private Tile getMainLayerTileAt(int row, int col) {

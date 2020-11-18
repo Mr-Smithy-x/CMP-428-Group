@@ -28,16 +28,16 @@ public class ZeldaContainer extends GameContainer {
     @Override
     protected void onPlay() {
         if (pressedKey[KeyEvent.VK_LEFT]) {
-            link.setSpriteDirection(Sprite.Direction.LEFT);
+            link.setSpritePose(Sprite.Pose.LEFT);
             link.move();
         } else if (pressedKey[KeyEvent.VK_RIGHT]) {
-            link.setSpriteDirection(Sprite.Direction.RIGHT);
+            link.setSpritePose(Sprite.Pose.RIGHT);
             link.move();
         } else if (pressedKey[KeyEvent.VK_UP]) {
-            link.setSpriteDirection(Sprite.Direction.UP);
+            link.setSpritePose(Sprite.Pose.UP);
             link.move();
         }else if (pressedKey[KeyEvent.VK_DOWN]) {
-            link.setSpriteDirection(Sprite.Direction.DOWN);
+            link.setSpritePose(Sprite.Pose.DOWN);
             link.move();
         }else if(pressedKey[KeyEvent.VK_Z]){
             link.spin();

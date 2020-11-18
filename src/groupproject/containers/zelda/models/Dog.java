@@ -19,12 +19,12 @@ public class Dog extends Sprite {
     }
 
     @Override
-    protected HashMap<Direction, Animation> setupImages(BufferedImage image, int delay) {
-        HashMap<Direction, Animation> map = super.setupImages(image, delay);
-        map.put(Direction.DOWN, getAnimation(image, 0, 0, 32, 32, 4, delay));
-        map.put(Direction.RIGHT, getAnimation(image, 0, 1, 32, 32, 4, delay));
-        map.put(Direction.UP, getAnimation(image, 0, 2, 32, 32, 4, delay));
-        map.put(Direction.LEFT, getAnimation(image, 0, 3, 32, 32, 4, delay));
+    protected HashMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
+        HashMap<Pose, Animation> map = super.setupImages(image, delay);
+        map.put(Pose.DOWN, getAnimation(image, 0, 0, 32, 32, 4, delay));
+        map.put(Pose.RIGHT, getAnimation(image, 0, 1, 32, 32, 4, delay));
+        map.put(Pose.UP, getAnimation(image, 0, 2, 32, 32, 4, delay));
+        map.put(Pose.LEFT, getAnimation(image, 0, 3, 32, 32, 4, delay));
         return map;
     }
 }

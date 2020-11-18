@@ -22,7 +22,7 @@ public class Link extends Sprite {
         double speed = 2000;
         double cosAngle = speed * getCosAngle().doubleValue();
         double sinAngle = speed * getSinAngle().doubleValue();
-        switch (getSpriteDirection()) {
+        switch (getSpritePose()) {
             case UP:
                 sinAngle *= 1;
                 cosAngle = 0;
@@ -48,19 +48,19 @@ public class Link extends Sprite {
     }
 
     @Override
-    protected HashMap<Direction, Animation> setupImages(BufferedImage image, int delay) {
-        HashMap<Direction, Animation> map = super.setupImages(image, delay);
+    protected HashMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
+        HashMap<Pose, Animation> map = super.setupImages(image, delay);
         //this.subImages = new SubImage[16][];
         //this.stillImages = new SubImage[16];
-        map.put(Direction.UP, getAnimation(image, 0, 4, 30, 30, 8, delay));
-        map.put(Direction.DOWN, getAnimation(image, 0, 1, 30, 30, 8, delay));
-        map.put(Direction.LEFT, getAnimation(image, 8, 1, 30, 30, 6, delay));
-        map.put(Direction.RIGHT, getAnimation(image, 8, 4, 30, 30, 6, delay));
+        map.put(Pose.UP, getAnimation(image, 0, 4, 30, 30, 8, delay));
+        map.put(Pose.DOWN, getAnimation(image, 0, 1, 30, 30, 8, delay));
+        map.put(Pose.LEFT, getAnimation(image, 8, 1, 30, 30, 6, delay));
+        map.put(Pose.RIGHT, getAnimation(image, 8, 4, 30, 30, 6, delay));
 
-        map.get(Direction.UP).setFirstFrame(pluck(image, 2, 0, 30, 30));
-        map.get(Direction.DOWN).setFirstFrame(pluck(image, 1, 0, 30, 30));
-        map.get(Direction.LEFT).setFirstFrame(pluck(image, 5, 0, 30, 30));
-        map.get(Direction.RIGHT).setFirstFrame(pluck(image, 11, 4, 30, 30));
+        map.get(Pose.UP).setFirstFrame(pluck(image, 2, 0, 30, 30));
+        map.get(Pose.DOWN).setFirstFrame(pluck(image, 1, 0, 30, 30));
+        map.get(Pose.LEFT).setFirstFrame(pluck(image, 5, 0, 30, 30));
+        map.get(Pose.RIGHT).setFirstFrame(pluck(image, 11, 4, 30, 30));
 
 
         Animation attackUP = Animation.with(delay);
@@ -68,8 +68,8 @@ public class Link extends Sprite {
         attackUP.addFrame(image.getSubimage(30, 177, 22, 30));
         attackUP.addFrame(image.getSubimage(61, 174, 20, 35));
         attackUP.addFrame(image.getSubimage(89, 177, 24, 30));
-        attackUP.setFirstFrame(map.get(Direction.UP).getFirstFrame());
-        map.put(Direction.ATTACK_UP, attackUP);
+        attackUP.setFirstFrame(map.get(Pose.UP).getFirstFrame());
+        map.put(Pose.ATTACK_UP, attackUP);
 
 
         Animation attackDown = Animation.with(delay);
@@ -78,8 +78,8 @@ public class Link extends Sprite {
         attackDown.addFrame(image.getSubimage(61, 85, 20, 32));
         attackDown.addFrame(image.getSubimage(91, 85, 20, 32));
         attackDown.addFrame(image.getSubimage(115, 87, 28, 29));
-        attackDown.setFirstFrame(map.get(Direction.DOWN).getFirstFrame());
-        map.put(Direction.ATTACK_DOWN, attackDown);
+        attackDown.setFirstFrame(map.get(Pose.DOWN).getFirstFrame());
+        map.put(Pose.ATTACK_DOWN, attackDown);
 
 
         Animation attackLeft = Animation.with(delay);
@@ -87,8 +87,8 @@ public class Link extends Sprite {
         attackLeft.addFrame(image.getSubimage(268, 90, 294 - 268, 24));
         attackLeft.addFrame(image.getSubimage(295, 91, 326 - 295, 21));
         attackLeft.addFrame(image.getSubimage(327, 91, 355 - 327, 21));
-        attackLeft.setFirstFrame(map.get(Direction.LEFT).getFirstFrame());
-        map.put(Direction.ATTACK_LEFT, attackLeft);
+        attackLeft.setFirstFrame(map.get(Pose.LEFT).getFirstFrame());
+        map.put(Pose.ATTACK_LEFT, attackLeft);
 
 
         Animation attackRight = Animation.with(delay);
@@ -96,8 +96,8 @@ public class Link extends Sprite {
         attackRight.addFrame(image.getSubimage(268, 180, 294 - 268, 24));
         attackRight.addFrame(image.getSubimage(295, 181, 326 - 295, 21));
         attackRight.addFrame(image.getSubimage(327, 181, 355 - 327, 21));
-        attackRight.setFirstFrame(map.get(Direction.RIGHT).getFirstFrame());
-        map.put(Direction.ATTACK_RIGHT, attackRight);
+        attackRight.setFirstFrame(map.get(Pose.RIGHT).getFirstFrame());
+        map.put(Pose.ATTACK_RIGHT, attackRight);
 
 
         Animation spinAttack = Animation.with(delay);
@@ -105,8 +105,8 @@ public class Link extends Sprite {
         spinAttack.addFrame(image.getSubimage(359, 86, 382 - 359, 31));
         spinAttack.addFrame(image.getSubimage(145, 88, 31, 27));
         spinAttack.addFrame(image.getSubimage(359, 176, 382 - 359, 31));
-        spinAttack.setFirstFrame(map.get(Direction.UP).getFirstFrame());
-        map.put(Direction.SPIN_ATTACK, spinAttack);
+        spinAttack.setFirstFrame(map.get(Pose.UP).getFirstFrame());
+        map.put(Pose.SPIN_ATTACK, spinAttack);
 
 
 
@@ -128,19 +128,19 @@ public class Link extends Sprite {
 
     public void attack() {
         attacking = true;
-        switch (getSpriteDirection()) {
+        switch (getSpritePose()) {
             case UP:
-                currentDirection = Direction.ATTACK_UP;
+                currentPose = Pose.ATTACK_UP;
                 break;
             case LEFT:
-                currentDirection = Direction.ATTACK_LEFT;
+                currentPose = Pose.ATTACK_LEFT;
                 break;
             case RIGHT:
-                currentDirection = Direction.ATTACK_RIGHT;
+                currentPose = Pose.ATTACK_RIGHT;
                 break;
             case SPIN_ATTACK:
             case DOWN:
-                currentDirection = Direction.ATTACK_DOWN;
+                currentPose = Pose.ATTACK_DOWN;
                 break;
         }
     }
@@ -162,6 +162,6 @@ public class Link extends Sprite {
 
     public void spin() {
         attacking = true;
-        setSpriteDirection(Direction.SPIN_ATTACK);
+        setSpritePose(Pose.SPIN_ATTACK);
     }
 }

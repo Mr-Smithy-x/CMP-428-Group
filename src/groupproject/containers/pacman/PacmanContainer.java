@@ -33,16 +33,16 @@ public class PacmanContainer extends GameContainer {
     }
 
     // Basic collision detection based on the 8 map tiles surrounding a sprite.
-    private boolean isSpriteCollidingWithMap(Sprite sprite, Sprite.Direction direction) {
+    private boolean isSpriteCollidingWithMap(Sprite sprite, Sprite.Pose pose) {
         boolean isColliding = false;
         int velocity = sprite.getVelocity();
 
-        switch (direction) {
+        switch (pose) {
             case RIGHT:
                 for (Tile tile : maps.get(0).getSurroundingTiles(
                         sprite.getBounds().getX().intValue(),
                         sprite.getBounds().getY().intValue(),
-                        Sprite.Direction.RIGHT))
+                        Sprite.Pose.RIGHT))
                     if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), velocity, 0))
                         isColliding = true;
                 break;
@@ -50,7 +50,7 @@ public class PacmanContainer extends GameContainer {
                 for (Tile tile : maps.get(0).getSurroundingTiles(
                         sprite.getBounds().getX().intValue(),
                         sprite.getBounds().getY().intValue(),
-                        Sprite.Direction.LEFT))
+                        Sprite.Pose.LEFT))
                     if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), -velocity, 0))
                         isColliding = true;
                 break;
@@ -58,7 +58,7 @@ public class PacmanContainer extends GameContainer {
                 for (Tile tile : maps.get(0).getSurroundingTiles(
                         sprite.getBounds().getX().intValue(),
                         sprite.getBounds().getY().intValue(),
-                        Sprite.Direction.UP))
+                        Sprite.Pose.UP))
                     if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, -velocity))
                         isColliding = true;
                 break;
@@ -66,7 +66,7 @@ public class PacmanContainer extends GameContainer {
                 for (Tile tile : maps.get(0).getSurroundingTiles(
                         sprite.getBounds().getX().intValue(),
                         sprite.getBounds().getY().intValue(),
-                        Sprite.Direction.DOWN))
+                        Sprite.Pose.DOWN))
                     if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, velocity))
                         isColliding = true;
                 break;
@@ -110,31 +110,31 @@ public class PacmanContainer extends GameContainer {
 
     @Override
     protected void onPlay() {
-        Sprite.Direction direction = player.getSpriteDirection();
+        Sprite.Pose pose = player.getSpritePose();
         boolean allowMove = false;
 
-        if (pressedKey[KeyEvent.VK_W] && !isSpriteCollidingWithMap(player, Sprite.Direction.UP)) {
-            direction = Sprite.Direction.UP;
+        if (pressedKey[KeyEvent.VK_W] && !isSpriteCollidingWithMap(player, Sprite.Pose.UP)) {
+            pose = Sprite.Pose.UP;
             allowMove = true;
         }
 
-        if (pressedKey[KeyEvent.VK_S] && !isSpriteCollidingWithMap(player, Sprite.Direction.DOWN)) {
-            direction = Sprite.Direction.DOWN;
+        if (pressedKey[KeyEvent.VK_S] && !isSpriteCollidingWithMap(player, Sprite.Pose.DOWN)) {
+            pose = Sprite.Pose.DOWN;
             allowMove = true;
         }
 
-        if (pressedKey[KeyEvent.VK_A] && !isSpriteCollidingWithMap(player, Sprite.Direction.LEFT)) {
-            direction = Sprite.Direction.LEFT;
+        if (pressedKey[KeyEvent.VK_A] && !isSpriteCollidingWithMap(player, Sprite.Pose.LEFT)) {
+            pose = Sprite.Pose.LEFT;
             allowMove = true;
         }
 
-        if (pressedKey[KeyEvent.VK_D] && !isSpriteCollidingWithMap(player, Sprite.Direction.RIGHT)) {
-            direction = Sprite.Direction.RIGHT;
+        if (pressedKey[KeyEvent.VK_D] && !isSpriteCollidingWithMap(player, Sprite.Pose.RIGHT)) {
+            pose = Sprite.Pose.RIGHT;
             allowMove = true;
         }
 
-        if (allowMove || !isSpriteCollidingWithMap(player, direction)) {
-            player.setSpriteDirection(direction);
+        if (allowMove || !isSpriteCollidingWithMap(player, pose)) {
+            player.setSpritePose(pose);
             player.move();
             //Its important to note that when using the camera with tilemap call this method
             //do not use getWidth or getHeight of the component window when using it with the tilemap
@@ -149,7 +149,7 @@ public class PacmanContainer extends GameContainer {
             maps.get(0).render(g);
             for (Tile tile : maps.get(0).getSurroundingTiles(
                     player.getBounds().getX().intValue(),
-                    player.getBounds().getY().intValue(), Sprite.Direction.ALL))
+                    player.getBounds().getY().intValue(), Sprite.Pose.ALL))
                 tile.drawBoundsRect(g);
         }
         player.render(g);
