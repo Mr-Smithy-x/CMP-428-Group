@@ -59,10 +59,7 @@ public class MapEditorView extends JPanel {
                         editorController.setCurrentHoveredColumn(button.getMapCol());
 
                         // Allows for "dragging" over tiles and doing an action.
-                        if (SwingUtilities.isLeftMouseButton(e))
-                            editorTileLeftClicked((MapEditorTileButton) e.getSource());
-                        else if (SwingUtilities.isRightMouseButton(e))
-                            editorTileRightClicked((MapEditorTileButton) e.getSource());
+                        mousePressed(e);
                     }
                 });
 
