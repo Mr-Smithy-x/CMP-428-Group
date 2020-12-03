@@ -6,24 +6,24 @@ import java.awt.image.BufferedImage;
 
 @SuppressWarnings("java:S110")
 public class MapEditorTileButton extends JLabel {
-    private transient BufferedImage tileImage;
-    private transient BufferedImage objectImage;
     private final int mapRow;
     private final int mapCol;
+    private transient BufferedImage tileImage;
+    private transient BufferedImage objectImage;
 
     public MapEditorTileButton(BufferedImage tileImage, int row, int col) {
         this.tileImage = tileImage;
         this.mapRow = row;
         this.mapCol = col;
         this.drawIcon();
-        if(tileImage != null) {
+        if (tileImage != null) {
             this.setPreferredSize(new Dimension(this.tileImage.getWidth(), this.tileImage.getHeight()));
         }
     }
 
     public void drawIcon() {
-        if(this.tileImage != null) {
-            if(this.objectImage != null) {
+        if (this.tileImage != null) {
+            if (this.objectImage != null) {
                 BufferedImage layeredImage = new BufferedImage(tileImage.getWidth(), tileImage.getHeight(), tileImage.getType());
                 Graphics g = layeredImage.getGraphics();
                 g.drawImage(this.tileImage, 0, 0, null);
@@ -33,13 +33,13 @@ public class MapEditorTileButton extends JLabel {
         }
     }
 
+    public BufferedImage getTileImage() {
+        return tileImage;
+    }
+
     public void setTileImage(BufferedImage tileImage) {
         this.tileImage = tileImage;
         this.drawIcon();
-    }
-
-    public BufferedImage getTileImage() {
-        return tileImage;
     }
 
     public int getMapRow() {
@@ -50,12 +50,12 @@ public class MapEditorTileButton extends JLabel {
         return mapCol;
     }
 
+    public BufferedImage getObjectImage() {
+        return objectImage;
+    }
+
     public void setObjectImage(BufferedImage objectImage) {
         this.objectImage = objectImage;
         this.drawIcon();
-    }
-
-    public BufferedImage getObjectImage() {
-        return objectImage;
     }
 }

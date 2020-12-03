@@ -1,19 +1,22 @@
 package groupproject.gameengine.tile;
 
-import groupproject.gameengine.Rect;
+import groupproject.gameengine.camera.GlobalCamera;
+import groupproject.gameengine.contracts.CameraContract;
+import groupproject.gameengine.contracts.Renderable;
+import groupproject.gameengine.models.BoundingBox;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Tile {
-    private int x;
-    private int y;
-    private Rect boundsRect;
+public class Tile implements Renderable, CameraContract {
     private final int width;
     private final int height;
+    private final BufferedImage tileImage;
+    private int x;
+    private int y;
+    private BoundingBox boundsRect;
     private boolean collisionEnabled = false;
     private boolean isObject = false;
-    private final BufferedImage tileImage;
 
     public Tile(BufferedImage image) {
         this.tileImage = image;
@@ -21,22 +24,62 @@ public class Tile {
         this.height = image.getHeight();
     }
 
-    public void draw(Graphics g) {
-        g.drawImage(tileImage, x, y, null);
+    @Override
+    public void render(Graphics g) {
+        g.drawImage(tileImage,
+                getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
+                getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
+                null);
     }
 
     public void drawBoundsRect(Graphics g) {
-        if(collisionEnabled) g.setColor(Color.red);
+        if (collisionEnabled) g.setColor(Color.red);
         else g.setColor(Color.green);
-        boundsRect.draw(g);
+        boundsRect.render(g);
     }
 
-    public int getWidth() {
+    @Override
+    public Number getX() {
+        return x;
+    }
+
+    @Override
+    public Number getY() {
+        return y;
+    }
+
+    @Override
+    public Number getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    @Override
+    public Number getHeight() {
         return height;
+    }
+
+    @Override
+    public void setHeight(Number height) {
+        /*
+          Not needed.
+         */
+    }
+
+    @Override
+    public void setWidth(Number width) {
+        /*
+          Not needed.
+         */
+    }
+
+    @Override
+    public void setX(Number x) {
+        this.x = x.intValue();
+    }
+
+    @Override
+    public void setY(Number y) {
+        this.y = y.intValue();
     }
 
     public boolean isCollisionEnabled() {
@@ -59,19 +102,11 @@ public class Tile {
         return tileImage;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public Rect getBoundsRect() {
+    public BoundingBox getBoundsRect() {
         return boundsRect;
     }
 
     public void initBoundsRect() {
-        this.boundsRect = new Rect(x, y, width, height);
+        this.boundsRect = new BoundingBox(x, y, width, height);
     }
 }
