@@ -1,6 +1,7 @@
 package groupproject.gameengine;
 
 
+import groupproject.gameengine.helpers.FontHelper;
 import groupproject.gameengine.tile.TileMap;
 import groupproject.gameengine.tile.TileMapModel;
 
@@ -16,7 +17,8 @@ import java.util.logging.Logger;
 public abstract class GameContainer implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 
     protected final Logger logger = Logger.getLogger("GameEngine", null);
-    private final Font mono = new Font(Font.MONOSPACED, Font.BOLD, 16);
+    protected final Font caveatFont = FontHelper.get("Caveat-Bold.ttf", 20);
+    protected final Font permanentMarkerFont = FontHelper.get("PermanentMarker-Regular.ttf",20);
     private final Component container;
     protected boolean[] pressedKey = new boolean[255];
     protected boolean playing = true;
@@ -75,7 +77,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     protected void onCreateImages() {
         offScreenImage = container.createImage(getWidth(), getHeight());
         offScreenGraphics = offScreenImage.getGraphics();
-        offScreenGraphics.setFont(mono);
+        offScreenGraphics.setFont(caveatFont);
     }
 
     /**
@@ -154,6 +156,15 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         g.dispose();
     }
 
+    protected void drawTextCentered(Graphics g, String text) {
+        drawTextCenteredOffset(g, text, 0, 0);
+    }
+
+    protected void drawTextCenteredOffset(Graphics g, String text, int offsetX, int offsetY) {
+        int strWidth = g.getFontMetrics().stringWidth(text);
+        g.drawString(text, (getWidth() / 2) - (strWidth / 2) - offsetX, (getHeight() / 2) + (g.getFontMetrics().getHeight() / 2) - offsetY);
+    }
+
     protected abstract void onPaint(Graphics g);
 
     /**
@@ -165,8 +176,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         g.setColor(new Color(0f, 0f, 0f, 0.3f));
         g.fillRect(0, 0, getWidth(), getHeight());
         String paused = "Paused";
-        int width = g.getFontMetrics().stringWidth(paused) / 2;
-        g.drawString(paused, getWidth() / 2 - width, getHeight() / 2 + g.getFontMetrics().getHeight() / 2);
+        drawTextCentered(g, paused);
     }
 
     public void stop() {

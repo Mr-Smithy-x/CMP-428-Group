@@ -35,7 +35,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     }
 
     public enum Pose {
-        UP, DOWN, LEFT, RIGHT, ALL, JUMP, ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, SPIN_ATTACK;
+        UP, DOWN, LEFT, RIGHT, ALL, JUMP, ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, SPIN_ATTACK, DEAD;
 
         public static Pose parse(String pose) {
             return Pose.valueOf(pose.toUpperCase());
