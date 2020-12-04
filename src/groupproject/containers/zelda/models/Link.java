@@ -4,6 +4,7 @@ package groupproject.containers.zelda.models;
 import groupproject.containers.zelda.contracts.Energy;
 import groupproject.gameengine.sprite.Animation;
 import groupproject.gameengine.sprite.Sprite;
+import groupproject.spritesheeteditor.models.FileFormat;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
