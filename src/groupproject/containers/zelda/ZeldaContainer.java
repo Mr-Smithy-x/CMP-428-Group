@@ -10,7 +10,6 @@ import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
 import groupproject.gameengine.sprite.Sprite;
-import groupproject.spritesheeteditor.models.FileFormat;
 
 import javax.swing.*;
 import java.awt.*;

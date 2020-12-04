@@ -19,7 +19,7 @@ public class Link extends Sprite implements Energy {
     private double energy;
 
     public Link(int positionX, int positionY, int duration) throws IOException {
-        super("link.png", positionX, positionY, 3, duration);
+        super(FileFormat.Companion.load( "link.pose"), positionX, positionY, 3, duration);
     }
 
     public void attack(List<Sprite> objects) {
@@ -112,6 +112,7 @@ public class Link extends Sprite implements Energy {
         return map;
     }
 
+
     @Override
     protected void initAnimations() {
         animDict.values().forEach(a -> a.scale(scaled));
@@ -155,4 +156,5 @@ public class Link extends Sprite implements Energy {
     public void setEnergy(double energy) {
         this.energy = energy;
     }
+
 }
