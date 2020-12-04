@@ -4,6 +4,9 @@ package groupproject.gameengine;
 import groupproject.gameengine.helpers.FontHelper;
 import groupproject.gameengine.tile.TileMap;
 import groupproject.gameengine.tile.TileMapModel;
+import states.GameState;
+import states.MenuState;
+import states.State;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +25,10 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     private final Component container;
     protected boolean[] pressedKey = new boolean[255];
     protected boolean playing = true;
+
+    private State gameState;  // add by chen
+    private State menuState;  // add by chen
+
     /**
      * Mouse Variables
      */
@@ -235,7 +242,8 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     }
 
     public TileMap loadTileMap(String mapFile) {
-        try (FileInputStream fis = new FileInputStream(TileMapModel.MAP_FOLDER + mapFile); ObjectInputStream is = new ObjectInputStream(fis)) {
+        try (FileInputStream fis = new FileInputStream(TileMapModel.MAP_FOLDER + mapFile);
+             ObjectInputStream is = new ObjectInputStream(fis)) {
             TileMapModel mapModel = (TileMapModel) is.readObject();
             return new TileMap(mapModel);
         } catch (ClassNotFoundException | IOException e) {
@@ -243,4 +251,18 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         }
         return null;
     }
+
+    // add by chen
+    public void init(){
+        gameState = new GameState();
+        menuState = new MenuState();
+        State.setState(gameState);
+    }
+
+    public void tick(){
+        if(State.getState() != null){
+            State.getState().tick();
+        }
+    }
+
 }

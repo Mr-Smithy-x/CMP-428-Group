@@ -71,7 +71,10 @@ public class Animation {
 
     public void scale(int scale) {
         frames = frames.stream()
-                .map(scaledFrames -> scaledFrames.getScaledInstance(scaledFrames.getWidth(null) * scale, scaledFrames.getHeight(null) * scale, Image.SCALE_FAST))
+                .map(scaledFrames -> scaledFrames.getScaledInstance(
+                        scaledFrames.getWidth(null) * scale,
+                        scaledFrames.getHeight(null) * scale,
+                        Image.SCALE_FAST))
                 .collect(Collectors.toList());
     }
 

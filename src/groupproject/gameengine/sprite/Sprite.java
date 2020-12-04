@@ -45,9 +45,11 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     // Takes care of initializing animations for the 4 basic directions the sprite would face.
     // Can always override this to fit the needs of your sprite.
     protected void loadBaseAnimations(String prefix, int delay) {
-        String[] directions = Arrays.stream(Pose.values()).map(d -> d.name().toLowerCase()).toArray(String[]::new);
+        String[] directions = Arrays.stream(Pose.values()).map(d ->
+                d.name().toLowerCase()).toArray(String[]::new);
         for (String direction : directions) {
-            Animation anim = new Animation(delay, String.join("_", prefix, direction), getSpriteDirectory());
+            Animation anim = new Animation(delay,
+                    String.join("_", prefix, direction), getSpriteDirectory());
             animDict.put(Pose.parse(direction), anim);
         }
     }
@@ -57,7 +59,8 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
 
     private void setupBox(int x, int y) {
         Image currentFrame = getFirstAnimation().getCurrentFrame();
-        this.bounds = new BoundingBox(x, y, currentFrame.getWidth(null) / scaled, currentFrame.getHeight(null) / scaled);
+        this.bounds = new BoundingBox(x, y, currentFrame.getWidth(null) / scaled,
+                currentFrame.getHeight(null) / scaled);
     }
 
     public String getSpriteDirectory() {

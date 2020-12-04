@@ -9,6 +9,7 @@ import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
 import groupproject.gameengine.sprite.Sprite;
+import states.State;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,9 @@ public class ZeldaContainer extends GameContainer {
         Canvas canvas = make(width, height);
         frame.add(canvas);
         frame.pack();
+
         return new ZeldaContainer(frame, canvas);
+
     }
 
     @Override
@@ -102,6 +105,11 @@ public class ZeldaContainer extends GameContainer {
             g.setColor(new Color(255, 70, 70));
             drawTextCenteredOffset(g, GameTextDialog.PLAYER_DIED, 0, getHeight() / 4);
         }
+
+        // add by chen
+        if(State.getState() != null) {
+            State.getState().render(g);
+        }
     }
 
     @Override
@@ -117,5 +125,6 @@ public class ZeldaContainer extends GameContainer {
         EnergyHud.getInstance().setEnergy(link);
         healthBox = new BoundingBox((int) (getWidth() / 1.5), (int) (getHeight() / 1.5), 100, 100);
         damageBox = new BoundingBox((int) (getWidth() / 1.2), (int) (getHeight() / 1.2), 100, 100);
+
     }
 }
