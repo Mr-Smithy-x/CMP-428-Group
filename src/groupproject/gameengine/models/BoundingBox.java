@@ -26,8 +26,8 @@ public class BoundingBox extends GravitationObject implements CollisionDetection
     @Override
     public void render(Graphics g) {
         //what about if we wanted to center it? so we move the x and y position of the object
-        g.drawRect(getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
-                getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
+        g.drawRect(getCameraOffsetX(GlobalCamera.getInstance()).intValue() - getWidth().intValue() / 2,
+                getCameraOffsetY(GlobalCamera.getInstance()).intValue() - getHeight().intValue() / 2,
                 getWidth().intValue(), getHeight().intValue());
     }
 }

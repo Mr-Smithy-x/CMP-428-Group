@@ -13,6 +13,8 @@ import javafx.scene.input.KeyCode
 import javafx.stage.FileChooser
 import java.io.File
 import kotlin.system.exitProcess
+import javafx.scene.control.TextInputDialog
+
 
 class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.SpriteCanvasMouseCallback {
 
@@ -22,6 +24,12 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
 
     @FXML
     lateinit var openMenuItem: MenuItem
+
+    @FXML
+    lateinit var evenModeMenuItem: MenuItem
+
+    @FXML
+    lateinit var fineModeMenuItem: MenuItem
 
     @FXML
     lateinit var saveMenuItem: MenuItem
@@ -69,6 +77,8 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
         aboutMenuItem.onAction = this
         addPoseBtn.onAction = this
         addImageBtn.onAction = this
+        evenModeMenuItem.onAction = this
+        fineModeMenuItem.onAction = this
         spriteCanvasSelectionView.callback = this
         tableView.selectionModel.selectedItemProperty().addListener { _, _, newValue ->
             newValue?.run {
@@ -95,6 +105,22 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
 
     override fun handle(event: ActionEvent?) {
         when (event?.source) {
+            fineModeMenuItem -> {
+                spriteCanvasSelectionView.mode = SpriteCanvasSelectionView.SelectionMode.FINE
+            }
+            evenModeMenuItem -> {
+                val result = TextInputDialog("Dimension").also {
+                    it.headerText = "What dimension is the SpriteSheet? (Numeric)"
+                }.showAndWait()
+                when {
+                    result.get().toIntOrNull() is Int -> spriteCanvasSelectionView.mode = SpriteCanvasSelectionView.SelectionMode.EVEN.also {
+                        it.dimension = result.get().toInt()
+                    }
+                    else -> {
+                        alert("Error", "Value isn't numeric", "The value specified is invalid, please enter a number", Alert.AlertType.ERROR).showAndWait()
+                    }
+                }
+            }
             aboutMenuItem -> {
                 alert(
                     "About",

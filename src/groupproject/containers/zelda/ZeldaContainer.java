@@ -95,7 +95,7 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onPaint(Graphics g) {
-        g.setColor(Color.black);
+        g.setColor(new Color(70,120,70));
         g.fillRect(0, 0, getWidth(), getHeight());
         dog.render(g);
         link.render(g);

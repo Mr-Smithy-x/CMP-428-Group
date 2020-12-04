@@ -2,6 +2,7 @@ package groupproject.gameengine.camera;
 
 import groupproject.gameengine.contracts.BoundingContract;
 import groupproject.gameengine.models.BoundingBox;
+import groupproject.gameengine.sprite.Sprite;
 import groupproject.gameengine.tile.TileMap;
 
 import java.awt.*;
@@ -27,8 +28,8 @@ public abstract class BaseCamera {
 
     public void setOrigin(BoundingContract e, TileMap map) {
         // Commented out code would center the pixel onto the screen, but with this dynamic, it works much differently
-        this.xOrigin = e.getX().doubleValue() - (map.getWidth().doubleValue() / 2);// + (e.getWidth().doubleValue() / 2);
-        this.yOrigin = e.getY().doubleValue() - (map.getHeight().doubleValue() / 2);// + (e.getHeight().doubleValue() / 2);
+        this.xOrigin = e.getX().doubleValue() - (map.getWidth().doubleValue() / 2);
+        this.yOrigin = e.getY().doubleValue() - (map.getHeight().doubleValue() / 2);
 
         this.x = xOrigin;
         this.y = yOrigin;
@@ -39,18 +40,14 @@ public abstract class BaseCamera {
         }
     }
 
+    // Bounds onto the screen,
     public void setOrigin(BoundingContract e, double screenWidth, double screenHeight) {
-        // Commented out code would center the pixel onto the screen, but with this dynamic, it works much differently
-        xOrigin = e.getX().doubleValue() - (screenWidth / 2);// + (e.getWidth().doubleValue() / 2);
-        yOrigin = e.getY().doubleValue() - (screenHeight / 2);// + (e.getHeight().doubleValue() / 2);
-
+        xOrigin = e.getX().doubleValue() - (screenWidth / 2);
+        yOrigin = e.getY().doubleValue() - (screenHeight / 2);
         this.x = xOrigin;
         this.y = yOrigin;
-
-        if (e instanceof BoundingBox) {
-            xOrigin -= e.getWidth().doubleValue() / 2;
-            yOrigin -= e.getHeight().doubleValue() / 2;
-        }
+        xOrigin -= e.getWidth().doubleValue() / 2;
+        yOrigin -= e.getHeight().doubleValue() / 2;
     }
 
     public void setOffsetFromOrigin(double x, double y) {

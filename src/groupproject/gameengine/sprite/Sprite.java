@@ -146,16 +146,16 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
                 currentFrame = animDict.get(currentPose).getFirstFrame();
             }
             g.drawImage(currentFrame,
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4, null);
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 2,
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 2, null);
 
             moving = false;
         } else {
             Animation firstAnim = getFirstAnimation();
             Image currentFrame = firstAnim.getCurrentFrame();
             g.drawImage(currentFrame,
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 2,
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 2,
                     null);
         }
         drawBounds(g);

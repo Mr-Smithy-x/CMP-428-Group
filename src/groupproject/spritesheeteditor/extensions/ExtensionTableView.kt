@@ -81,8 +81,10 @@ fun TableView<FileFormat.AnimationRow>.add(pose: String) {
 
 fun TableView<FileFormat.AnimationRow>.removeLastInserted() {
     val item = selectionModel.selectedItem
-    item.set.remove(item.set.last())
-    refresh()
+    if(!item.set.isEmpty()) {
+        item.set.remove(item.set.last())
+        refresh()
+    }
 }
 
 fun TableView<FileFormat.AnimationRow>.map(filename: String): FileFormat {
