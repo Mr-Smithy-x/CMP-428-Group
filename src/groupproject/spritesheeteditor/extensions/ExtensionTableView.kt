@@ -49,7 +49,7 @@ fun TableView<FileFormat.AnimationRow>.loadSerialized(spriteCanvasSelectionView:
 
 
 fun TableView<FileFormat.AnimationRow>.load(spriteCanvasSelectionView: SpriteCanvasSelectionView, file: File, format: FileFormat) {
-    val imagePath = "${file.parent}/${format.image}"
+    val imagePath = "${file.parentFile.parent}/sheets/${format.image}"
     val imageFile = File(imagePath)
     if (imageFile.exists()) {
         spriteCanvasSelectionView.file = imageFile

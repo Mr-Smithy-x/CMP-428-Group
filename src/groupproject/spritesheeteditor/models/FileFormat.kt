@@ -39,7 +39,7 @@ data class FileFormat(
         private const val serialVersionUID = 20201204202000L
 
         fun load(filename: String): FileFormat? {
-            return load(File("./assets/sheets/$filename"))
+            return load(File("./assets/poses/$filename"))
         }
 
         private fun load(file: File): FileFormat? {

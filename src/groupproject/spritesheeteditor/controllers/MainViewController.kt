@@ -57,9 +57,7 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
     }
     var imageExtensionFilter = FileChooser.ExtensionFilter("Image", "*.png", "*.gif")
     var poseExtensionFilter = FileChooser.ExtensionFilter("Pose", "*.pose")
-    private var fileChooser: FileChooser = FileChooser().also {
-        it.initialDirectory = File("./assets/sheets")
-    }
+    private var fileChooser: FileChooser = FileChooser()
     //endregion
 
     @FXML
@@ -106,6 +104,7 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
             }
             newMenuItem -> {
                 spriteCanvasSelectionView.clear()
+                fileChooser.initialDirectory = File("./assets/sheets")
                 fileChooser.extensionFilters.setAll(imageExtensionFilter)
                 val file = fileChooser.showOpenDialog(null)
                 if (file != null && file.exists()) {
@@ -115,6 +114,7 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                 }
             }
             openMenuItem -> {
+                fileChooser.initialDirectory = File("./assets/poses")
                 fileChooser.extensionFilters.setAll(poseExtensionFilter)
                 val file = fileChooser.showOpenDialog(null)
                 if (file != null && file.exists()) {
@@ -124,6 +124,7 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
             saveMenuItem -> {
                 if (spriteCanvasSelectionView.isInitialized) {
                     val imageFile = spriteCanvasSelectionView.file!!
+                    fileChooser.initialDirectory = File("./assets/poses")
                     fileChooser.extensionFilters.setAll(poseExtensionFilter)
                     fileChooser.initialFileName = imageFile.nameWithoutExtension
                     val file = fileChooser.showSaveDialog(null)
