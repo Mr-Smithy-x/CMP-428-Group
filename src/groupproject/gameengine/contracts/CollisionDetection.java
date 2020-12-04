@@ -26,18 +26,10 @@ public interface CollisionDetection extends Gravitation {
 
 
     default boolean isOverlapping(Movable box) {
-        boolean colliding =  ((box.getX().doubleValue() + box.getWidth().doubleValue() >= getX().doubleValue()) &&
+        return ((box.getX().doubleValue() + box.getWidth().doubleValue() >= getX().doubleValue()) &&
                 (getX().doubleValue() + getWidth().doubleValue() >= box.getX().doubleValue()) &&
                 (box.getY().doubleValue() + box.getHeight().doubleValue() >= getY().doubleValue()) &&
                 (getY().doubleValue() + getHeight().doubleValue() >= box.getY().doubleValue()));
-        if(colliding){
-            System.out.printf("(%s, %s, %s, %s), (%s, %s, %s, %s)\n",
-                    box.getX(), box.getY(),
-                    box.getX2(), box.getY2(),
-                    getX(), getY(),
-                    getX2(), getY2());
-        }
-        return colliding;
     }
 
 
