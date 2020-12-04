@@ -28,9 +28,11 @@ public class SoundEffects {
 
     public void play() {
         if (clip == null) return;
-        stop();
-        clip.setFramePosition(0);
-        clip.start();
+        if(!clip.isActive()) {
+            stop();
+            clip.setFramePosition(0);
+            clip.start();
+        }
     }
 
     public void stop() {
