@@ -129,13 +129,13 @@ public class Link extends Sprite implements Energy {
             moving = attacking;
         }
         super.render(g);
-        attacking = false;
     }
 
     public void spin() {
         attacking = true;
         setSpritePose(Pose.SPIN_ATTACK);
     }
+
 
     @Override
     public double getHealth() {

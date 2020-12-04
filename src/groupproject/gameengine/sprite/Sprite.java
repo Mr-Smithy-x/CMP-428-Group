@@ -6,6 +6,7 @@ import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.CollisionDetection;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
+import groupproject.gameengine.sound.GlobalPoseSoundBoard;
 import groupproject.games.ZeldaTestGame;
 import groupproject.spritesheeteditor.models.FileFormat;
 
@@ -49,7 +50,10 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         animDict.putAll(setupImages(format, initializeSheet(format.getImage()), delay));
         initAnimations();
         setupBox(x, y);
+    }
 
+    public boolean isActive() {
+        return moving;
     }
 
     public enum Pose {
@@ -61,6 +65,40 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
 
         public static Pose parse(String pose) {
             return Pose.valueOf(pose.toUpperCase());
+        }
+
+        public String soundeffect() {
+            switch (this) {
+
+                case UP:
+                case DOWN:
+                case LEFT:
+                case RIGHT:
+                    return "FOOTSTEPS.WAV";
+                case ATTACK_UP_01:
+                case ATTACK_DOWN_01:
+                case ATTACK_LEFT_01:
+                case ATTACK_RIGHT_01:
+                case ATTACK_UP:
+                case ATTACK_DOWN:
+                case ATTACK_LEFT:
+                case ATTACK_RIGHT:
+                    return "ATTACK.wav";
+                case SPIN_ATTACK:
+                    return "SPINATTACK.wav";
+                case ALL:
+                    break;
+                case JUMP:
+                    break;
+                case DEAD:
+                    break;
+                case ROLL_LEFT:
+                case ROLL_RIGHT:
+                case ROLL_UP:
+                case ROLL_DOWN:
+                    return "ROLL_WAV.wav";
+            }
+            return null;
         }
     }
 
@@ -136,6 +174,10 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         return images;
     }
 
+    public Animation getCurrentAnimation() {
+        return animDict.containsKey(currentPose) ? animDict.get(currentPose) : getFirstAnimation();
+    }
+
     // Draws the sprite's current image based on its current state.
     @Override
     public void render(Graphics g) {
@@ -149,8 +191,6 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
             g.drawImage(currentFrame,
                     getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
                     getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4, null);
-
-            moving = false;
         } else {
             Animation firstAnim = getFirstAnimation();
             currentFrame = firstAnim.getCurrentFrame();
@@ -163,6 +203,8 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
             drawActualImageBounds(currentFrame, g);
             drawBounds(g);
         }
+        GlobalPoseSoundBoard.getInstance().play(this);
+        moving = false;
     }
 
     public void drawActualImageBounds(Image currentFrame, Graphics g) {

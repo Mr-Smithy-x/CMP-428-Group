@@ -9,6 +9,8 @@ import groupproject.containers.zelda.models.MinishLink;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
+import groupproject.gameengine.sound.BaseSoundEffects;
+import groupproject.gameengine.sound.GlobalPoseSoundBoard;
 import groupproject.gameengine.sprite.Sprite;
 import groupproject.games.ZeldaTestGame;
 
@@ -24,7 +26,6 @@ public class ZeldaContainer extends GameContainer {
     BoundingBox healthBox;
     BoundingBox damageBox;
     MinishLink minishLink;
-    SoundEffects se;
 
     protected ZeldaContainer(JFrame container, Canvas canvas) {
         super(container, canvas);
@@ -72,7 +73,6 @@ public class ZeldaContainer extends GameContainer {
                 } else if (pressedKey[KeyEvent.VK_SPACE]) {
                     minishLink.attack();
                     minishLink.useEnergy(.1);
-                    se.play();
                 }
             }
 
@@ -93,6 +93,8 @@ public class ZeldaContainer extends GameContainer {
                 minishLink.useEnergy(.1);
             }
         }
+
+        GlobalPoseSoundBoard.getInstance().play(minishLink);
         GlobalCamera.getInstance().setOrigin(minishLink, getWidth(), getHeight());
     }
 
@@ -130,7 +132,6 @@ public class ZeldaContainer extends GameContainer {
         dog.setVelocity(10);
         minishLink.setVelocity(10);
         GlobalCamera.getInstance().setOrigin(minishLink, getWidth(), getHeight());
-        se = new SoundEffects("./assets/sounds/effects/NormalSlash.wav");
         link.setHealth(100);
         link.setEnergy(100);
         minishLink.setHealth(100);

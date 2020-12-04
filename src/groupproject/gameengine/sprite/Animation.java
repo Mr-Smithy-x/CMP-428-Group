@@ -69,6 +69,12 @@ public class Animation {
         }
     }
 
+
+    public int getCurrentFrameIndex() {
+        return currentFrame;
+    }
+
+
     public void scale(int scale) {
         frames = frames.stream()
                 .map(scaledFrames -> scaledFrames.getScaledInstance(scaledFrames.getWidth(null) * scale, scaledFrames.getHeight(null) * scale, Image.SCALE_FAST))
