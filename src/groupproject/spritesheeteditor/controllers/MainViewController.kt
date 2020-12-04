@@ -1,5 +1,6 @@
 package groupproject.spritesheeteditor.controllers
 
+import groupproject.gameengine.sprite.Sprite
 import groupproject.spritesheeteditor.extensions.*
 import groupproject.spritesheeteditor.models.FileFormat
 import groupproject.spritesheeteditor.views.SpriteCanvasSelectionView
@@ -137,6 +138,10 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                     spriteCanvasSelectionView.file = file
                     tableView.init(spriteCanvasSelectionView)
                     tableView.items.clear()
+                    selectPoseCombobox.items.clear()
+                    Sprite.Pose.values().forEach {
+                        addOption(it.name)
+                    }
                 }
             }
             openMenuItem -> {
@@ -145,6 +150,9 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                 val file = fileChooser.showOpenDialog(null)
                 if (file != null && file.exists()) {
                     tableView.loadSerialized(spriteCanvasSelectionView, file)
+                    selectPoseCombobox.items.clear()
+                    selectPoseCombobox.items.addAll(tableView.poses)
+                    selectPoseCombobox.selectionModel.select(0)
                 }
             }
             saveMenuItem -> {
@@ -169,27 +177,9 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                 exitProcess(0)
             }
             addPoseBtn -> {
-                if (spriteCanvasSelectionView.isInitialized) {
-                    val text = poseTextField.text.trim().toUpperCase()
-                    poseTextField.clear()
-                    if (!tableView.hasPose(text)) {
-                        selectPoseCombobox.items.add(text)
-                        selectPoseCombobox.selectionModel.select(text)
-                        tableView.add(text)
-                    } else alert(
-                        "Error",
-                        "We ran into a conflict",
-                        "You already have '$text' listed already",
-                        Alert.AlertType.ERROR
-                    ).showAndWait()
-                } else {
-                    alert(
-                        "Error",
-                        "We ran into an issue",
-                        "App needs to be initialized",
-                        Alert.AlertType.ERROR
-                    ).showAndWait()
-                }
+                val text = poseTextField.text.trim().toUpperCase()
+                poseTextField.clear()
+                addOption(text)
             }
             addImageBtn -> {
                 if (spriteCanvasSelectionView.isInitialized) {
@@ -206,6 +196,28 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                     ).showAndWait()
                 }
             }
+        }
+    }
+
+    private fun addOption(text: String){
+        if (spriteCanvasSelectionView.isInitialized) {
+            if (!tableView.hasPose(text)) {
+                selectPoseCombobox.items.add(text)
+                selectPoseCombobox.selectionModel.select(text)
+                tableView.addOption(text)
+            } else alert(
+                "Error",
+                "We ran into a conflict",
+                "You already have '$text' listed already",
+                Alert.AlertType.ERROR
+            ).showAndWait()
+        } else {
+            alert(
+                "Error",
+                "We ran into an issue",
+                "App needs to be initialized",
+                Alert.AlertType.ERROR
+            ).showAndWait()
         }
     }
 

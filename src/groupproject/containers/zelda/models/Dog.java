@@ -2,7 +2,6 @@ package groupproject.containers.zelda.models;
 
 import groupproject.gameengine.sprite.Animation;
 import groupproject.gameengine.sprite.Sprite;
-import groupproject.spritesheeteditor.models.FileFormat;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.util.EnumMap;
 public class Dog extends Sprite {
 
     public Dog(int positionX, int positionY, int duration) throws IOException {
-        super("dog.png", positionX, positionY, 3, duration);
+        super("dog.png", positionX, positionY, 2, duration);
     }
 
     @Override

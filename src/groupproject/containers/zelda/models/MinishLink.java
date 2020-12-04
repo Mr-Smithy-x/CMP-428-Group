@@ -17,7 +17,7 @@ public class MinishLink extends Sprite implements Energy {
     private double energy;
 
     public MinishLink(int positionX, int positionY, int duration) throws IOException {
-        super(Objects.requireNonNull(FileFormat.Companion.load("link_final_spritesheet.pose")), positionX, positionY, 3, duration);
+        super(Objects.requireNonNull(FileFormat.Companion.load("link_final_spritesheet.pose")), positionX, positionY, 2, duration);
     }
 
     public void attack(List<Sprite> objects) {
