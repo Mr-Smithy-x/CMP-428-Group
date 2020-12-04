@@ -1,6 +1,7 @@
 package groupproject.containers.zelda.models;
 
 
+import groupproject.containers.zelda.contracts.Energy;
 import groupproject.gameengine.sprite.Animation;
 import groupproject.gameengine.sprite.Sprite;
 
@@ -10,40 +11,15 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.List;
 
-public class Link extends Sprite {
+public class Link extends Sprite implements Energy {
 
     boolean attacking = false;
+    private double health;
+    private double energy;
 
     public Link(int positionX, int positionY, int duration) throws IOException {
         super("link.png", positionX, positionY, 3, duration);
     }
-
-    /*
-    This can be reimplemented when actually needed, base it off the tile map rather than angles.
-    public void hit(Sprite obj) {
-        double speed = 2000;
-        double cosAngle = speed * getCosAngle().doubleValue();
-        double sinAngle = speed * getSinAngle().doubleValue();
-        switch (getSpritePose()) {
-            case UP:
-                sinAngle *= 1;
-                cosAngle = 0;
-                break;
-            case DOWN:
-                sinAngle *= -1;
-                cosAngle = 0;
-                break;
-            case LEFT:
-                sinAngle = 0;
-                cosAngle *= -1;
-                break;
-            case RIGHT:
-                sinAngle = 0;
-                cosAngle *= 1;
-                break;
-        }
-        obj.setVelocity(cosAngle, sinAngle);
-    }*/
 
     public void attack(List<Sprite> objects) {
         this.attack();
@@ -52,21 +28,21 @@ public class Link extends Sprite {
     public void attack() {
         attacking = true;
         switch (getSpritePose()) {
-        case UP:
-            currentPose = Pose.ATTACK_UP;
-            break;
-        case LEFT:
-            currentPose = Pose.ATTACK_LEFT;
-            break;
-        case RIGHT:
-            currentPose = Pose.ATTACK_RIGHT;
-            break;
-        case SPIN_ATTACK:
-        case DOWN:
-            currentPose = Pose.ATTACK_DOWN;
-            break;
-        default:
-            break;
+            case UP:
+                currentPose = Pose.ATTACK_UP;
+                break;
+            case LEFT:
+                currentPose = Pose.ATTACK_LEFT;
+                break;
+            case RIGHT:
+                currentPose = Pose.ATTACK_RIGHT;
+                break;
+            case SPIN_ATTACK:
+            case DOWN:
+                currentPose = Pose.ATTACK_DOWN;
+                break;
+            default:
+                break;
         }
     }
 
@@ -128,6 +104,10 @@ public class Link extends Sprite {
         spinAttack.addFrame(image.getSubimage(359, 176, 382 - 359, 31));
         spinAttack.setFirstFrame(map.get(Pose.UP).getFirstFrame());
         map.put(Pose.SPIN_ATTACK, spinAttack);
+
+        Animation dead = Animation.with(delay);
+        dead.addFrame(pluck(image, 4, 7, 30, 30));
+        map.put(Pose.DEAD, dead);
         return map;
     }
 
@@ -138,6 +118,11 @@ public class Link extends Sprite {
 
     @Override
     public void render(Graphics g) {
+        if (isDead()) {
+            setSpritePose(Pose.DEAD);
+        } else if (currentPose == Pose.DEAD) {
+            setSpritePose(Pose.DOWN);
+        }
         if (attacking) {
             moving = attacking;
         }
@@ -148,5 +133,25 @@ public class Link extends Sprite {
     public void spin() {
         attacking = true;
         setSpritePose(Pose.SPIN_ATTACK);
+    }
+
+    @Override
+    public double getHealth() {
+        return health;
+    }
+
+    @Override
+    public void setHealth(double health) {
+        this.health = health;
+    }
+
+    @Override
+    public double getEnergy() {
+        return energy;
+    }
+
+    @Override
+    public void setEnergy(double energy) {
+        this.energy = energy;
     }
 }
