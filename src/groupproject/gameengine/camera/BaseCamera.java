@@ -42,12 +42,10 @@ public abstract class BaseCamera {
 
     // Bounds onto the screen,
     public void setOrigin(BoundingContract e, double screenWidth, double screenHeight) {
-        xOrigin = e.getX().doubleValue() - (screenWidth / 2);
-        yOrigin = e.getY().doubleValue() - (screenHeight / 2);
-        this.x = xOrigin;
-        this.y = yOrigin;
-        xOrigin -= e.getWidth().doubleValue() / 2;
-        yOrigin -= e.getHeight().doubleValue() / 2;
+        xOrigin = e.getX().doubleValue() - (screenWidth / 2) - e.getWidth().doubleValue() / 2;
+        yOrigin = e.getY().doubleValue() - (screenHeight / 2) - e.getHeight().doubleValue() / 2;
+        this.x = xOrigin + e.getWidth().doubleValue();
+        this.y = yOrigin + e.getHeight().doubleValue();
     }
 
     public void setOffsetFromOrigin(double x, double y) {

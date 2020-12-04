@@ -10,6 +10,7 @@ import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
 import groupproject.gameengine.sprite.Sprite;
+import groupproject.games.ZeldaTestGame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,19 +46,19 @@ public class ZeldaContainer extends GameContainer {
         }
         if (!minishLink.isDead()) {
             if (pressedKey[KeyEvent.VK_LEFT]) {
-                if(pressedKey[KeyEvent.VK_R]) minishLink.roll();
+                if (pressedKey[KeyEvent.VK_R]) minishLink.roll();
                 else minishLink.setSpritePose(Sprite.Pose.LEFT);
                 minishLink.move();
             } else if (pressedKey[KeyEvent.VK_RIGHT]) {
-                if(pressedKey[KeyEvent.VK_R]) minishLink.roll();
+                if (pressedKey[KeyEvent.VK_R]) minishLink.roll();
                 else minishLink.setSpritePose(Sprite.Pose.RIGHT);
                 minishLink.move();
             } else if (pressedKey[KeyEvent.VK_UP]) {
-                if(pressedKey[KeyEvent.VK_R]) minishLink.roll();
+                if (pressedKey[KeyEvent.VK_R]) minishLink.roll();
                 else minishLink.setSpritePose(Sprite.Pose.UP);
                 minishLink.move();
             } else if (pressedKey[KeyEvent.VK_DOWN]) {
-                if(pressedKey[KeyEvent.VK_R]) minishLink.roll();
+                if (pressedKey[KeyEvent.VK_R]) minishLink.roll();
                 else minishLink.setSpritePose(Sprite.Pose.DOWN);
                 minishLink.move();
             }
@@ -95,7 +96,7 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onPaint(Graphics g) {
-        g.setColor(new Color(70,120,70));
+        g.setColor(new Color(70, 120, 70));
         g.fillRect(0, 0, getWidth(), getHeight());
         dog.render(g);
         link.render(g);
@@ -106,8 +107,10 @@ public class ZeldaContainer extends GameContainer {
         damageBox.render(g);
         LifeHud.getInstance().render(g);
         EnergyHud.getInstance().render(g);
-        GlobalCamera.getInstance().render(g, getContainer());
-        if (link.isDead()) {
+        if (ZeldaTestGame.inDebuggingMode()) {
+            GlobalCamera.getInstance().render(g, getContainer());
+        }
+        if (minishLink.isDead()) {
             g.setColor(new Color(1, 1, 1, 0.4f));
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setFont(caveatFont);

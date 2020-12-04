@@ -6,6 +6,7 @@ import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.CollisionDetection;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
+import groupproject.games.ZeldaTestGame;
 import groupproject.spritesheeteditor.models.FileFormat;
 
 import javax.imageio.ImageIO;
@@ -98,7 +99,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     @SuppressWarnings("java:S1172")
     private EnumMap<Pose, Animation> setupImages(@Nullable FileFormat format, BufferedImage image, int delay) {
         EnumMap<Pose, Animation> map = new EnumMap<>(Pose.class);
-        for (FileFormat.AnimationRow row: format.getPoses()) {
+        for (FileFormat.AnimationRow row : format.getPoses()) {
             Animation animation = Animation.with(delay);
             for (FileFormat.SpriteBounds spriteBounds : row.getSet()) {
                 animation.addFrame(image.getSubimage(spriteBounds.getX(), spriteBounds.getY(), spriteBounds.getW(), spriteBounds.getH()));
@@ -138,27 +139,41 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     // Draws the sprite's current image based on its current state.
     @Override
     public void render(Graphics g) {
+        Image currentFrame;
         if (animDict.containsKey(currentPose)) {
-            Image currentFrame;
             if (moving) {
                 currentFrame = animDict.get(currentPose).getCurrentFrame();
             } else {
                 currentFrame = animDict.get(currentPose).getFirstFrame();
             }
             g.drawImage(currentFrame,
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 2,
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 2, null);
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4, null);
 
             moving = false;
         } else {
             Animation firstAnim = getFirstAnimation();
-            Image currentFrame = firstAnim.getCurrentFrame();
+            currentFrame = firstAnim.getCurrentFrame();
             g.drawImage(currentFrame,
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 2,
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 2,
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
                     null);
         }
-        drawBounds(g);
+        if (ZeldaTestGame.inDebuggingMode()) {
+            drawActualImageBounds(currentFrame, g);
+            drawBounds(g);
+        }
+    }
+
+    public void drawActualImageBounds(Image currentFrame, Graphics g) {
+        // For debug purposes, draw the bounding box of the sprite.
+        g.setColor(Color.RED);
+        g.drawRect(getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
+                getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
+                currentFrame.getWidth(null)
+                , currentFrame.getHeight(null));
+
+
     }
 
     public void drawBounds(Graphics g) {
