@@ -19,7 +19,7 @@ public class Link extends Sprite implements Energy {
     private double energy;
 
     public Link(int positionX, int positionY, int duration) throws IOException {
-        super(FileFormat.Companion.load( "link.pose"), positionX, positionY, 2, duration);
+        super(FileFormat.Companion.load("link.pose"), positionX, positionY, 2, duration);
     }
 
     public void attack(List<Sprite> objects) {
@@ -135,7 +135,6 @@ public class Link extends Sprite implements Energy {
         attacking = true;
         setSpritePose(Pose.SPIN_ATTACK);
     }
-
 
     @Override
     public double getHealth() {

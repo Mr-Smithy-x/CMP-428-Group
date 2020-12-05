@@ -6,7 +6,7 @@ import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.CollisionDetection;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
-import groupproject.gameengine.sound.GlobalPoseSoundBoard;
+import groupproject.gameengine.sound.GlobalSoundEffect;
 import groupproject.games.ZeldaTestGame;
 import groupproject.spritesheeteditor.models.FileFormat;
 
@@ -58,47 +58,32 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
 
     public enum Pose {
         UP, DOWN, LEFT, RIGHT,
-        ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT,
-        SPIN_ATTACK, ALL, JUMP, DEAD,
+        ATTACK_UP("attack.wav"), ATTACK_DOWN("attack.wav"),
+        ATTACK_LEFT("attack.wav"), ATTACK_RIGHT("attack.wav"),
+        SPIN_ATTACK("spin_attack.wav"), ALL, JUMP, DEAD("dead.wav"),
         ROLL_LEFT, ROLL_RIGHT, ROLL_UP, ROLL_DOWN,
-        ATTACK_UP_01, ATTACK_DOWN_01, ATTACK_LEFT_01, ATTACK_RIGHT_01;
+        ATTACK_UP_01("cane.wav"), ATTACK_DOWN_01("cane.wav"),
+        ATTACK_LEFT_01("cane.wav"), ATTACK_RIGHT_01("cane.wav");
+
+        private String soundFileName;
+
+        Pose(){
+            this.soundFileName = null;
+        }
+        Pose(String soundFileName) {
+            this.soundFileName = soundFileName;
+        }
 
         public static Pose parse(String pose) {
             return Pose.valueOf(pose.toUpperCase());
         }
 
-        public String soundeffect() {
-            switch (this) {
+        public boolean hasSoundFile(){
+            return soundFileName != null;
+        }
 
-                case UP:
-                case DOWN:
-                case LEFT:
-                case RIGHT:
-                    return "FOOTSTEPS.WAV";
-                case ATTACK_UP_01:
-                case ATTACK_DOWN_01:
-                case ATTACK_LEFT_01:
-                case ATTACK_RIGHT_01:
-                case ATTACK_UP:
-                case ATTACK_DOWN:
-                case ATTACK_LEFT:
-                case ATTACK_RIGHT:
-                    return "ATTACK.wav";
-                case SPIN_ATTACK:
-                    return "SPINATTACK.wav";
-                case ALL:
-                    break;
-                case JUMP:
-                    break;
-                case DEAD:
-                    break;
-                case ROLL_LEFT:
-                case ROLL_RIGHT:
-                case ROLL_UP:
-                case ROLL_DOWN:
-                    return "ROLL_WAV.wav";
-            }
-            return null;
+        public String getSoundFileName() {
+            return soundFileName;
         }
     }
 
@@ -203,7 +188,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
             drawActualImageBounds(currentFrame, g);
             drawBounds(g);
         }
-        GlobalPoseSoundBoard.getInstance().play(this);
+        GlobalSoundEffect.getInstance().play(this);
         moving = false;
     }
 
@@ -254,6 +239,11 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     public Pose getSpritePose() {
         return currentPose;
     }
+
+    public String getPoseSoundEffect() {
+        return String.format("%s/%s", this.getClass().getSimpleName().toLowerCase(), currentPose.getSoundFileName());
+    }
+
 
     public void setSpritePose(Pose currentPose) {
         this.currentPose = currentPose;
