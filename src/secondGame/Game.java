@@ -4,15 +4,29 @@ import com.sun.org.apache.xpath.internal.axes.WalkingIteratorSorted;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 
 public class Game extends Canvas implements Runnable{
     private String title;
     private static final int WIDTH = 640, HEIGHT=WIDTH/12*9;
     private Thread thread;
     private boolean running = false;
+    private Handler handler;
+    private Random r;
 
     public Game(){
         new Display(WIDTH, HEIGHT,"Second Game", this);
+
+        handler = new Handler();
+        r = new Random();
+
+//        for(int i=0; i<50; i++){
+//            handler.addObject(new Player(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.Player));
+//        }
+
+        for(int i=0; i<50; i++){
+            handler.addObject(new Player(0,0, ID.Player));
+        }
     }
 
     @Override
@@ -68,7 +82,7 @@ public class Game extends Canvas implements Runnable{
     }
 
     public void tick(){
-
+        handler.tick();
     }
 
     public void render(){
@@ -83,6 +97,8 @@ public class Game extends Canvas implements Runnable{
         g.clearRect(0, 0, WIDTH, HEIGHT);
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        handler.render(g);
         // call it to show on screen
         bs.show();
         g.dispose();
