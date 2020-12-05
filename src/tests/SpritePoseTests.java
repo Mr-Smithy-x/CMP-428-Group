@@ -1,11 +1,11 @@
 package tests;
 
 import groupproject.spritesheeteditor.models.FileFormat;
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;
 
 public class SpritePoseTests {
 
-    @Test
+
     public void testIsValidPose() {
         try {
             String filename = "link_final_spritesheet.pose";
