@@ -7,8 +7,8 @@ import java.io.Serializable
 import java.util.*
 
 data class FileFormat(
-    var image: String,
-    var poses: LinkedList<AnimationRow>
+        var image: String,
+        var poses: LinkedList<AnimationRow>
 ) : Serializable {
 
     data class AnimationRow(var pose: String, var set: AnimationSet) : Serializable {

@@ -8,9 +8,8 @@ import java.util.EnumMap;
 
 public class GlobalSoundEffect extends BaseSound {
 
-    private final EnumMap<Sprite.Pose, Clip> clips;
-
     private static GlobalSoundEffect instance;
+    private final EnumMap<Sprite.Pose, Clip> clips;
 
     private GlobalSoundEffect() {
         clips = new EnumMap<>(Sprite.Pose.class);
@@ -46,9 +45,11 @@ public class GlobalSoundEffect extends BaseSound {
      * Add Aditional clips in the event you want to play custom clips
      */
     public static class Clips {
-        public static final Clip FALL =  init(getInstance().get("hurt.wav"));
+        public static final Clip FALL = init(getInstance().get("hurt.wav"));
         public static final Clip HURT = init(getInstance().get("fall.wav"));
         public static final Clip ERROR = init(getInstance().get("error.wav"));
-        private Clips(){ }
+
+        private Clips() {
+        }
     }
 }

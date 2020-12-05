@@ -9,6 +9,23 @@ public abstract class BaseSound {
     protected static final String SOUND_TRACK_FOLDER = "assets/sound/tracks";
     protected static final String SOUND_EFFECTS_FOLDER = "assets/sound/effects";
 
+    public static Clip init(File file) {
+        try {
+            AudioInputStream stream = AudioSystem.getAudioInputStream(file);
+            AudioFormat format = stream.getFormat();
+            // specify what kind of line you want to create
+            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            // create the line
+            Clip clip = (Clip) AudioSystem.getLine(info);
+            // Load the samples from the stream
+            clip.open(stream);
+            return clip;
+        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public abstract String getAssetFolder();
 
     public Clip createClip(String file) {
@@ -33,23 +50,6 @@ public abstract class BaseSound {
 
     protected boolean exists(String file) {
         return get(file).exists();
-    }
-
-    public static Clip init(File file) {
-        try {
-            AudioInputStream stream = AudioSystem.getAudioInputStream(file);
-            AudioFormat format = stream.getFormat();
-            // specify what kind of line you want to create
-            DataLine.Info info = new DataLine.Info(Clip.class, format);
-            // create the line
-            Clip clip = (Clip) AudioSystem.getLine(info);
-            // Load the samples from the stream
-            clip.open(stream);
-            return clip;
-        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public void play(Clip clip) {

@@ -14,7 +14,7 @@ public class ZeldaTestGame {
         game.start();
     }
 
-    public static boolean inDebuggingMode(){
+    public static boolean inDebuggingMode() {
         return System.getProperty("DEBUG", "false").equals("true");
     }
 

@@ -7,10 +7,11 @@ import java.awt.*;
 
 public class LifeHud extends BaseHud {
 
-    private Life life;
+    private static LifeHud instance = null;
     private final Polygon diamond;
     private final int[] xDerivedPoints;
     private final int[] yDerivedPoints;
+    private Life life;
 
     private LifeHud() {
         Polygon polygon = new Polygon();
@@ -21,8 +22,6 @@ public class LifeHud extends BaseHud {
         yDerivedPoints = new int[polygon.npoints];
         this.diamond = polygon;
     }
-
-    private static LifeHud instance = null;
 
     public static LifeHud getInstance() {
         if (instance == null) {

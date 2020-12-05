@@ -7,33 +7,18 @@ import java.util.EnumMap;
 
 public class GlobalSoundTrack extends BaseSound {
 
-    protected Track track = Track.NORMAL;
-    private final EnumMap<Track, Clip> clips;
-
     private static GlobalSoundTrack instance;
+    private final EnumMap<Track, Clip> clips;
+    protected Track track = Track.NORMAL;
 
     private GlobalSoundTrack() {
         clips = new EnumMap<>(Track.class);
         for (Track value : Track.values()) {
-            if(exists(value.track)) {
-                Clip clip = createClip(value.track);
+            if (exists(value.value)) {
+                Clip clip = createClip(value.value);
                 clips.put(value, clip);
             }
         }
-    }
-
-    public void setTrack(Track track) {
-        if(this.track != track) {
-            Clip clip = this.clips.get(this.track);
-            if (clip.isActive()) {
-                stop(clip);
-            }
-            this.track = track;
-        }
-    }
-
-    public Track getTrack() {
-        return track;
     }
 
     public static GlobalSoundTrack getInstance() {
@@ -41,6 +26,20 @@ public class GlobalSoundTrack extends BaseSound {
             instance = new GlobalSoundTrack();
         }
         return instance;
+    }
+
+    public Track getTrack() {
+        return track;
+    }
+
+    public void setTrack(Track track) {
+        if (this.track != track) {
+            Clip clip = this.clips.get(this.track);
+            if (clip.isActive()) {
+                stop(clip);
+            }
+            this.track = track;
+        }
     }
 
     public void play() {
@@ -58,10 +57,10 @@ public class GlobalSoundTrack extends BaseSound {
         COMBAT("forest.wav"),
         DUNGEON("sanctuary_dungeon.wav");
 
-        private final String track;
+        private final String value;
 
-        Track(String track) {
-            this.track = track;
+        Track(String value) {
+            this.value = value;
         }
 
     }

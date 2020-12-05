@@ -2,8 +2,8 @@ package groupproject.spritesheeteditor.extensions
 
 import groupproject.gameengine.sprite.Sprite
 import groupproject.spritesheeteditor.helpers.SpriteCellValueFactory
-import groupproject.spritesheeteditor.views.SpriteCanvasSelectionView
 import groupproject.spritesheeteditor.models.FileFormat
+import groupproject.spritesheeteditor.views.SpriteCanvasSelectionView
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.cell.PropertyValueFactory
@@ -12,13 +12,13 @@ import java.io.*
 import java.util.*
 
 fun TableView<FileFormat.AnimationRow>.init(
-    spriteCanvasSelectionView: SpriteCanvasSelectionView
+        spriteCanvasSelectionView: SpriteCanvasSelectionView
 ): List<TableColumn<FileFormat.AnimationRow, Any>> {
     return init(spriteCanvasSelectionView.image)
 }
 
 fun TableView<FileFormat.AnimationRow>.init(
-    image: BufferedImage
+        image: BufferedImage
 ): List<TableColumn<FileFormat.AnimationRow, Any>> {
     val map = ArrayList<TableColumn<FileFormat.AnimationRow, Any>>()
     for (i in 0..16) {
@@ -63,7 +63,7 @@ fun TableView<FileFormat.AnimationRow>.load(spriteCanvasSelectionView: SpriteCan
         val defaultPoses = Sprite.Pose.values().map { it.name }
         val addedPoses = items.map { it.pose }
         val posesToAdd = defaultPoses.minus(addedPoses)
-        for(pose in posesToAdd){
+        for (pose in posesToAdd) {
             addOption(pose)
         }
         refresh()
@@ -80,8 +80,8 @@ fun TableView<FileFormat.AnimationRow>.hasPose(pose: String): Boolean {
 fun TableView<FileFormat.AnimationRow>.find(pose: String): FileFormat.AnimationRow? {
     return items.find {
         it.pose.equals(
-            pose,
-            true
+                pose,
+                true
         )
     }
 }
@@ -93,7 +93,7 @@ fun TableView<FileFormat.AnimationRow>.addOption(pose: String) {
 
 fun TableView<FileFormat.AnimationRow>.removeLastInserted() {
     val item = selectionModel.selectedItem
-    if(!item.set.isEmpty()) {
+    if (!item.set.isEmpty()) {
         item.set.remove(item.set.last())
         refresh()
     }

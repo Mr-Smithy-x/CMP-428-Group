@@ -59,7 +59,7 @@ open class BaseCanvasView : EventHandler<MouseEvent?> {
         canvas.width = image.width.toDouble()
         canvas.height = image.height.toDouble()
         draw(image)
-        return image;
+        return image
     }
 
     fun draw(toFXImage: WritableImage?) {
@@ -67,11 +67,11 @@ open class BaseCanvasView : EventHandler<MouseEvent?> {
     }
 
     fun draw(
-        image: BufferedImage,
-        x: Double = 0.0,
-        y: Double = 0.0,
-        w: Double = image.width.toDouble(),
-        h: Double = image.height.toDouble()
+            image: BufferedImage,
+            x: Double = 0.0,
+            y: Double = 0.0,
+            w: Double = image.width.toDouble(),
+            h: Double = image.height.toDouble()
     ) {
         canvas.graphicsContext2D.drawImage(SwingFXUtils.toFXImage(image, null), x, y, w, h)
     }

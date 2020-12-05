@@ -6,11 +6,11 @@ import groupproject.containers.zelda.hud.LifeHud;
 import groupproject.containers.zelda.models.Dog;
 import groupproject.containers.zelda.models.Link;
 import groupproject.containers.zelda.models.MinishLink;
+import groupproject.containers.zelda.sound.GlobalSoundEffect;
+import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
-import groupproject.containers.zelda.sound.GlobalSoundEffect;
-import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.sprite.Sprite;
 import groupproject.games.ZeldaTestGame;
 
@@ -91,7 +91,7 @@ public class ZeldaContainer extends GameContainer {
                 GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.COMBAT);
                 minishLink.damageHealth(.2);
                 minishLink.useEnergy(.1);
-            }else{
+            } else {
                 GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.NORMAL);
             }
         }

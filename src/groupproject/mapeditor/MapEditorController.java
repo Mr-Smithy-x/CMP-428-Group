@@ -77,12 +77,12 @@ public class MapEditorController {
         for (int row = 0; row < model.getMapModel().getMapRows(); row++) {
             for (int col = 0; col < model.getMapModel().getMapColumns(); col++) {
                 switch (editorMode) {
-                case PAINT:
-                    updateTileInMap(row, col, false);
-                    break;
-                case COLLISION:
-                case OBJECT:
-                    break;
+                    case PAINT:
+                        updateTileInMap(row, col, false);
+                        break;
+                    case COLLISION:
+                    case OBJECT:
+                        break;
                 }
             }
         }
@@ -99,15 +99,15 @@ public class MapEditorController {
     public void fillRowBasedOnEditorMode() {
         for (int col = 0; col < model.getMapModel().getMapColumns(); col++) {
             switch (editorMode) {
-            case PAINT:
-                updateTileInMap(currentHoveredRow, col, false);
-                break;
-            case COLLISION:
-                updateCollisionTileInMap(currentHoveredRow, col);
-                break;
-            case OBJECT:
-                updateTileInObjectMap(currentHoveredRow, col, false);
-                break;
+                case PAINT:
+                    updateTileInMap(currentHoveredRow, col, false);
+                    break;
+                case COLLISION:
+                    updateCollisionTileInMap(currentHoveredRow, col);
+                    break;
+                case OBJECT:
+                    updateTileInObjectMap(currentHoveredRow, col, false);
+                    break;
             }
         }
         mapEditorView.loadInitialMapView(
@@ -129,15 +129,15 @@ public class MapEditorController {
     public void fillColumnBasedOnEditorMode() {
         for (int row = 0; row < model.getMapModel().getMapRows(); row++) {
             switch (editorMode) {
-            case PAINT:
-                updateTileInMap(row, currentHoveredColumn, false);
-                break;
-            case COLLISION:
-                updateCollisionTileInMap(row, currentHoveredColumn);
-                break;
-            case OBJECT:
-                updateTileInObjectMap(row, currentHoveredColumn, false);
-                break;
+                case PAINT:
+                    updateTileInMap(row, currentHoveredColumn, false);
+                    break;
+                case COLLISION:
+                    updateCollisionTileInMap(row, currentHoveredColumn);
+                    break;
+                case OBJECT:
+                    updateTileInObjectMap(row, currentHoveredColumn, false);
+                    break;
             }
         }
         mapEditorView.loadInitialMapView(
