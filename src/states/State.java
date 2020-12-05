@@ -1,5 +1,7 @@
 package states;
 
+import groupproject.gameengine.GameContainer;
+
 import java.awt.*;
 
 public abstract class State {
@@ -11,6 +13,11 @@ public abstract class State {
 
     public static State getState(){
         return currentState;
+    }
+
+    protected GameContainer game;
+    public State(GameContainer game){
+        this.game = game;
     }
 
     public abstract void tick();

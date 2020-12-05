@@ -1,10 +1,12 @@
 package states;
 
+import groupproject.gameengine.GameContainer;
+
 import java.awt.*;
 
 public class GameState extends State {
-    public GameState(){
-
+    public GameState(GameContainer game){
+        super(game);
     }
 
     @Override

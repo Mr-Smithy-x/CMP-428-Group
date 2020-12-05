@@ -26,8 +26,8 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     protected boolean[] pressedKey = new boolean[255];
     protected boolean playing = true;
 
-    private State gameState;  // add by chen
-    private State menuState;  // add by chen
+    public State gameState;  // add by chen
+    public State menuState;  // add by chen
 
     /**
      * Mouse Variables
@@ -254,14 +254,23 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
 
     // add by chen
     public void init(){
-        gameState = new GameState();
-        menuState = new MenuState();
-        State.setState(gameState);
+        gameState = new GameState(this);
+        menuState = new MenuState(this);
+//        State.setState(gameState);
+//        State.setState(menuState);
     }
 
     public void tick(){
         if(State.getState() != null){
             State.getState().tick();
+        }
+    }
+
+    public void render(Graphics g){
+
+        // add by chen
+        if(State.getState() != null) {
+            State.getState().render(g);
         }
     }
 

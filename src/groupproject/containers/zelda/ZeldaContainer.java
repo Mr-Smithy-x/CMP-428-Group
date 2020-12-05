@@ -105,11 +105,6 @@ public class ZeldaContainer extends GameContainer {
             g.setColor(new Color(255, 70, 70));
             drawTextCenteredOffset(g, GameTextDialog.PLAYER_DIED, 0, getHeight() / 4);
         }
-
-        // add by chen
-        if(State.getState() != null) {
-            State.getState().render(g);
-        }
     }
 
     @Override
