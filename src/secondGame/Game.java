@@ -8,30 +8,33 @@ import java.util.Random;
 
 public class Game extends Canvas implements Runnable{
     private String title;
-    private static final int WIDTH = 640, HEIGHT=WIDTH/12*9;
+    public static final int WIDTH = 640, HEIGHT=WIDTH/12*9;
     private Thread thread;
     private boolean running = false;
     private Handler handler;
     private Random r;
+    private HUD hud;
 
     public Game(){
+        handler = new Handler();
+        this.addKeyListener(new KeyInput(handler));
+
         new Display(WIDTH, HEIGHT,"Second Game", this);
 
-        handler = new Handler();
         r = new Random();
-
-//        for(int i=0; i<50; i++){
-//            handler.addObject(new Player(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.Player));
+        hud = new HUD();
+        handler.addObject(new Player(WIDTH/2-32,HEIGHT/2-32, ID.Player, handler));
+//        for(int i=0; i<5; i++){
+//            handler.addObject(new BasicEnemy(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.BasicEnemy, handler));
 //        }
-
-        for(int i=0; i<50; i++){
-            handler.addObject(new Player(0,0, ID.Player));
-        }
+        handler.addObject(new BasicEnemy(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.BasicEnemy, handler));
+        handler.addObject(new BasicEnemy(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.BasicEnemy, handler));
+        handler.addObject(new BasicEnemy(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.BasicEnemy, handler));
+        handler.addObject(new BasicEnemy(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.BasicEnemy, handler));
     }
 
     @Override
     public void run() {
-
         double fps = 60.0;  //tickes per second
         double timePerTick = 1000000000 / fps; // nanoseconds per tick
         double delta = 0;
@@ -83,6 +86,7 @@ public class Game extends Canvas implements Runnable{
 
     public void tick(){
         handler.tick();
+        hud.tick();
     }
 
     public void render(){
@@ -99,8 +103,18 @@ public class Game extends Canvas implements Runnable{
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         handler.render(g);
+        hud.render(g);
         // call it to show on screen
         bs.show();
         g.dispose();
+    }
+
+    public static int clamp(int var, int min,int max){
+        if(var>=max)
+            return var = max;
+        else if(var<=min)
+            return var = min;
+        else
+            return var;
     }
 }
