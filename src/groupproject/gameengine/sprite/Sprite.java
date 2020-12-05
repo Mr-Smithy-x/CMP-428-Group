@@ -1,10 +1,13 @@
 package groupproject.gameengine.sprite;
 
+import com.sun.istack.internal.Nullable;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.CollisionDetection;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
+import groupproject.games.ZeldaTestGame;
+import groupproject.spritesheeteditor.models.FileFormat;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -34,8 +37,27 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         setupBox(x, y);
     }
 
+    public Sprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
+        this.scaled = scaled;
+        animDict.putAll(setupImages(initializeSheet(spriteSheet), delay));
+        initAnimations();
+        setupBox(x, y);
+    }
+
+    protected Sprite(FileFormat format, int x, int y, int scaled, int delay) throws IOException {
+        this.scaled = scaled;
+        animDict.putAll(setupImages(format, initializeSheet(format.getImage()), delay));
+        initAnimations();
+        setupBox(x, y);
+
+    }
+
     public enum Pose {
-        UP, DOWN, LEFT, RIGHT, ALL, JUMP, ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT, SPIN_ATTACK, DEAD;
+        UP, DOWN, LEFT, RIGHT,
+        ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT,
+        SPIN_ATTACK, ALL, JUMP, DEAD,
+        ROLL_LEFT, ROLL_RIGHT, ROLL_UP, ROLL_DOWN,
+        ATTACK_UP_01, ATTACK_DOWN_01, ATTACK_LEFT_01, ATTACK_RIGHT_01;
 
         public static Pose parse(String pose) {
             return Pose.valueOf(pose.toUpperCase());
@@ -77,11 +99,17 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         }
     }
 
-    public Sprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
-        this.scaled = scaled;
-        animDict.putAll(setupImages(initializeSheet(spriteSheet), delay));
-        initAnimations();
-        setupBox(x, y);
+    @SuppressWarnings("java:S1172")
+    private EnumMap<Pose, Animation> setupImages(@Nullable FileFormat format, BufferedImage image, int delay) {
+        EnumMap<Pose, Animation> map = new EnumMap<>(Pose.class);
+        for (FileFormat.AnimationRow row : format.getPoses()) {
+            Animation animation = Animation.with(delay);
+            for (FileFormat.SpriteBounds spriteBounds : row.getSet()) {
+                animation.addFrame(image.getSubimage(spriteBounds.getX(), spriteBounds.getY(), spriteBounds.getW(), spriteBounds.getH()));
+            }
+            map.put(Pose.parse(row.getPose()), animation);
+        }
+        return map;
     }
 
     @SuppressWarnings("java:S1172")
@@ -114,8 +142,8 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     // Draws the sprite's current image based on its current state.
     @Override
     public void render(Graphics g) {
+        Image currentFrame;
         if (animDict.containsKey(currentPose)) {
-            Image currentFrame;
             if (moving) {
                 currentFrame = animDict.get(currentPose).getCurrentFrame();
             } else {
@@ -128,12 +156,27 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
             moving = false;
         } else {
             Animation firstAnim = getFirstAnimation();
-            Image currentFrame = firstAnim.getCurrentFrame();
+            currentFrame = firstAnim.getCurrentFrame();
             g.drawImage(currentFrame,
                     getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
                     getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
                     null);
         }
+        if (ZeldaTestGame.inDebuggingMode()) {
+            drawActualImageBounds(currentFrame, g);
+            drawBounds(g);
+        }
+    }
+
+    public void drawActualImageBounds(Image currentFrame, Graphics g) {
+        // For debug purposes, draw the bounding box of the sprite.
+        g.setColor(Color.RED);
+        g.drawRect(getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
+                getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
+                currentFrame.getWidth(null)
+                , currentFrame.getHeight(null));
+
+
     }
 
     public void drawBounds(Graphics g) {
@@ -144,20 +187,24 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
 
     public void move() {
         switch (currentPose) {
-        case UP:
-            moveUp(velocity);
-            break;
-        case DOWN:
-            moveDown(velocity);
-            break;
-        case LEFT:
-            moveLeft(velocity);
-            break;
-        case RIGHT:
-            moveRight(velocity);
-            break;
-        default:
-            break;
+            case ROLL_UP:
+            case UP:
+                moveUp(velocity);
+                break;
+            case ROLL_DOWN:
+            case DOWN:
+                moveDown(velocity);
+                break;
+            case ROLL_LEFT:
+            case LEFT:
+                moveLeft(velocity);
+                break;
+            case ROLL_RIGHT:
+            case RIGHT:
+                moveRight(velocity);
+                break;
+            default:
+                break;
         }
     }
 
