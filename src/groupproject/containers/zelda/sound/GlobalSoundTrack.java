@@ -1,4 +1,6 @@
-package groupproject.gameengine.sound;
+package groupproject.containers.zelda.sound;
+
+import groupproject.gameengine.sound.BaseSound;
 
 import javax.sound.sampled.Clip;
 import java.util.EnumMap;

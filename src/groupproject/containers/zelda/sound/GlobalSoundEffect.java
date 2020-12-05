@@ -1,5 +1,6 @@
-package groupproject.gameengine.sound;
+package groupproject.containers.zelda.sound;
 
+import groupproject.gameengine.sound.BaseSound;
 import groupproject.gameengine.sprite.Sprite;
 
 import javax.sound.sampled.Clip;

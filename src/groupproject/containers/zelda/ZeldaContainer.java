@@ -9,8 +9,8 @@ import groupproject.containers.zelda.models.MinishLink;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
-import groupproject.gameengine.sound.GlobalSoundEffect;
-import groupproject.gameengine.sound.GlobalSoundTrack;
+import groupproject.containers.zelda.sound.GlobalSoundEffect;
+import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.sprite.Sprite;
 import groupproject.games.ZeldaTestGame;
 

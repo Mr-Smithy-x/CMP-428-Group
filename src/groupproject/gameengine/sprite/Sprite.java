@@ -5,7 +5,7 @@ import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.CollisionDetection;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
-import groupproject.gameengine.sound.GlobalSoundEffect;
+import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.games.ZeldaTestGame;
 import groupproject.spritesheeteditor.models.FileFormat;
 
