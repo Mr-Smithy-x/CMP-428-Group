@@ -44,13 +44,30 @@ public class Tile implements Renderable, CameraContract {
     }
 
     @Override
+    public void setX(Number x) {
+        this.x = x.intValue();
+    }
+
+    @Override
     public Number getY() {
         return y;
     }
 
     @Override
+    public void setY(Number y) {
+        this.y = y.intValue();
+    }
+
+    @Override
     public Number getWidth() {
         return width;
+    }
+
+    @Override
+    public void setWidth(Number width) {
+        /*
+          Not needed.
+         */
     }
 
     @Override
@@ -63,23 +80,6 @@ public class Tile implements Renderable, CameraContract {
         /*
           Not needed.
          */
-    }
-
-    @Override
-    public void setWidth(Number width) {
-        /*
-          Not needed.
-         */
-    }
-
-    @Override
-    public void setX(Number x) {
-        this.x = x.intValue();
-    }
-
-    @Override
-    public void setY(Number y) {
-        this.y = y.intValue();
     }
 
     public boolean isCollisionEnabled() {

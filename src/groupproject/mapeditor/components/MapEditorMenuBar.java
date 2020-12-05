@@ -25,6 +25,26 @@ public class MapEditorMenuBar extends JMenuBar {
         setupEditMenu();
     }
 
+    public static void setEditorMenuStatus(EditorMode status) {
+        switch (status) {
+            case PAINT:
+                paintMode.setSelected(true);
+                collisionMode.setSelected(false);
+                objectMode.setSelected(false);
+                break;
+            case OBJECT:
+                paintMode.setSelected(false);
+                collisionMode.setSelected(false);
+                objectMode.setSelected(true);
+                break;
+            case COLLISION:
+                paintMode.setSelected(false);
+                collisionMode.setSelected(true);
+                objectMode.setSelected(false);
+                break;
+        }
+    }
+
     private void setupFileMenu() {
         JMenu fileMenu = new JMenu("File");
         JMenuItem newFile = new JMenuItem("Create Map..");
@@ -113,25 +133,5 @@ public class MapEditorMenuBar extends JMenuBar {
         editMenu.add(fillRow);
         editMenu.add(fillCol);
         this.add(editMenu);
-    }
-
-    public static void setEditorMenuStatus(EditorMode status) {
-        switch (status) {
-        case PAINT:
-            paintMode.setSelected(true);
-            collisionMode.setSelected(false);
-            objectMode.setSelected(false);
-            break;
-        case OBJECT:
-            paintMode.setSelected(false);
-            collisionMode.setSelected(false);
-            objectMode.setSelected(true);
-            break;
-        case COLLISION:
-            paintMode.setSelected(false);
-            collisionMode.setSelected(true);
-            objectMode.setSelected(false);
-            break;
-        }
     }
 }

@@ -31,6 +31,10 @@ public class Animation {
         timer.scheduleAtFixedRate(task, 0, delay);
     }
 
+    public static Animation with(int delay) {
+        return new Animation(delay);
+    }
+
     public void loadFrames(String prefix, String folder) {
         File directory = new File(folder);
         File[] frameFiles = directory.listFiles(file -> file.getName().startsWith(prefix));
@@ -56,10 +60,6 @@ public class Animation {
         frames.add(image);
     }
 
-    public static Animation with(int delay) {
-        return new Animation(delay);
-    }
-
     public Image getCurrentFrame() {
         try {
             return frames.get(currentFrame);
@@ -68,6 +68,12 @@ public class Animation {
             return null;
         }
     }
+
+
+    public int getCurrentFrameIndex() {
+        return currentFrame;
+    }
+
 
     public void scale(int scale) {
         frames = frames.stream()

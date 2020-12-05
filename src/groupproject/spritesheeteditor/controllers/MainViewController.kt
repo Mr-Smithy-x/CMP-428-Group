@@ -14,7 +14,6 @@ import javafx.scene.input.KeyCode
 import javafx.stage.FileChooser
 import java.io.File
 import kotlin.system.exitProcess
-import javafx.scene.control.TextInputDialog
 
 
 class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.SpriteCanvasMouseCallback {
@@ -94,10 +93,10 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
     }
 
     private fun alert(
-        title: String,
-        headerText: String,
-        contentText: String,
-        type: Alert.AlertType = Alert.AlertType.INFORMATION
+            title: String,
+            headerText: String,
+            contentText: String,
+            type: Alert.AlertType = Alert.AlertType.INFORMATION
     ) = Alert(type).also {
         it.title = title
         it.headerText = headerText
@@ -124,9 +123,9 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
             }
             aboutMenuItem -> {
                 alert(
-                    "About",
-                    "Dev: Mr-Smithy-x@github.com",
-                    "Parsing & rearranging sheets is an nuisance"
+                        "About",
+                        "Dev: Mr-Smithy-x@github.com",
+                        "Parsing & rearranging sheets is an nuisance"
                 ).showAndWait()
             }
             newMenuItem -> {
@@ -166,10 +165,10 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                         tableView.saveSerialized(file, imageFile)
                     }
                 } else alert(
-                    "Hmmm",
-                    "We ran into a issue",
-                    "There's nothing to save",
-                    Alert.AlertType.INFORMATION
+                        "Hmmm",
+                        "We ran into a issue",
+                        "There's nothing to save",
+                        Alert.AlertType.INFORMATION
                 ).showAndWait()
             }
             closeMenuItem -> {
@@ -189,34 +188,34 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                     }
                 } else {
                     alert(
-                        "Error",
-                        "We ran into an issue",
-                        "App needs to be initialized",
-                        Alert.AlertType.ERROR
+                            "Error",
+                            "We ran into an issue",
+                            "App needs to be initialized",
+                            Alert.AlertType.ERROR
                     ).showAndWait()
                 }
             }
         }
     }
 
-    private fun addOption(text: String){
+    private fun addOption(text: String) {
         if (spriteCanvasSelectionView.isInitialized) {
             if (!tableView.hasPose(text)) {
                 selectPoseCombobox.items.add(text)
                 selectPoseCombobox.selectionModel.select(text)
                 tableView.addOption(text)
             } else alert(
-                "Error",
-                "We ran into a conflict",
-                "You already have '$text' listed already",
-                Alert.AlertType.ERROR
+                    "Error",
+                    "We ran into a conflict",
+                    "You already have '$text' listed already",
+                    Alert.AlertType.ERROR
             ).showAndWait()
         } else {
             alert(
-                "Error",
-                "We ran into an issue",
-                "App needs to be initialized",
-                Alert.AlertType.ERROR
+                    "Error",
+                    "We ran into an issue",
+                    "App needs to be initialized",
+                    Alert.AlertType.ERROR
             ).showAndWait()
         }
     }

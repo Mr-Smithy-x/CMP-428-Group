@@ -2,7 +2,6 @@ package groupproject.gameengine.camera;
 
 import groupproject.gameengine.contracts.BoundingContract;
 import groupproject.gameengine.models.BoundingBox;
-import groupproject.gameengine.sprite.Sprite;
 import groupproject.gameengine.tile.TileMap;
 
 import java.awt.*;
@@ -21,7 +20,7 @@ public abstract class BaseCamera {
     protected int scaling = 1;
     protected int gravity = 1;
 
-    public BaseCamera(double xOrigin, double yOrigin) {
+    protected BaseCamera(double xOrigin, double yOrigin) {
         this.xOrigin = xOrigin;
         this.yOrigin = yOrigin;
     }

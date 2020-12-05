@@ -6,6 +6,8 @@ import groupproject.containers.zelda.hud.LifeHud;
 import groupproject.containers.zelda.models.Dog;
 import groupproject.containers.zelda.models.Link;
 import groupproject.containers.zelda.models.MinishLink;
+import groupproject.containers.zelda.sound.GlobalSoundEffect;
+import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
@@ -63,7 +65,6 @@ public class ZeldaContainer extends GameContainer {
                 minishLink.move();
             }
 
-
             if (minishLink.hasEnergy()) {
                 if (pressedKey[KeyEvent.VK_Z]) {
                     minishLink.spin();
@@ -85,13 +86,25 @@ public class ZeldaContainer extends GameContainer {
             if (healthBox.isOverlapping(minishLink)) {
                 minishLink.incrementHealth(.1);
                 minishLink.incrementEnergy(.05);
-            }
-            if (damageBox.isOverlapping(minishLink)) {
+                GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
+            } else if (damageBox.isOverlapping(minishLink)) {
+                GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.COMBAT);
                 minishLink.damageHealth(.2);
                 minishLink.useEnergy(.1);
+            } else {
+                GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.NORMAL);
             }
         }
+        GlobalSoundEffect.getInstance().play(minishLink);
+        GlobalSoundTrack.getInstance().play();
         GlobalCamera.getInstance().setOrigin(minishLink, getWidth(), getHeight());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
+        GlobalSoundTrack.getInstance().play();
     }
 
     @Override

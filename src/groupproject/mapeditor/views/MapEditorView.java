@@ -85,47 +85,47 @@ public class MapEditorView extends JPanel {
 
     private void editorTileLeftClicked(MapEditorTileButton button) {
         switch (editorController.getEditorMode()) {
-        case PAINT:
-            if (editorController.getSelectedTile() != null) {
-                button.setTileImage(editorController.getSelectedTile());
-                editorController.updateTileInMap(button.getMapRow(), button.getMapCol(), false);
-            }
-            break;
-        case COLLISION:
-            boolean currentVal = editorController.updateCollisionTileInMap(button.getMapRow(), button.getMapCol());
-            if (currentVal) button.setBorder(BorderFactory.createLineBorder(Color.red));
-            else button.setBorder(UIManager.getBorder("Label.border"));
-            break;
-        case OBJECT:
-            if (editorController.getSelectedTile() != null && button.getTileImage() != null) {
-                button.setObjectImage(editorController.getSelectedTile());
-                editorController.updateTileInObjectMap(button.getMapRow(), button.getMapCol(), false);
-            }
-            break;
+            case PAINT:
+                if (editorController.getSelectedTile() != null) {
+                    button.setTileImage(editorController.getSelectedTile());
+                    editorController.updateTileInMap(button.getMapRow(), button.getMapCol(), false);
+                }
+                break;
+            case COLLISION:
+                boolean currentVal = editorController.updateCollisionTileInMap(button.getMapRow(), button.getMapCol());
+                if (currentVal) button.setBorder(BorderFactory.createLineBorder(Color.red));
+                else button.setBorder(UIManager.getBorder("Label.border"));
+                break;
+            case OBJECT:
+                if (editorController.getSelectedTile() != null && button.getTileImage() != null) {
+                    button.setObjectImage(editorController.getSelectedTile());
+                    editorController.updateTileInObjectMap(button.getMapRow(), button.getMapCol(), false);
+                }
+                break;
         }
     }
 
     private void editorTileRightClicked(MapEditorTileButton button) {
         switch (editorController.getEditorMode()) {
-        case PAINT:
-            if (button.getTileImage() != null) {
-                int iconWidth = button.getTileImage().getWidth();
-                int iconHeight = button.getTileImage().getHeight();
-                button.setTileImage(null);
-                button.setObjectImage(null);
-                createEmptyTileButton(iconWidth, iconHeight, button);
-                editorController.updateTileInMap(button.getMapRow(), button.getMapCol(), true);
-                editorController.updateTileInObjectMap(button.getMapRow(), button.getMapCol(), true);
-            }
-            break;
-        case OBJECT:
-            if (button.getObjectImage() != null) {
-                button.setObjectImage(null);
-                editorController.updateTileInObjectMap(button.getMapRow(), button.getMapCol(), true);
-            }
-            break;
-        case COLLISION:
-            break;
+            case PAINT:
+                if (button.getTileImage() != null) {
+                    int iconWidth = button.getTileImage().getWidth();
+                    int iconHeight = button.getTileImage().getHeight();
+                    button.setTileImage(null);
+                    button.setObjectImage(null);
+                    createEmptyTileButton(iconWidth, iconHeight, button);
+                    editorController.updateTileInMap(button.getMapRow(), button.getMapCol(), true);
+                    editorController.updateTileInObjectMap(button.getMapRow(), button.getMapCol(), true);
+                }
+                break;
+            case OBJECT:
+                if (button.getObjectImage() != null) {
+                    button.setObjectImage(null);
+                    editorController.updateTileInObjectMap(button.getMapRow(), button.getMapCol(), true);
+                }
+                break;
+            case COLLISION:
+                break;
         }
     }
 }

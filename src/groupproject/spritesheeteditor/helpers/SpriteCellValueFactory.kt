@@ -10,7 +10,7 @@ import javafx.util.Callback
 import java.awt.image.BufferedImage
 
 class SpriteCellValueFactory(val index: Int, val image: BufferedImage) :
-    Callback<TableColumn.CellDataFeatures<FileFormat.AnimationRow, Any>, ObservableValue<Any>> {
+        Callback<TableColumn.CellDataFeatures<FileFormat.AnimationRow, Any>, ObservableValue<Any>> {
 
     override fun call(data: TableColumn.CellDataFeatures<FileFormat.AnimationRow, Any>): ObservableValue<Any> {
         if (index < data.value.set.size) {

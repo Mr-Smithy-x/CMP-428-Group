@@ -13,8 +13,8 @@ object FloodFillAlgorithm {
         if (x >= 1 && y >= 1 && x < image.width && y < image.height) {
             val c2 = Color(image.getRGB(x, y))
             if (abs(c2.green - color.green) < 30 &&
-                abs(c2.red - color.red) < 30 &&
-                abs(c2.blue - color.blue) < 30
+                    abs(c2.red - color.red) < 30 &&
+                    abs(c2.blue - color.blue) < 30
             ) {
                 image.setRGB(x, y, replacement.rgb)
                 graphics.drawImage(SwingFXUtils.toFXImage(image, null), 0.0, 0.0)

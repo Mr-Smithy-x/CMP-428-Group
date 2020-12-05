@@ -4,6 +4,8 @@ public interface Life {
 
     double getHealth();
 
+    void setHealth(double health);
+
     default double getMaxHealth() {
         return 100;
     }
@@ -11,8 +13,6 @@ public interface Life {
     default boolean isDead() {
         return getHealth() <= 0;
     }
-
-    void setHealth(double health);
 
     default void damageHealth(double damage) {
         if (getHealth() > 0) {

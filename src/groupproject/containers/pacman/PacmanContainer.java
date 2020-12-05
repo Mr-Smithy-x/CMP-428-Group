@@ -75,40 +75,40 @@ public class PacmanContainer extends GameContainer {
         int velocity = sprite.getVelocity();
 
         switch (pose) {
-        case RIGHT:
-            for (Tile tile : maps.get(0).getSurroundingTiles(
-                    sprite.getBounds().getX().intValue(),
-                    sprite.getBounds().getY().intValue(),
-                    Sprite.Pose.RIGHT))
-                if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), velocity, 0))
-                    isColliding = true;
-            break;
-        case LEFT:
-            for (Tile tile : maps.get(0).getSurroundingTiles(
-                    sprite.getBounds().getX().intValue(),
-                    sprite.getBounds().getY().intValue(),
-                    Sprite.Pose.LEFT))
-                if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), -velocity, 0))
-                    isColliding = true;
-            break;
-        case UP:
-            for (Tile tile : maps.get(0).getSurroundingTiles(
-                    sprite.getBounds().getX().intValue(),
-                    sprite.getBounds().getY().intValue(),
-                    Sprite.Pose.UP))
-                if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, -velocity))
-                    isColliding = true;
-            break;
-        case DOWN:
-            for (Tile tile : maps.get(0).getSurroundingTiles(
-                    sprite.getBounds().getX().intValue(),
-                    sprite.getBounds().getY().intValue(),
-                    Sprite.Pose.DOWN))
-                if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, velocity))
-                    isColliding = true;
-            break;
-        default:
-            break;
+            case RIGHT:
+                for (Tile tile : maps.get(0).getSurroundingTiles(
+                        sprite.getBounds().getX().intValue(),
+                        sprite.getBounds().getY().intValue(),
+                        Sprite.Pose.RIGHT))
+                    if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), velocity, 0))
+                        isColliding = true;
+                break;
+            case LEFT:
+                for (Tile tile : maps.get(0).getSurroundingTiles(
+                        sprite.getBounds().getX().intValue(),
+                        sprite.getBounds().getY().intValue(),
+                        Sprite.Pose.LEFT))
+                    if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), -velocity, 0))
+                        isColliding = true;
+                break;
+            case UP:
+                for (Tile tile : maps.get(0).getSurroundingTiles(
+                        sprite.getBounds().getX().intValue(),
+                        sprite.getBounds().getY().intValue(),
+                        Sprite.Pose.UP))
+                    if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, -velocity))
+                        isColliding = true;
+                break;
+            case DOWN:
+                for (Tile tile : maps.get(0).getSurroundingTiles(
+                        sprite.getBounds().getX().intValue(),
+                        sprite.getBounds().getY().intValue(),
+                        Sprite.Pose.DOWN))
+                    if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, velocity))
+                        isColliding = true;
+                break;
+            default:
+                break;
         }
 
         return isColliding;

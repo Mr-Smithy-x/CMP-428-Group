@@ -12,7 +12,7 @@ import javax.imageio.ImageIO
 
 class SpriteCanvasSelectionView : BaseCanvasView {
 
-    enum class SelectionMode (var dimension: Int = 0) {
+    enum class SelectionMode(var dimension: Int = 0) {
         FINE,
         EVEN(48);
     }
@@ -84,7 +84,7 @@ class SpriteCanvasSelectionView : BaseCanvasView {
                         val width = highX - lowX
                         val height = highY - lowY
                         selectedSpriteBounds =
-                            FileFormat.SpriteBounds(lowX.toInt(), lowY.toInt(), width.toInt(), height.toInt())
+                                FileFormat.SpriteBounds(lowX.toInt(), lowY.toInt(), width.toInt(), height.toInt())
                     }
                 } else {
                     selectedSpriteBounds = null
@@ -94,10 +94,10 @@ class SpriteCanvasSelectionView : BaseCanvasView {
         canvas.graphicsContext2D.drawImage(SwingFXUtils.toFXImage(i, null), 0.0, 0.0)
         if (selectedSpriteBounds != null) {
             canvas.graphicsContext2D.strokeRect(
-                selectedSpriteBounds!!.x.toDouble(),
-                selectedSpriteBounds!!.y.toDouble(),
-                selectedSpriteBounds!!.w.toDouble(),
-                selectedSpriteBounds!!.h.toDouble()
+                    selectedSpriteBounds!!.x.toDouble(),
+                    selectedSpriteBounds!!.y.toDouble(),
+                    selectedSpriteBounds!!.w.toDouble(),
+                    selectedSpriteBounds!!.h.toDouble()
             )
         }
     }

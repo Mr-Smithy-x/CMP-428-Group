@@ -15,7 +15,7 @@ public class SpritePoseTests {
             assert load.getImage().equals(imagename);
             assert !load.getPoses().isEmpty();
             assert load.getPoses().get(0).getPose().equals("UP");
-        } catch (Throwable e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

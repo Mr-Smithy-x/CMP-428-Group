@@ -73,33 +73,33 @@ public class TileMap implements CameraContract, Renderable {
         int col = x / mapModel.getPerTileWidth();
         List<Tile> tiles = new ArrayList<>();
         switch (pose) {
-        case UP:
-            for (int i : new int[]{col, col + 1, col - 1})
-                tiles.add(getMainLayerTileAt(row - 1, i));
-            break;
-        case DOWN:
-            for (int i : new int[]{col, col + 1, col - 1})
-                tiles.add(getMainLayerTileAt(row + 1, i));
-            break;
-        case LEFT:
-            for (int i : new int[]{row - 1, row, row + 1})
-                tiles.add(getMainLayerTileAt(i, col - 1));
-            break;
-        case RIGHT:
-            for (int i : new int[]{row - 1, row, row + 1})
-                tiles.add(getMainLayerTileAt(i, col + 1));
-            break;
-        case ALL:
-            for (int i : new int[]{row - 1, row + 1}) {
-                tiles.add(getMainLayerTileAt(i, col));
-                tiles.add(getMainLayerTileAt(i, col + 1));
-                tiles.add(getMainLayerTileAt(i, col - 1));
-            }
-            for (int i : new int[]{col - 1, col + 1})
-                tiles.add(getMainLayerTileAt(row, i));
-            break;
-        default:
-            break;
+            case UP:
+                for (int i : new int[]{col, col + 1, col - 1})
+                    tiles.add(getMainLayerTileAt(row - 1, i));
+                break;
+            case DOWN:
+                for (int i : new int[]{col, col + 1, col - 1})
+                    tiles.add(getMainLayerTileAt(row + 1, i));
+                break;
+            case LEFT:
+                for (int i : new int[]{row - 1, row, row + 1})
+                    tiles.add(getMainLayerTileAt(i, col - 1));
+                break;
+            case RIGHT:
+                for (int i : new int[]{row - 1, row, row + 1})
+                    tiles.add(getMainLayerTileAt(i, col + 1));
+                break;
+            case ALL:
+                for (int i : new int[]{row - 1, row + 1}) {
+                    tiles.add(getMainLayerTileAt(i, col));
+                    tiles.add(getMainLayerTileAt(i, col + 1));
+                    tiles.add(getMainLayerTileAt(i, col - 1));
+                }
+                for (int i : new int[]{col - 1, col + 1})
+                    tiles.add(getMainLayerTileAt(row, i));
+                break;
+            default:
+                break;
         }
         return tiles.parallelStream().filter(Objects::nonNull).collect(Collectors.toList());
     }
@@ -118,13 +118,28 @@ public class TileMap implements CameraContract, Renderable {
     }
 
     @Override
+    public void setX(Number x) {
+        //Do Nothing
+    }
+
+    @Override
     public Number getY() {
         return 0;
     }
 
     @Override
+    public void setY(Number y) {
+        //Do Nothing
+    }
+
+    @Override
     public Number getWidth() {
         return mapWidth;
+    }
+
+    @Override
+    public void setWidth(Number width) {
+        //Do Nothing
     }
 
     @Override
@@ -134,21 +149,6 @@ public class TileMap implements CameraContract, Renderable {
 
     @Override
     public void setHeight(Number height) {
-        //Do Nothing
-    }
-
-    @Override
-    public void setWidth(Number width) {
-        //Do Nothing
-    }
-
-    @Override
-    public void setY(Number y) {
-        //Do Nothing
-    }
-
-    @Override
-    public void setX(Number x) {
         //Do Nothing
     }
 
