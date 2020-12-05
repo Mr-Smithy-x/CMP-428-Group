@@ -14,8 +14,8 @@ public class GlobalSoundTrack extends BaseSound {
     private GlobalSoundTrack() {
         clips = new EnumMap<>(Track.class);
         for (Track value : Track.values()) {
-            if (exists(value.value)) {
-                Clip clip = createClip(value.value);
+            if (exists(value.trackChoice)) {
+                Clip clip = createClip(value.trackChoice);
                 clips.put(value, clip);
             }
         }
@@ -57,10 +57,10 @@ public class GlobalSoundTrack extends BaseSound {
         COMBAT("forest.wav"),
         DUNGEON("sanctuary_dungeon.wav");
 
-        private final String value;
+        private final String trackChoice;
 
-        Track(String value) {
-            this.value = value;
+        Track(String trackChoice) {
+            this.trackChoice = trackChoice;
         }
 
     }
