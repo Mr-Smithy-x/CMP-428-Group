@@ -14,9 +14,7 @@ public class GlobalSoundEffect extends BaseSound {
 
     private GlobalSoundEffect() {
         clips = new EnumMap<>(Sprite.Pose.class);
-        Clips.HURT = init(get("hurt.wav"));
-        Clips.FALL = init(get("fall.wav"));
-        Clips.ERROR = init(get("error.wav"));
+
         Sprite.Pose[] values = Sprite.Pose.values();
         for (Sprite.Pose value : values) {
             if (value.hasSoundFile() && exists(value.getSoundFileName())) {
@@ -44,9 +42,13 @@ public class GlobalSoundEffect extends BaseSound {
         return SOUND_EFFECTS_FOLDER;
     }
 
+    /**
+     * Add Aditional clips in the event you want to play custom clips
+     */
     public static class Clips {
-        public static Clip FALL = null;
-        public static Clip HURT = null;
-        public static Clip ERROR = null;
+        public static final Clip FALL =  init(getInstance().get("hurt.wav"));
+        public static final Clip HURT = init(getInstance().get("fall.wav"));
+        public static final Clip ERROR = init(getInstance().get("error.wav"));
+        private Clips(){ }
     }
 }
