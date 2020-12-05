@@ -86,10 +86,9 @@ public class ZeldaContainer extends GameContainer {
             if (healthBox.isOverlapping(minishLink)) {
                 minishLink.incrementHealth(.1);
                 minishLink.incrementEnergy(.05);
-            }
-            if (damageBox.isOverlapping(minishLink)) {
+                GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
+            } else if (damageBox.isOverlapping(minishLink)) {
                 GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.COMBAT);
-                GlobalSoundEffect.getInstance().play(GlobalSoundEffect.Clips.HURT);
                 minishLink.damageHealth(.2);
                 minishLink.useEnergy(.1);
             }else{

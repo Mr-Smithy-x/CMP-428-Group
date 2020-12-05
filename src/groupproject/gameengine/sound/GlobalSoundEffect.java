@@ -3,15 +3,16 @@ package groupproject.gameengine.sound;
 import groupproject.gameengine.sprite.Sprite;
 
 import javax.sound.sampled.Clip;
-import java.util.HashMap;
+import java.util.EnumMap;
 
 public class GlobalSoundEffect extends BaseSound {
 
-    HashMap<Sprite.Pose, Clip> clips = new HashMap<>();
+    private final EnumMap<Sprite.Pose, Clip> clips;
 
     private static GlobalSoundEffect instance;
 
     private GlobalSoundEffect() {
+        clips = new EnumMap<>(Sprite.Pose.class);
         Clips.HURT = init(get("hurt.wav"));
         Clips.FALL = init(get("fall.wav"));
         Clips.ERROR = init(get("error.wav"));

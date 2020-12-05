@@ -1,6 +1,5 @@
 package groupproject.gameengine.sprite;
 
-import com.sun.istack.internal.Nullable;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.CollisionDetection;
@@ -31,14 +30,14 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     protected int scaled = 1;
     protected boolean moving = false;
 
-    public Sprite(int x, int y, String spritePrefix, int delay) {
+    protected Sprite(int x, int y, String spritePrefix, int delay) {
         velocity = 1;
         loadBaseAnimations(spritePrefix, delay);
         initAnimations();
         setupBox(x, y);
     }
 
-    public Sprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
+    protected Sprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
         this.scaled = scaled;
         animDict.putAll(setupImages(initializeSheet(spriteSheet), delay));
         initAnimations();
@@ -65,7 +64,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
         ATTACK_UP_01("cane.wav"), ATTACK_DOWN_01("cane.wav"),
         ATTACK_LEFT_01("cane.wav"), ATTACK_RIGHT_01("cane.wav");
 
-        private String soundFileName;
+        private final String soundFileName;
 
         Pose(){
             this.soundFileName = null;
@@ -120,7 +119,7 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     }
 
     @SuppressWarnings("java:S1172")
-    private EnumMap<Pose, Animation> setupImages(@Nullable FileFormat format, BufferedImage image, int delay) {
+    private EnumMap<Pose, Animation> setupImages(FileFormat format, BufferedImage image, int delay) {
         EnumMap<Pose, Animation> map = new EnumMap<>(Pose.class);
         for (FileFormat.AnimationRow row : format.getPoses()) {
             Animation animation = Animation.with(delay);
@@ -173,17 +172,13 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
             } else {
                 currentFrame = animDict.get(currentPose).getFirstFrame();
             }
-            g.drawImage(currentFrame,
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4, null);
         } else {
             Animation firstAnim = getFirstAnimation();
             currentFrame = firstAnim.getCurrentFrame();
-            g.drawImage(currentFrame,
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
-                    null);
         }
+        g.drawImage(currentFrame,
+                getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
+                getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4, null);
         if (ZeldaTestGame.inDebuggingMode()) {
             drawActualImageBounds(currentFrame, g);
             drawBounds(g);
@@ -199,8 +194,6 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
                 getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
                 currentFrame.getWidth(null)
                 , currentFrame.getHeight(null));
-
-
     }
 
     public void drawBounds(Graphics g) {
@@ -243,7 +236,6 @@ public abstract class Sprite implements Renderable, CameraContract, CollisionDet
     public String getPoseSoundEffect() {
         return String.format("%s/%s", this.getClass().getSimpleName().toLowerCase(), currentPose.getSoundFileName());
     }
-
 
     public void setSpritePose(Pose currentPose) {
         this.currentPose = currentPose;

@@ -6,7 +6,6 @@ import java.io.IOException;
 
 public abstract class BaseSound {
 
-
     protected static final String SOUND_TRACK_FOLDER = "assets/sound/tracks";
     protected static final String SOUND_EFFECTS_FOLDER = "assets/sound/effects";
 

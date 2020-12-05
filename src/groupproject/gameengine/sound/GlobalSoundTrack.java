@@ -1,15 +1,17 @@
 package groupproject.gameengine.sound;
 
 import javax.sound.sampled.Clip;
-import java.util.HashMap;
+import java.util.EnumMap;
 
 public class GlobalSoundTrack extends BaseSound {
 
     protected Track track = Track.NORMAL;
-    private HashMap<Track, Clip> clips = new HashMap<>();
+    private final EnumMap<Track, Clip> clips;
+
     private static GlobalSoundTrack instance;
 
     private GlobalSoundTrack() {
+        clips = new EnumMap<>(Track.class);
         for (Track value : Track.values()) {
             if(exists(value.track)) {
                 Clip clip = createClip(value.track);
@@ -51,9 +53,10 @@ public class GlobalSoundTrack extends BaseSound {
     public enum Track {
         PAUSE("select_screen.wav"),
         NORMAL("overworld.wav"),
-        COMBAT("forest.wav");
+        COMBAT("forest.wav"),
+        DUNGEON("sanctuary_dungeon.wav");
 
-        private String track;
+        private final String track;
 
         Track(String track) {
             this.track = track;
