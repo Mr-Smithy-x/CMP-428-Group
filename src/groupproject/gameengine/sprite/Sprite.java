@@ -95,7 +95,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
 
     @Override
     public String getSoundEffectFile() {
-        return null;
+        return currentPose.soundFileName;
     }
 
     // Draws the sprite's current image based on its current state.
