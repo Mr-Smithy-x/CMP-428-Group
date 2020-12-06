@@ -12,6 +12,7 @@ import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
 import groupproject.gameengine.sprite.Sprite;
+import groupproject.gameengine.tile.TileMap;
 import groupproject.games.ZeldaTestGame;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ public class ZeldaContainer extends GameContainer {
     BoundingBox healthBox;
     BoundingBox damageBox;
     MinishLink minishLink;
+    TileMap map;
 
     protected ZeldaContainer(JFrame container, Canvas canvas) {
         super(container, canvas);
@@ -97,7 +99,7 @@ public class ZeldaContainer extends GameContainer {
         }
         GlobalSoundEffect.getInstance().play(minishLink);
         GlobalSoundTrack.getInstance().play();
-        GlobalCamera.getInstance().setOrigin(minishLink, getWidth(), getHeight());
+        GlobalCamera.getInstance().setOrigin(minishLink.getBounds(), getWidth(), getHeight());
     }
 
     @Override
@@ -111,6 +113,7 @@ public class ZeldaContainer extends GameContainer {
     protected void onPaint(Graphics g) {
         g.setColor(new Color(70, 120, 70));
         g.fillRect(0, 0, getWidth(), getHeight());
+        if (map != null) map.render(g);
         dog.render(g);
         link.render(g);
         minishLink.render(g);
@@ -134,13 +137,15 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onInitialize() throws IOException {
+        map = loadTileMap("forest_test.tilemap");
+        map.initializeMap();
         link = new Link(getWidth() / 2, getHeight() / 2, 1000 / 16);
         dog = new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2);
         minishLink = new MinishLink(getWidth() / 2, getHeight() / 2, 1000 / 16);
         link.setVelocity(10);
         dog.setVelocity(10);
-        minishLink.setVelocity(10);
-        GlobalCamera.getInstance().setOrigin(minishLink, getWidth(), getHeight());
+        minishLink.setVelocity(3);
+        GlobalCamera.getInstance().setOrigin(minishLink.getBounds(), getWidth(), getHeight());
         link.setHealth(100);
         link.setEnergy(100);
         minishLink.setHealth(100);
@@ -150,4 +155,25 @@ public class ZeldaContainer extends GameContainer {
         healthBox = new BoundingBox((int) (getWidth() / 1.5), (int) (getHeight() / 1.5), 100, 100);
         damageBox = new BoundingBox((int) (getWidth() / 1.2), (int) (getHeight() / 1.2), 100, 100);
     }
+
+    /**
+     * Will scale the image up or down to the current map
+     *
+     * @return
+     */
+    @Override
+    public int getWidth() {
+        return 600;
+    }
+
+    /**
+     * Will scale the image up or down to the current map
+     *
+     * @return
+     */
+    @Override
+    public int getHeight() {
+        return 600;
+    }
+
 }

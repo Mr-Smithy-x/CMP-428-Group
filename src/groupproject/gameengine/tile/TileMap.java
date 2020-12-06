@@ -50,17 +50,12 @@ public class TileMap implements CameraContract, Renderable {
 
     @Override
     public void render(Graphics g) {
-        BufferedImage map = new BufferedImage(mapWidth, mapHeight, BufferedImage.TYPE_INT_RGB);
-        Graphics gMap = map.getGraphics();
         for (int row = 0; row < mapModel.getMapRows(); row++) {
             for (int col = 0; col < mapModel.getMapColumns(); col++) {
-                Tile currentTile = mainLayerTiles[row][col];
-                currentTile.render(gMap);
-                if (objectLayerTiles[row][col] != null) objectLayerTiles[row][col].render(gMap);
+                mainLayerTiles[row][col].render(g);
+                if (objectLayerTiles[row][col] != null) objectLayerTiles[row][col].render(g);
             }
         }
-        //These coords stay the same in regards to the camera, changing this would be catastrophic
-        g.drawImage(map, 0, 0, null);
     }
 
     public List<Tile> getSurroundingTiles(Sprite movable) {
