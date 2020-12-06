@@ -1,3 +1,5 @@
+package groupproject.spritesheetediitor;
+
 import groupproject.spritesheeteditor.models.FileFormat;
 import org.junit.jupiter.api.Test;
 
