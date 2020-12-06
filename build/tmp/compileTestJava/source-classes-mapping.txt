@@ -1,0 +1,2 @@
+groupproject/spritesheeteditor/SpritePoseTests.java
+ groupproject.spritesheeteditor.SpritePoseTests

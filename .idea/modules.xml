@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/CMP-428-Group.iml" filepath="$PROJECT_DIR$/.idea/CMP-428-Group.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CMP-428-Group.main.iml" filepath="$PROJECT_DIR$/.idea/modules/CMP-428-Group.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CMP-428-Group.test.iml" filepath="$PROJECT_DIR$/.idea/modules/CMP-428-Group.test.iml" />
     </modules>
   </component>
 </project>

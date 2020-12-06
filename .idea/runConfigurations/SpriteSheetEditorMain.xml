@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="SpriteSheetEditorMain" type="Application" factoryName="Application">
+  <configuration default="false" name="SpriteSheetEditorMain" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="ALTERNATIVE_JRE_PATH" value="Kotlin SDK" />
     <option name="MAIN_CLASS_NAME" value="groupproject.spritesheeteditor.SpriteSheetEditorMain" />
-    <module name="CMP-428-Group" />
-    <option name="WORKING_DIRECTORY" value="$ContentRoot$" />
+    <module name="CMP-428-Group.main" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
