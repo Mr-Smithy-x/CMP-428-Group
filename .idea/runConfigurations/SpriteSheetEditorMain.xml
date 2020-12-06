@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SpriteSheetEditorMain" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="groupproject.spritesheeteditor.SpriteSheetEditorMain" />
+    <module name="CMP-428-Group" />
+    <option name="WORKING_DIRECTORY" value="$ContentRoot$" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
