@@ -12,7 +12,6 @@ import java.util.Objects;
 
 public class MinishLink extends Sprite implements Energy {
 
-    boolean attacking = false;
     private double health;
     private double energy;
 
@@ -46,7 +45,7 @@ public class MinishLink extends Sprite implements Energy {
     }
 
     public void attack() {
-        attacking = true;
+        moving = true;
         switch (getSpritePose()) {
             case UP:
                 currentPose = Pose.ATTACK_UP;
@@ -91,15 +90,11 @@ public class MinishLink extends Sprite implements Energy {
         } else if (currentPose == Pose.DEAD) {
             setSpritePose(Pose.DOWN);
         }
-        if (attacking) {
-            moving = attacking;
-        }
         super.render(g);
-        attacking = false;
     }
 
     public void spin() {
-        attacking = true;
+        moving = true;
         setSpritePose(Pose.SPIN_ATTACK);
     }
 

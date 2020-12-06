@@ -35,15 +35,21 @@ public class Animation {
         return new Animation(delay);
     }
 
-    public void loadFrames(String prefix, String folder) {
+    public static boolean isValidDirectory(String prefix, String folder) {
         File directory = new File(folder);
         File[] frameFiles = directory.listFiles(file -> file.getName().startsWith(prefix));
-        if (frameFiles == null || frameFiles.length == 0) {
-            logger.log(Level.INFO, "No images file found for {0}.", prefix);
-        } else {
+        return frameFiles != null && frameFiles.length > 0;
+    }
+
+    public void loadFrames(String prefix, String folder) {
+        if (isValidDirectory(prefix, folder)) {
+            File directory = new File(folder);
+            File[] frameFiles = directory.listFiles(file -> file.getName().startsWith(prefix));
             for (File f : frameFiles) {
                 this.addFrame(f);
             }
+        } else {
+            logger.log(Level.INFO, "No images file found for {0}.", prefix);
         }
     }
 
@@ -69,11 +75,9 @@ public class Animation {
         }
     }
 
-
     public int getCurrentFrameIndex() {
         return currentFrame;
     }
-
 
     public void scale(int scale) {
         frames = frames.stream()

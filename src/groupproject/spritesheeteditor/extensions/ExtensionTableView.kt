@@ -105,14 +105,30 @@ fun TableView<FileFormat.AnimationRow>.map(filename: String): FileFormat {
     return FileFormat(filename, lists)
 }
 
+fun TableView<FileFormat.AnimationRow>.mapSelected(filename: String): FileFormat.AnimationRow {
+    return selectionModel.selectedItem ?: items.first()
+}
+
 fun TableView<FileFormat.AnimationRow>.map(image: File): FileFormat {
     return map(image.name)
 }
+
+fun TableView<FileFormat.AnimationRow>.mapSelected(image: File): FileFormat.AnimationRow {
+    return mapSelected(image.name)
+}
+
 
 fun TableView<FileFormat.AnimationRow>.saveSerialized(file: File, imageFilename: File) {
     ObjectOutputStream(FileOutputStream(file)).use {
         it.writeObject(map(imageFilename))
     }
 }
+
+fun TableView<FileFormat.AnimationRow>.saveProjectile(file: File, imageFilename: File){
+    ObjectOutputStream(FileOutputStream(file)).use {
+        it.writeObject(mapSelected(imageFilename))
+    }
+}
+
 
 

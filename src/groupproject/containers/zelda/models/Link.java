@@ -50,10 +50,10 @@ public class Link extends Sprite implements Energy {
     @Override
     protected EnumMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
         EnumMap<Pose, Animation> map = new EnumMap<>(Pose.class);
-        map.put(Pose.UP, getAnimation(image, 0, 4, 30, 30, 8, delay));
-        map.put(Pose.DOWN, getAnimation(image, 0, 1, 30, 30, 8, delay));
-        map.put(Pose.LEFT, getAnimation(image, 8, 1, 30, 30, 6, delay));
-        map.put(Pose.RIGHT, getAnimation(image, 8, 4, 30, 30, 6, delay));
+        map.put(Pose.UP, parseAnimation(image, 0, 4, 30, 30, 8, delay));
+        map.put(Pose.DOWN, parseAnimation(image, 0, 1, 30, 30, 8, delay));
+        map.put(Pose.LEFT, parseAnimation(image, 8, 1, 30, 30, 6, delay));
+        map.put(Pose.RIGHT, parseAnimation(image, 8, 4, 30, 30, 6, delay));
 
         map.get(Pose.UP).setFirstFrame(pluck(image, 2, 0, 30, 30));
         map.get(Pose.DOWN).setFirstFrame(pluck(image, 1, 0, 30, 30));

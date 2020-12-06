@@ -7,9 +7,9 @@ import java.io.Serializable
 import java.util.*
 
 data class FileFormat(
-        var image: String,
+        override var image: String,
         var poses: LinkedList<AnimationRow>
-) : Serializable {
+) : SingleFileFormat(image), Serializable {
 
     data class AnimationRow(var pose: String, var set: AnimationSet) : Serializable {
         fun add(bounds: SpriteBounds) {
