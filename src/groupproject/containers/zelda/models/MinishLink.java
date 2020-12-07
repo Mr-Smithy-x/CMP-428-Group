@@ -2,8 +2,10 @@ package groupproject.containers.zelda.models;
 
 
 import groupproject.containers.zelda.contracts.Energy;
+import groupproject.gameengine.camera.GlobalCamera;
+import groupproject.gameengine.sprite.Projectile;
 import groupproject.gameengine.sprite.Sprite;
-import groupproject.spritesheeteditor.models.FileFormat;
+import groupproject.spritesheeteditor.models.PoseFileFormat;
 
 import java.awt.*;
 import java.io.IOException;
@@ -12,16 +14,50 @@ import java.util.Objects;
 
 public class MinishLink extends Sprite implements Energy {
 
-    boolean attacking = false;
     private double health;
     private double energy;
 
+    private Projectile projectile;
+
     public MinishLink(int positionX, int positionY, int duration) throws IOException {
-        super(Objects.requireNonNull(FileFormat.Companion.load("link_final_spritesheet.pose")), positionX, positionY, 2, duration);
+        super(Objects.requireNonNull(PoseFileFormat.Companion.load("link_final_spritesheet.pose")), positionX, positionY, 2, duration);
     }
 
     public void attack(List<Sprite> objects) {
         this.attack();
+    }
+
+
+    @Override
+    public void move() {
+        super.move();
+        if(projectile != null && projectile.getVelocity() == 0){
+            projectile.setDirection(getDirection());
+            projectile.setWorld(getX(), getY());
+        }
+    }
+
+    public void setProjectile(Projectile projectile) {
+        this.projectile = projectile;
+    }
+
+    protected void resetProjectile() {
+        if (projectile.isOutsideCamera(GlobalCamera.getInstance())) {
+            this.projectile.setWorld(getX(), getY());
+            this.projectile.setDirection(getDirection());
+            this.projectile.setVelocity(0);
+        }else if(projectile.getVelocity() == 0){
+            this.projectile.setWorld(getX(), getY());
+            this.projectile.setDirection(getDirection());
+        }
+    }
+
+    public boolean shoot(){
+        if(projectile != null){
+            projectile.setVelocity(20);
+            return true;
+        }
+        return false;
     }
 
     public void roll() {
@@ -46,7 +82,7 @@ public class MinishLink extends Sprite implements Energy {
     }
 
     public void attack() {
-        attacking = true;
+        moving = true;
         switch (getSpritePose()) {
             case UP:
                 currentPose = Pose.ATTACK_UP;
@@ -65,7 +101,6 @@ public class MinishLink extends Sprite implements Energy {
                 break;
         }
     }
-
 
     @Override
     protected void initAnimations() {
@@ -86,20 +121,24 @@ public class MinishLink extends Sprite implements Energy {
 
     @Override
     public void render(Graphics g) {
+        if (projectile != null) {
+            if(projectile.isInsideCamera(GlobalCamera.getInstance()) && projectile.getVelocity() > 0){
+                projectile.render(g);
+                projectile.move();
+            }else{
+                resetProjectile();
+            }
+        }
         if (isDead()) {
             setSpritePose(Pose.DEAD);
         } else if (currentPose == Pose.DEAD) {
             setSpritePose(Pose.DOWN);
         }
-        if (attacking) {
-            moving = attacking;
-        }
         super.render(g);
-        attacking = false;
     }
 
     public void spin() {
-        attacking = true;
+        moving = true;
         setSpritePose(Pose.SPIN_ATTACK);
     }
 

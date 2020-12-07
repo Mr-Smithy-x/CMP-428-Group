@@ -20,10 +20,16 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
 
     //region FXML Injectable Fields
     @FXML
-    lateinit var newMenuItem: MenuItem
+    lateinit var newPoseMenuItem: MenuItem
 
     @FXML
-    lateinit var openMenuItem: MenuItem
+    lateinit var newProjectileMenuItem: MenuItem
+
+    @FXML
+    lateinit var openPoseMenuItem: MenuItem
+
+    @FXML
+    lateinit var openProjectileMenuItem: MenuItem
 
     @FXML
     lateinit var evenModeMenuItem: MenuItem
@@ -64,14 +70,15 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
         SpriteCanvasSelectionView(spriteCanvas)
     }
     var imageExtensionFilter = FileChooser.ExtensionFilter("Image", "*.png", "*.gif")
-    var poseExtensionFilter = FileChooser.ExtensionFilter("Pose", "*.pose")
     private var fileChooser: FileChooser = FileChooser()
     //endregion
 
     @FXML
     fun initialize() {
-        newMenuItem.onAction = this
-        openMenuItem.onAction = this
+        newPoseMenuItem.onAction = this
+        newProjectileMenuItem.onAction = this
+        openPoseMenuItem.onAction = this
+        openProjectileMenuItem.onAction = this
         saveMenuItem.onAction = this
         closeMenuItem.onAction = this
         aboutMenuItem.onAction = this
@@ -93,10 +100,10 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
     }
 
     private fun alert(
-            title: String,
-            headerText: String,
-            contentText: String,
-            type: Alert.AlertType = Alert.AlertType.INFORMATION
+        title: String,
+        headerText: String,
+        contentText: String,
+        type: Alert.AlertType = Alert.AlertType.INFORMATION
     ) = Alert(type).also {
         it.title = title
         it.headerText = headerText
@@ -113,24 +120,35 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                     it.headerText = "What dimension is the SpriteSheet? (Numeric)"
                 }.showAndWait()
                 when {
-                    result.get().toIntOrNull() is Int -> spriteCanvasSelectionView.mode = SpriteCanvasSelectionView.SelectionMode.EVEN.also {
-                        it.dimension = result.get().toInt()
-                    }
+                    result.get().toIntOrNull() is Int -> spriteCanvasSelectionView.mode =
+                        SpriteCanvasSelectionView.SelectionMode.EVEN.also {
+                            it.dimension = result.get().toInt()
+                        }
                     else -> {
-                        alert("Error", "Value isn't numeric", "The value specified is invalid, please enter a number", Alert.AlertType.ERROR).showAndWait()
+                        alert(
+                            "Error",
+                            "Value isn't numeric",
+                            "The value specified is invalid, please enter a number",
+                            Alert.AlertType.ERROR
+                        ).showAndWait()
                     }
                 }
             }
             aboutMenuItem -> {
                 alert(
-                        "About",
-                        "Dev: Mr-Smithy-x@github.com",
-                        "Parsing & rearranging sheets is an nuisance"
+                    "About",
+                    "Dev: Mr-Smithy-x@github.com",
+                    "Parsing & rearranging sheets is an nuisance"
                 ).showAndWait()
             }
-            newMenuItem -> {
+            newPoseMenuItem -> {
+                tableView.mode = ExtensionTableView.EDITOR.POSE
                 spriteCanvasSelectionView.clear()
-                fileChooser.initialDirectory = File("./assets/sheets")
+                fileChooser.initialDirectory = File("./assets/sheets").also {
+                    if (!it.exists()) {
+                        it.mkdirs()
+                    }
+                }
                 fileChooser.extensionFilters.setAll(imageExtensionFilter)
                 val file = fileChooser.showOpenDialog(null)
                 if (file != null && file.exists()) {
@@ -143,9 +161,40 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                     }
                 }
             }
-            openMenuItem -> {
-                fileChooser.initialDirectory = File("./assets/poses")
-                fileChooser.extensionFilters.setAll(poseExtensionFilter)
+            newProjectileMenuItem -> {
+                tableView.mode = ExtensionTableView.EDITOR.PROJECTILE
+                spriteCanvasSelectionView.clear()
+                fileChooser.initialDirectory = File("./assets/sheets").also {
+                    if (!it.exists()) {
+                        it.mkdirs()
+                    }
+                }
+                fileChooser.extensionFilters.setAll(imageExtensionFilter)
+                val file = fileChooser.showOpenDialog(null)
+                if (file != null && file.exists()) {
+                    spriteCanvasSelectionView.file = file
+                    tableView.init(spriteCanvasSelectionView)
+                    tableView.items.clear()
+                    selectPoseCombobox.items.clear()
+                    addOption(tableView.mode.name)
+                }
+            }
+            openPoseMenuItem -> {
+                tableView.mode = ExtensionTableView.EDITOR.POSE
+                fileChooser.initialDirectory = tableView.mode.file
+                fileChooser.extensionFilters.setAll(tableView.mode.extensionFilter)
+                val file = fileChooser.showOpenDialog(null)
+                if (file != null && file.exists()) {
+                    tableView.loadSerialized(spriteCanvasSelectionView, file)
+                    selectPoseCombobox.items.clear()
+                    selectPoseCombobox.items.addAll(tableView.poses)
+                    selectPoseCombobox.selectionModel.select(0)
+                }
+            }
+            openProjectileMenuItem -> {
+                tableView.mode = ExtensionTableView.EDITOR.PROJECTILE
+                fileChooser.initialDirectory = tableView.mode.file
+                fileChooser.extensionFilters.setAll(tableView.mode.extensionFilter)
                 val file = fileChooser.showOpenDialog(null)
                 if (file != null && file.exists()) {
                     tableView.loadSerialized(spriteCanvasSelectionView, file)
@@ -157,18 +206,18 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
             saveMenuItem -> {
                 if (spriteCanvasSelectionView.isInitialized) {
                     val imageFile = spriteCanvasSelectionView.file!!
-                    fileChooser.initialDirectory = File("./assets/poses")
-                    fileChooser.extensionFilters.setAll(poseExtensionFilter)
+                    fileChooser.initialDirectory = tableView.mode.file
+                    fileChooser.extensionFilters.setAll(tableView.mode.extensionFilter)
                     fileChooser.initialFileName = imageFile.nameWithoutExtension
                     val file = fileChooser.showSaveDialog(null)
                     if (file != null) {
                         tableView.saveSerialized(file, imageFile)
                     }
                 } else alert(
-                        "Hmmm",
-                        "We ran into a issue",
-                        "There's nothing to save",
-                        Alert.AlertType.INFORMATION
+                    "Hmmm",
+                    "We ran into a issue",
+                    "There's nothing to save",
+                    Alert.AlertType.INFORMATION
                 ).showAndWait()
             }
             closeMenuItem -> {
@@ -176,9 +225,11 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                 exitProcess(0)
             }
             addPoseBtn -> {
-                val text = poseTextField.text.trim().toUpperCase()
-                poseTextField.clear()
-                addOption(text)
+                if(tableView.mode == ExtensionTableView.EDITOR.POSE) {
+                    val text = poseTextField.text.trim().toUpperCase()
+                    poseTextField.clear()
+                    addOption(text)
+                }
             }
             addImageBtn -> {
                 if (spriteCanvasSelectionView.isInitialized) {
@@ -188,10 +239,10 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                     }
                 } else {
                     alert(
-                            "Error",
-                            "We ran into an issue",
-                            "App needs to be initialized",
-                            Alert.AlertType.ERROR
+                        "Error",
+                        "We ran into an issue",
+                        "App needs to be initialized",
+                        Alert.AlertType.ERROR
                     ).showAndWait()
                 }
             }
@@ -205,24 +256,25 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                 selectPoseCombobox.selectionModel.select(text)
                 tableView.addOption(text)
             } else alert(
-                    "Error",
-                    "We ran into a conflict",
-                    "You already have '$text' listed already",
-                    Alert.AlertType.ERROR
+                "Error",
+                "We ran into a conflict",
+                "You already have '$text' listed already",
+                Alert.AlertType.ERROR
             ).showAndWait()
         } else {
             alert(
-                    "Error",
-                    "We ran into an issue",
-                    "App needs to be initialized",
-                    Alert.AlertType.ERROR
+                "Error",
+                "We ran into an issue",
+                "App needs to be initialized",
+                Alert.AlertType.ERROR
             ).showAndWait()
         }
     }
 
-    override fun onDoubleClicked(bounds: FileFormat.SpriteBounds) {
+    override fun onDoubleClicked(bounds: FileFormat.Bounds) {
         tableView.find(selectPoseCombobox.selectionModel.selectedItem)?.add(bounds)
         tableView.refresh()
     }
+
 
 }

@@ -55,7 +55,8 @@ public abstract class BaseSound {
     public void play(Clip clip) {
         if (clip == null) return;
         setVolume(clip, 0.2f);
-        if (!clip.isActive()) {
+        boolean active = clip.isActive();
+        if (!active) {
             stop(clip);
             clip.setFramePosition(0);
             clip.start();

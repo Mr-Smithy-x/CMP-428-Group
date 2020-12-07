@@ -1,8 +1,20 @@
 package groupproject.gameengine.contracts;
 
 import groupproject.gameengine.camera.BaseCamera;
+import groupproject.gameengine.camera.GlobalCamera;
 
 public interface CameraContract extends BoundingContract {
+
+    default boolean isInsideCamera(BaseCamera camera) {
+        if(getX().doubleValue() < camera.getX() + camera.getWidth() && getX().doubleValue() > camera.getX()) {
+            return getY().doubleValue() < camera.getY() + camera.getWidth() && getY().doubleValue() > camera.getY();
+        }
+        return false;
+    }
+
+    default boolean isOutsideCamera(BaseCamera camera){
+        return !isInsideCamera(camera);
+    }
 
     default Number getCameraOffsetX(BaseCamera camera) {
         if (camera == null) {

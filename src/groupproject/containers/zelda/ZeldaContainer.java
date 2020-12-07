@@ -6,6 +6,7 @@ import groupproject.containers.zelda.hud.LifeHud;
 import groupproject.containers.zelda.models.Dog;
 import groupproject.containers.zelda.models.Link;
 import groupproject.containers.zelda.models.MinishLink;
+import groupproject.containers.zelda.projectiles.EnergyBall;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
@@ -66,7 +67,6 @@ public class ZeldaContainer extends GameContainer {
                 else minishLink.setSpritePose(Sprite.Pose.DOWN);
                 minishLink.move();
             }
-
             if (minishLink.hasEnergy()) {
                 if (pressedKey[KeyEvent.VK_Z]) {
                     minishLink.spin();
@@ -74,9 +74,11 @@ public class ZeldaContainer extends GameContainer {
                 } else if (pressedKey[KeyEvent.VK_SPACE]) {
                     minishLink.attack();
                     minishLink.useEnergy(.1);
+                } else if (pressedKey[KeyEvent.VK_T]) {
+                    minishLink.shoot();
+                    minishLink.useEnergy(.5);
                 }
             }
-
             if (minishLink.isOverlapping(dog)) {
                 minishLink.pushes(dog);
             }
@@ -84,7 +86,6 @@ public class ZeldaContainer extends GameContainer {
             if (link.isOverlapping(dog)) {
                 link.pushes(dog);
             }
-
             if (healthBox.isOverlapping(minishLink)) {
                 minishLink.incrementHealth(.1);
                 minishLink.incrementEnergy(.05);
@@ -144,6 +145,7 @@ public class ZeldaContainer extends GameContainer {
         minishLink = new MinishLink(getWidth() / 2, getHeight() / 2, 1000 / 16);
         link.setVelocity(10);
         dog.setVelocity(10);
+        minishLink.setProjectile(new EnergyBall());
         minishLink.setVelocity(3);
         GlobalCamera.getInstance().setOrigin(minishLink.getBounds(), getWidth(), getHeight());
         link.setHealth(100);
