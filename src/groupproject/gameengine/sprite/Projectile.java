@@ -50,6 +50,11 @@ public abstract class Projectile extends AnimatedObject<Animation, ProjectileFil
         return null;
     }
 
+    @Override
+    public Animation getSafeAnimation() {
+        return animDict;
+    }
+
     protected abstract void playSound();
 
     @Override

@@ -118,6 +118,10 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         }
     }
 
+    @Override
+    public Animation getSafeAnimation() {
+        return animDict.get(Pose.parse(currentPose.direction.name()));
+    }
 
     @Override
     public String getSheetDirectory() {
@@ -204,6 +208,9 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         }
 
         public static Pose parse(String pose) {
+            if(pose.equals("NONE")){
+                return DOWN;
+            }
             return Pose.valueOf(pose.toUpperCase());
         }
 

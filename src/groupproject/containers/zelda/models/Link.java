@@ -9,7 +9,7 @@ import java.io.IOException;
 public class Link extends AttackSprite {
 
     public Link(int positionX, int positionY, int duration) throws IOException {
-        super(PoseFileFormat.Companion.load("link.pose"), positionX, positionY, 2, duration);
+        super(PoseFileFormat.Companion.load(Link.class.getName().toLowerCase()), positionX, positionY, 2, duration);
     }
 
 }
