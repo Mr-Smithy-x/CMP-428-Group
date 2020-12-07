@@ -52,7 +52,7 @@ public class MinishLink extends Sprite implements Energy {
         }
     }
 
-    public boolean launch(){
+    public boolean shoot(){
         if(projectile != null){
             projectile.setVelocity(20);
             return true;

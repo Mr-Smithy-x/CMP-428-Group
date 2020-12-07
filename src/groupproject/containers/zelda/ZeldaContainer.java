@@ -73,7 +73,7 @@ public class ZeldaContainer extends GameContainer {
                     minishLink.attack();
                     minishLink.useEnergy(.1);
                 } else if (pressedKey[KeyEvent.VK_T]) {
-                    minishLink.launch();
+                    minishLink.shoot();
                     minishLink.useEnergy(.5);
                 }
             }
