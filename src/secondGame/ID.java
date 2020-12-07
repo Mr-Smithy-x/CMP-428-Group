@@ -1,7 +1,8 @@
 package secondGame;
 
 public enum ID {
-    BasicEnemy(),
     Player(),
+    BasicEnemy(),
+    FastEnemy(),
     Trail(),
 }
