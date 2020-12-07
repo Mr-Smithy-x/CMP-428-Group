@@ -76,7 +76,6 @@ public class ZeldaContainer extends GameContainer {
                     minishLink.useEnergy(.1);
                 } else if (pressedKey[KeyEvent.VK_T]) {
                     minishLink.shoot();
-                    minishLink.useEnergy(.5);
                 }
             }
             if (minishLink.isOverlapping(dog)) {

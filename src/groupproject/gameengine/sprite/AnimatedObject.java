@@ -223,6 +223,10 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
         bounds.setWidth(width);
     }
 
+    public Image getCurrentFrame(){
+        return getCurrentAnimation().getCurrentFrame();
+    }
+
     @Override
     public Number getHeight() {
         return bounds.getHeight();

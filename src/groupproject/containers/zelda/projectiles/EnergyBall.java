@@ -1,5 +1,6 @@
 package groupproject.containers.zelda.projectiles;
 
+import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.gameengine.sprite.Projectile;
 import groupproject.spritesheeteditor.models.ProjectileFileFormat;
 
@@ -30,4 +31,8 @@ public class EnergyBall extends Projectile {
         return null;
     }
 
+    @Override
+    protected void playSound() {
+        GlobalSoundEffect.getInstance().play(GlobalSoundEffect.Clips.CANE);
+    }
 }
