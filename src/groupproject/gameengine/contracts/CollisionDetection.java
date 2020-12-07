@@ -48,6 +48,6 @@ public interface CollisionDetection extends Gravitation {
     default double distanceBetween(Movable movable) {
         double dx = movable.getX().doubleValue() - getX().doubleValue();
         double dy = movable.getY().doubleValue() - getY().doubleValue();
-        return Math.sqrt(dx * dx + dy + dy);
+        return Math.sqrt(dx * dx + dy * dy);
     }
 }
