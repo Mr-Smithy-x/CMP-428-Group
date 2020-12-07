@@ -1,7 +1,5 @@
 package secondGame;
 
-import com.sun.org.apache.xpath.internal.axes.WalkingIteratorSorted;
-
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
@@ -19,21 +17,24 @@ public class Game extends Canvas implements Runnable{
 
     public enum STATE {
         Menu,
+        Help,
         Game,
+        ZeldaGame;
     }
 
     public STATE gameState = STATE.Menu;
 
     public Game(){
         handler = new Handler();
+        menu = new Menu(this, handler);
         this.addKeyListener(new KeyInput(handler));
+        this.addMouseListener(menu);
 
         new Display(WIDTH, HEIGHT,"Second Game", this);
 
         r = new Random();
         hud = new HUD();
         spawn = new Spawn(handler, hud);
-        menu = new Menu();
 
         if(gameState == STATE.Game){
             handler.addObject(new Player(WIDTH/2-32,HEIGHT/2-32, ID.Player, handler));
@@ -99,7 +100,11 @@ public class Game extends Canvas implements Runnable{
             spawn.tick();
         }else if (gameState == STATE.Menu){
             menu.tick();
+        }else if (gameState == STATE.Help){
+            menu.tick();
         }
+
+
     }
 
     public void render(){
@@ -121,7 +126,11 @@ public class Game extends Canvas implements Runnable{
             hud.render(g);
         }else if (gameState == STATE.Menu){
             menu.render(g);
+        }else if (gameState == STATE.Help){
+            menu.render(g);
         }
+
+
         // call it to show on screen
         bs.show();
         g.dispose();
