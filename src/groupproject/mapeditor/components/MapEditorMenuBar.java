@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
+// Suppress deprecation warnings, since SonarLint seems to think the project is set to Java 10+.
 @SuppressWarnings("java:S1874")
 public class MapEditorMenuBar extends JMenuBar {
     private static final JCheckBoxMenuItem paintMode = new JCheckBoxMenuItem("Paint Mode");
@@ -23,6 +24,7 @@ public class MapEditorMenuBar extends JMenuBar {
         setupFileMenu();
         setupEditorModeMenu();
         setupEditMenu();
+        setupViewMenu();
     }
 
     public static void setEditorMenuStatus(EditorMode status) {
@@ -41,6 +43,8 @@ public class MapEditorMenuBar extends JMenuBar {
                 paintMode.setSelected(false);
                 collisionMode.setSelected(true);
                 objectMode.setSelected(false);
+                break;
+            default:
                 break;
         }
     }
@@ -125,13 +129,39 @@ public class MapEditorMenuBar extends JMenuBar {
         KeyStroke fillColShortcut = KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
         fillCol.setAccelerator(fillColShortcut);
 
+        JMenuItem addRowToTop = new JMenuItem("Add Row to Top");
+        JMenuItem addRowToBottom = new JMenuItem("Add Row to Bottom");
+
         fillOption.addActionListener((ActionEvent event) -> editorController.fillMapWithSelectedTile());
         fillRow.addActionListener((ActionEvent event) -> editorController.fillRowBasedOnEditorMode());
         fillCol.addActionListener((ActionEvent event) -> editorController.fillColumnBasedOnEditorMode());
+        addRowToTop.addActionListener((ActionEvent event) -> editorController.addRowToLayout("top"));
+        addRowToBottom.addActionListener((ActionEvent event) -> editorController.addRowToLayout("bottom"));
 
         editMenu.add(fillOption);
         editMenu.add(fillRow);
         editMenu.add(fillCol);
+        editMenu.add(addRowToTop);
+        editMenu.add(addRowToBottom);
         this.add(editMenu);
+    }
+
+    private void setupViewMenu() {
+        JMenu viewMenu = new JMenu("View");
+        JMenuItem zoomIn = new JMenuItem("Zoom In");
+        JMenuItem zoomOut = new JMenuItem("Zoom Out");
+        JMenuItem viewCollisionTiles = new JMenuItem("Show Collision Tiles");
+        JMenuItem hideCollisionTiles = new JMenuItem("Hide Collision Tiles");
+
+        zoomIn.addActionListener((ActionEvent event) -> editorController.setScaleFactor(editorController.getScaleFactor() + 0.25));
+        zoomOut.addActionListener((ActionEvent event) -> editorController.setScaleFactor(editorController.getScaleFactor() - 0.25));
+        viewCollisionTiles.addActionListener((ActionEvent event) -> editorController.setViewCollisionTileStatus(true));
+        hideCollisionTiles.addActionListener((ActionEvent event) -> editorController.setViewCollisionTileStatus(false));
+
+        viewMenu.add(zoomIn);
+        viewMenu.add(zoomOut);
+        viewMenu.add(viewCollisionTiles);
+        viewMenu.add(hideCollisionTiles);
+        this.add(viewMenu);
     }
 }
