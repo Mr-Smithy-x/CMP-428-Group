@@ -28,6 +28,7 @@ public class Menu extends MouseAdapter {
             // Game2
             if (mouseOver(mx, my,300,250,300,80)){
                 game.gameState = Game.STATE.Game;
+
                 handler.addObject(new Player(Game.WIDTH/2-32,Game.HEIGHT/2-32, ID.Player, handler));
                 handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH),r.nextInt(Game.HEIGHT), ID.BasicEnemy, handler));
             }
@@ -41,11 +42,20 @@ public class Menu extends MouseAdapter {
             }
         }
 
-        // Back Button
+        // Back Button in Help
         if (game.gameState == Game.STATE.Help){
             if (mouseOver(mx,my,300,450,300,80 )){
                 game.gameState = Game.STATE.Menu;
                 return;
+            }
+        }
+        // Back Button in Game2
+        if (game.gameState == Game.STATE.Game){
+            if (mouseOver(mx,my,300,450,300,80 )){
+                game.gameState = Game.STATE.Menu;
+                Game newGame = new Game();
+                HUD hud = new HUD();
+
             }
         }
     }

@@ -24,6 +24,15 @@ public class HUD {
 
         g.drawString("Score: "+score, 10,68);
         g.drawString("Level: "+level, 10, 88);
+
+        Font font1 = new Font("arial", 1, 50);
+        g.setFont(font1);
+        g.setColor(Color.WHITE);
+        g.drawString("Back",395,510);
+
+        g.setColor(Color.WHITE);
+        g.drawRect(300,450,300,80);
+
     }
 
     public static int getHEALTH() {

@@ -120,16 +120,14 @@ public class Game extends Canvas implements Runnable{
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        handler.render(g);
-
         if(gameState == STATE.Game){
+            handler.render(g);
             hud.render(g);
         }else if (gameState == STATE.Menu){
             menu.render(g);
         }else if (gameState == STATE.Help){
             menu.render(g);
         }
-
 
         // call it to show on screen
         bs.show();
