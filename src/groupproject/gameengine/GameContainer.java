@@ -1,6 +1,5 @@
 package groupproject.gameengine;
 
-
 import groupproject.gameengine.helpers.FontHelper;
 import groupproject.gameengine.tile.TileMap;
 import groupproject.gameengine.tile.TileMapModel;
@@ -31,7 +30,6 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     private boolean isRunning = true;
     private Thread t;
     private Image offScreenImage;
-
 
     protected GameContainer(JFrame container, Canvas canvas) {
         this.container = canvas;
