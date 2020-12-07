@@ -81,25 +81,28 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         if (projectile.isOutsideCamera(GlobalCamera.getInstance())) {
             this.projectile.align(this);
             this.projectile.setVelocity(0);
-        }else if(projectile.getVelocity() == 0){
+        } else if (projectile.getVelocity() == 0) {
             this.projectile.align(this);
         }
     }
 
-    public boolean shoot(){
-        if(projectile != null){
-            if(shootWhen()) {
-                projectile.setVelocity(20);
-                projectile.playSound();
-                return true;
-            }
+    public boolean shoot() {
+        if (projectile != null && shootWhen()) {
+            projectile.setVelocity(20);
+            projectile.playSound();
+            return true;
         }
         return false;
     }
 
     protected boolean shootWhen() {
+        Pose[] poses = {Pose.ATTACK_LEFT_01, Pose.ATTACK_RIGHT_01, Pose.ATTACK_UP_01, Pose.ATTACK_DOWN_01};
+        if (Arrays.stream(poses).anyMatch(p -> p == currentPose)) {
+            return getCurrentAnimation().isLastFrame();
+        }
         return false;
     }
+
 
     public Animation getCurrentAnimation() {
         boolean hasKey = animDict.containsKey(currentPose);
@@ -132,10 +135,10 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     public void render(Graphics g) {
         GlobalSoundEffect.getInstance().play(this);
         if (projectile != null) {
-            if(projectile.isInsideCamera(GlobalCamera.getInstance()) && projectile.getVelocity() > 0){
+            if (projectile.isInsideCamera(GlobalCamera.getInstance()) && projectile.getVelocity() > 0) {
                 projectile.render(g);
                 projectile.move();
-            }else{
+            } else {
                 resetProjectile();
             }
         }
@@ -146,7 +149,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     public void move() {
         this.direction = currentPose.direction;
         super.move();
-        if(projectile != null && projectile.getVelocity() == 0){
+        if (projectile != null && projectile.getVelocity() == 0) {
             projectile.align(this);
         }
     }
@@ -172,7 +175,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         SPIN_ATTACK("spin_attack.wav", Direction.NONE), ALL, JUMP, DEAD("dead.wav", Direction.NONE),
         ROLL_LEFT(Direction.LEFT), ROLL_RIGHT(Direction.RIGHT), ROLL_UP(Direction.UP), ROLL_DOWN(Direction.DOWN),
         ATTACK_UP_01(Direction.UP), ATTACK_DOWN_01(Direction.DOWN),
-        ATTACK_LEFT_01(Direction.LEFT), ATTACK_RIGHT_01( Direction.RIGHT);
+        ATTACK_LEFT_01(Direction.LEFT), ATTACK_RIGHT_01(Direction.RIGHT);
 
         private final String soundFileName;
         private final Direction direction;
@@ -181,7 +184,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
             this(Direction.NONE);
         }
 
-        Pose(Direction direction){
+        Pose(Direction direction) {
             this.soundFileName = null;
             this.direction = direction;
         }

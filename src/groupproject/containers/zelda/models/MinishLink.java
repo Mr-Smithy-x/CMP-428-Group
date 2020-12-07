@@ -35,15 +35,6 @@ public class MinishLink extends Sprite implements Energy {
         return shoot;
     }
 
-    @Override
-    protected boolean shootWhen() {
-        Pose[] poses = {Pose.ATTACK_LEFT_01, Pose.ATTACK_RIGHT_01, Pose.ATTACK_UP_01, Pose.ATTACK_DOWN_01};
-        if (Arrays.stream(poses).anyMatch(p -> p == currentPose)) {
-            return getCurrentAnimation().isLastFrame();
-        }
-        return false;
-    }
-
     public void canePose() {
         moving = true;
         switch (currentPose.getDirection()) {
