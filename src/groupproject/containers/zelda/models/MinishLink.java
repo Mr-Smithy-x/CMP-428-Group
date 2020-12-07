@@ -2,13 +2,12 @@ package groupproject.containers.zelda.models;
 
 
 import groupproject.containers.zelda.contracts.Energy;
-import groupproject.gameengine.camera.GlobalCamera;
-import groupproject.gameengine.sprite.Projectile;
 import groupproject.gameengine.sprite.Sprite;
 import groupproject.spritesheeteditor.models.PoseFileFormat;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +16,6 @@ public class MinishLink extends Sprite implements Energy {
     private double health;
     private double energy;
 
-    private Projectile projectile;
 
     public MinishLink(int positionX, int positionY, int duration) throws IOException {
         super(Objects.requireNonNull(PoseFileFormat.Companion.load("link_final_spritesheet.pose")), positionX, positionY, 2, duration);
@@ -27,37 +25,41 @@ public class MinishLink extends Sprite implements Energy {
         this.attack();
     }
 
+    @Override
+    public boolean shoot() {
+        canePose();
+        boolean shoot = super.shoot();
+        if (shoot) {
+            useEnergy(.5);
+        }
+        return shoot;
+    }
 
     @Override
-    public void move() {
-        super.move();
-        if(projectile != null && projectile.getVelocity() == 0){
-            projectile.setDirection(getDirection());
-            projectile.setWorld(getX(), getY());
-        }
-    }
-
-    public void setProjectile(Projectile projectile) {
-        this.projectile = projectile;
-    }
-
-    protected void resetProjectile() {
-        if (projectile.isOutsideCamera(GlobalCamera.getInstance())) {
-            this.projectile.setWorld(getX(), getY());
-            this.projectile.setDirection(getDirection());
-            this.projectile.setVelocity(0);
-        }else if(projectile.getVelocity() == 0){
-            this.projectile.setWorld(getX(), getY());
-            this.projectile.setDirection(getDirection());
-        }
-    }
-
-    public boolean shoot(){
-        if(projectile != null){
-            projectile.setVelocity(20);
-            return true;
+    protected boolean shootWhen() {
+        Pose[] poses = {Pose.ATTACK_LEFT_01, Pose.ATTACK_RIGHT_01, Pose.ATTACK_UP_01, Pose.ATTACK_DOWN_01};
+        if (Arrays.stream(poses).anyMatch(p -> p == currentPose)) {
+            return getCurrentAnimation().isLastFrame();
         }
         return false;
+    }
+
+    public void canePose() {
+        moving = true;
+        switch (currentPose.getDirection()) {
+            case UP:
+                setSpritePose(Pose.ATTACK_UP_01);
+                break;
+            case DOWN:
+                setSpritePose(Pose.ATTACK_DOWN_01);
+                break;
+            case LEFT:
+                setSpritePose(Pose.ATTACK_LEFT_01);
+                break;
+            case RIGHT:
+                setSpritePose(Pose.ATTACK_RIGHT_01);
+                break;
+        }
     }
 
     public void roll() {
@@ -121,14 +123,6 @@ public class MinishLink extends Sprite implements Energy {
 
     @Override
     public void render(Graphics g) {
-        if (projectile != null) {
-            if(projectile.isInsideCamera(GlobalCamera.getInstance()) && projectile.getVelocity() > 0){
-                projectile.render(g);
-                projectile.move();
-            }else{
-                resetProjectile();
-            }
-        }
         if (isDead()) {
             setSpritePose(Pose.DEAD);
         } else if (currentPose == Pose.DEAD) {

@@ -85,6 +85,10 @@ public class Animation {
                 .collect(Collectors.toList());
     }
 
+    public boolean isLastFrame(){
+        return currentFrame == frames.size() - 1;
+    }
+
     public Image getFirstFrame() {
         if (!frames.isEmpty()) {
             return frames.get(0);
