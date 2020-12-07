@@ -19,6 +19,9 @@ import java.util.logging.Logger;
 
 public abstract class AnimatedObject<T, F extends FileFormat> implements Renderable, CameraContract, CollisionDetection {
 
+
+    protected static final String SPRITE_FOLDER = "assets/sprites/";
+
     protected Logger logger = Logger.getLogger("GameEngine", null);
     protected T animDict;
     protected Direction direction = Direction.NONE;
@@ -58,6 +61,10 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
     public abstract String getSheetDirectory();
 
     public abstract String getFileDirectory();
+
+    public String getSpriteDirectory() {
+        return SPRITE_FOLDER + this.getClass().getSimpleName().toLowerCase();
+    }
 
     public abstract String getSoundEffectFile();
 
@@ -204,6 +211,7 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
             moving = true;
         }
     }
+
 
     @Override
     public Number getWidth() {

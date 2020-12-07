@@ -6,6 +6,7 @@ import groupproject.containers.zelda.hud.LifeHud;
 import groupproject.containers.zelda.models.Dog;
 import groupproject.containers.zelda.models.Link;
 import groupproject.containers.zelda.models.MinishLink;
+import groupproject.containers.zelda.projectiles.EnergyBall;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
@@ -64,7 +65,6 @@ public class ZeldaContainer extends GameContainer {
                 else minishLink.setSpritePose(Sprite.Pose.DOWN);
                 minishLink.move();
             }
-
             if (minishLink.hasEnergy()) {
                 if (pressedKey[KeyEvent.VK_Z]) {
                     minishLink.spin();
@@ -72,9 +72,11 @@ public class ZeldaContainer extends GameContainer {
                 } else if (pressedKey[KeyEvent.VK_SPACE]) {
                     minishLink.attack();
                     minishLink.useEnergy(.1);
+                } else if (pressedKey[KeyEvent.VK_T]) {
+                    minishLink.launch();
+                    minishLink.useEnergy(.5);
                 }
             }
-
             if (minishLink.isOverlapping(dog)) {
                 minishLink.pushes(dog);
             }
@@ -82,7 +84,6 @@ public class ZeldaContainer extends GameContainer {
             if (link.isOverlapping(dog)) {
                 link.pushes(dog);
             }
-
             if (healthBox.isOverlapping(minishLink)) {
                 minishLink.incrementHealth(.1);
                 minishLink.incrementEnergy(.05);
@@ -98,6 +99,7 @@ public class ZeldaContainer extends GameContainer {
         GlobalSoundEffect.getInstance().play(minishLink);
         GlobalSoundTrack.getInstance().play();
         GlobalCamera.getInstance().setOrigin(minishLink, getWidth(), getHeight());
+
     }
 
     @Override
@@ -140,6 +142,7 @@ public class ZeldaContainer extends GameContainer {
         link.setVelocity(10);
         dog.setVelocity(10);
         minishLink.setVelocity(10);
+        minishLink.setProjectile(new EnergyBall());
         GlobalCamera.getInstance().setOrigin(minishLink, getWidth(), getHeight());
         link.setHealth(100);
         link.setEnergy(100);

@@ -12,7 +12,6 @@ import java.util.EnumMap;
 
 public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animation>, PoseFileFormat> {
 
-    private static final String SPRITE_FOLDER = "assets/sprites/";
     private static final String SPRITE_SHEET_FOLDER = "assets/sheets/";
 
     protected Pose currentPose = Pose.RIGHT;
@@ -23,6 +22,11 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
 
     protected Sprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
         super(spriteSheet, x, y, scaled, delay);
+    }
+
+    @Override
+    public Direction getDirection() {
+        return currentPose.direction;
     }
 
     protected Sprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
@@ -48,10 +52,6 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
 
     // For initializing anymore animations besides 4 basic ones for the sprite.
     protected abstract void initAnimations();
-
-    public String getSpriteDirectory() {
-        return SPRITE_FOLDER + this.getClass().getSimpleName().toLowerCase();
-    }
 
     @SuppressWarnings("java:S1172")
     public EnumMap<Pose, Animation> setupImages(PoseFileFormat format, BufferedImage image, int delay) {
@@ -101,9 +101,8 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     // Draws the sprite's current image based on its current state.
     @Override
     public void render(Graphics g) {
-        super.render(g);
         GlobalSoundEffect.getInstance().play(this);
-        moving = false;
+        super.render(g);
     }
 
 
@@ -123,6 +122,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     public String getPoseSoundEffect() {
         return String.format("%s/%s", this.getClass().getSimpleName().toLowerCase(), currentPose.getSoundFileName());
     }
+
 
     public enum Pose {
         UP(Direction.UP), DOWN(Direction.DOWN), LEFT(Direction.LEFT), RIGHT(Direction.RIGHT),
