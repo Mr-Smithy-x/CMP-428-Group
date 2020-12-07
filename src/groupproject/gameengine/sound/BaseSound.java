@@ -53,10 +53,14 @@ public abstract class BaseSound {
     }
 
     public void play(Clip clip) {
+        play(clip, false);
+    }
+
+    public void play(Clip clip, boolean force) {
         if (clip == null) return;
         setVolume(clip, 0.2f);
         boolean active = clip.isActive();
-        if (!active) {
+        if (!active || force) {
             stop(clip);
             clip.setFramePosition(0);
             clip.start();

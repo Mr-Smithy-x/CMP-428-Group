@@ -87,10 +87,14 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     }
 
     public boolean shoot() {
-        if (projectile != null && shootWhen()) {
-            projectile.setVelocity(20);
-            projectile.playSound();
-            return true;
+        if (projectile != null) {
+            if(shootWhen()) {
+                projectile.setVelocity(20);
+                projectile.playSound();
+                return true;
+            }else{
+                getCurrentAnimation().holdLastFrame();
+            }
         }
         return false;
     }
@@ -163,10 +167,11 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         this.direction = currentPose.direction;
     }
 
+    //This is for fetching sound effects in the future for specific class by their classname
+    //ie. ./assets/sounds/effects/(classname)/filename.wav
     public String getPoseSoundEffect() {
         return String.format("%s/%s", this.getClass().getSimpleName().toLowerCase(), currentPose.getSoundFileName());
     }
-
 
     public enum Pose {
         UP(Direction.UP), DOWN(Direction.DOWN), LEFT(Direction.LEFT), RIGHT(Direction.RIGHT),
