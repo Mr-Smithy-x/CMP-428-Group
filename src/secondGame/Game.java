@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Game extends Canvas implements Runnable{
     private String title;
-    public static final int WIDTH = 640, HEIGHT=WIDTH/12*9;
+    public static final int WIDTH = 900, HEIGHT=WIDTH/12*9;
     private Thread thread;
     private boolean running = false;
     private Handler handler;
@@ -29,7 +29,8 @@ public class Game extends Canvas implements Runnable{
 //        for(int i=0; i<5; i++){
 //            handler.addObject(new BasicEnemy(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.BasicEnemy, handler));
 //        }
-        handler.addObject(new BasicEnemy(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.BasicEnemy, handler));
+//        handler.addObject(new BasicEnemy(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.BasicEnemy, handler));
+        handler.addObject(new EnemyBoss(r.nextInt(WIDTH),r.nextInt(HEIGHT), ID.EnemyBoss, handler));
 
     }
 
