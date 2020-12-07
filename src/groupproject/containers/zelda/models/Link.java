@@ -4,7 +4,7 @@ package groupproject.containers.zelda.models;
 import groupproject.containers.zelda.contracts.Energy;
 import groupproject.gameengine.sprite.Animation;
 import groupproject.gameengine.sprite.Sprite;
-import groupproject.spritesheeteditor.models.FileFormat;
+import groupproject.spritesheeteditor.models.PoseFileFormat;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,7 +19,7 @@ public class Link extends Sprite implements Energy {
     private double energy;
 
     public Link(int positionX, int positionY, int duration) throws IOException {
-        super(FileFormat.Companion.load("link.pose"), positionX, positionY, 2, duration);
+        super(PoseFileFormat.Companion.load("link.pose"), positionX, positionY, 2, duration);
     }
 
     public void attack(List<Sprite> objects) {

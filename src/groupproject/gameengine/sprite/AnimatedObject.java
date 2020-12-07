@@ -6,19 +6,18 @@ import groupproject.gameengine.contracts.CollisionDetection;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
 import groupproject.games.ZeldaTestGame;
-import groupproject.spritesheeteditor.models.SingleFileFormat;
+import groupproject.spritesheeteditor.models.FileFormat;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class AnimatedObject<T, F extends SingleFileFormat> implements Renderable, CameraContract, CollisionDetection {
+public abstract class AnimatedObject<T, F extends FileFormat> implements Renderable, CameraContract, CollisionDetection {
 
     protected Logger logger = Logger.getLogger("GameEngine", null);
     protected T animDict;

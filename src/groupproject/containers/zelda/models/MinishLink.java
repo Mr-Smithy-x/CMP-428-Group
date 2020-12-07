@@ -3,7 +3,7 @@ package groupproject.containers.zelda.models;
 
 import groupproject.containers.zelda.contracts.Energy;
 import groupproject.gameengine.sprite.Sprite;
-import groupproject.spritesheeteditor.models.FileFormat;
+import groupproject.spritesheeteditor.models.PoseFileFormat;
 
 import java.awt.*;
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class MinishLink extends Sprite implements Energy {
     private double energy;
 
     public MinishLink(int positionX, int positionY, int duration) throws IOException {
-        super(Objects.requireNonNull(FileFormat.Companion.load("link_final_spritesheet.pose")), positionX, positionY, 2, duration);
+        super(Objects.requireNonNull(PoseFileFormat.Companion.load("link_final_spritesheet.pose")), positionX, positionY, 2, duration);
     }
 
     public void attack(List<Sprite> objects) {

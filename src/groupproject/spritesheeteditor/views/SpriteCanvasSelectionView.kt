@@ -18,7 +18,7 @@ class SpriteCanvasSelectionView : BaseCanvasView {
     }
 
     interface SpriteCanvasMouseCallback {
-        fun onDoubleClicked(bounds: FileFormat.SpriteBounds)
+        fun onDoubleClicked(bounds: FileFormat.Bounds)
     }
 
     constructor(canvas: Canvas) : super(canvas)
@@ -39,7 +39,7 @@ class SpriteCanvasSelectionView : BaseCanvasView {
         return image
     }
 
-    private var selectedSpriteBounds: FileFormat.SpriteBounds? = null
+    private var selectedBounds: FileFormat.Bounds? = null
 
     override fun handle(event: MouseEvent?) {
         super.handle(event)
@@ -47,10 +47,10 @@ class SpriteCanvasSelectionView : BaseCanvasView {
         when (event?.eventType) {
             MouseEvent.MOUSE_CLICKED, MouseEvent.MOUSE_DRAGGED -> {
                 drawImage(event!!)
-                if (event.clickCount >= 2 && this::callback.isInitialized && this.selectedSpriteBounds != null) {
-                    callback.onDoubleClicked(selectedSpriteBounds!!)
+                if (event.clickCount >= 2 && this::callback.isInitialized && this.selectedBounds != null) {
+                    callback.onDoubleClicked(selectedBounds!!)
                 } else {
-                    println(selectedSpriteBounds)
+                    println(selectedBounds)
                 }
             }
         }
@@ -68,7 +68,7 @@ class SpriteCanvasSelectionView : BaseCanvasView {
             SelectionMode.EVEN -> {
                 val realX = x.toInt() - (x.toInt() % mode.dimension)
                 val realY = y.toInt() - (y.toInt() % mode.dimension)
-                selectedSpriteBounds = FileFormat.SpriteBounds(realX, realY, mode.dimension, mode.dimension)
+                selectedBounds = FileFormat.Bounds(realX, realY, mode.dimension, mode.dimension)
             }
             else -> {
                 val rgb = i.getRGB(x.toInt(), y.toInt())
@@ -83,28 +83,28 @@ class SpriteCanvasSelectionView : BaseCanvasView {
                     if (lowX != null && highX != null && lowY != null && highY != null) {
                         val width = highX - lowX
                         val height = highY - lowY
-                        selectedSpriteBounds =
-                                FileFormat.SpriteBounds(lowX.toInt(), lowY.toInt(), width.toInt(), height.toInt())
+                        selectedBounds =
+                                FileFormat.Bounds(lowX.toInt(), lowY.toInt(), width.toInt(), height.toInt())
                     }
                 } else {
-                    selectedSpriteBounds = null
+                    selectedBounds = null
                 }
             }
         }
         canvas.graphicsContext2D.drawImage(SwingFXUtils.toFXImage(i, null), 0.0, 0.0)
-        if (selectedSpriteBounds != null) {
+        if (selectedBounds != null) {
             canvas.graphicsContext2D.strokeRect(
-                    selectedSpriteBounds!!.x.toDouble(),
-                    selectedSpriteBounds!!.y.toDouble(),
-                    selectedSpriteBounds!!.w.toDouble(),
-                    selectedSpriteBounds!!.h.toDouble()
+                    selectedBounds!!.x.toDouble(),
+                    selectedBounds!!.y.toDouble(),
+                    selectedBounds!!.w.toDouble(),
+                    selectedBounds!!.h.toDouble()
             )
         }
     }
 
 
-    fun getSelectedImage(): FileFormat.SpriteBounds? {
-        return selectedSpriteBounds
+    fun getSelectedImage(): FileFormat.Bounds? {
+        return selectedBounds
     }
 
 }

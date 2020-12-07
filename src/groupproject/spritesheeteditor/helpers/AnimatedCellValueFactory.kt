@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView
 import javafx.util.Callback
 import java.awt.image.BufferedImage
 
-class SpriteCellValueFactory(val index: Int, val image: BufferedImage) :
+class AnimatedCellValueFactory(val index: Int, val image: BufferedImage) :
         Callback<TableColumn.CellDataFeatures<FileFormat.AnimationRow, Any>, ObservableValue<Any>> {
 
     override fun call(data: TableColumn.CellDataFeatures<FileFormat.AnimationRow, Any>): ObservableValue<Any> {

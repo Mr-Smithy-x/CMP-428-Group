@@ -1,24 +1,28 @@
 package groupproject.spritesheeteditor.extensions
 
 import groupproject.gameengine.sprite.Sprite
-import groupproject.spritesheeteditor.helpers.SpriteCellValueFactory
+import groupproject.spritesheeteditor.helpers.AnimatedCellValueFactory
+import groupproject.spritesheeteditor.models.PoseFileFormat
+import groupproject.spritesheeteditor.models.ProjectileFileFormat
 import groupproject.spritesheeteditor.models.FileFormat
 import groupproject.spritesheeteditor.views.SpriteCanvasSelectionView
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.cell.PropertyValueFactory
+import javafx.stage.FileChooser
 import java.awt.image.BufferedImage
 import java.io.*
+import java.nio.file.Files
 import java.util.*
 
 fun TableView<FileFormat.AnimationRow>.init(
-        spriteCanvasSelectionView: SpriteCanvasSelectionView
+    spriteCanvasSelectionView: SpriteCanvasSelectionView
 ): List<TableColumn<FileFormat.AnimationRow, Any>> {
     return init(spriteCanvasSelectionView.image)
 }
 
 fun TableView<FileFormat.AnimationRow>.init(
-        image: BufferedImage
+    image: BufferedImage
 ): List<TableColumn<FileFormat.AnimationRow, Any>> {
     val map = ArrayList<TableColumn<FileFormat.AnimationRow, Any>>()
     for (i in 0..16) {
@@ -28,7 +32,7 @@ fun TableView<FileFormat.AnimationRow>.init(
             map.add(element)
         } else {
             val element = TableColumn<FileFormat.AnimationRow, Any>("F:$i")
-            element.cellValueFactory = SpriteCellValueFactory(i - 1, image)
+            element.cellValueFactory = AnimatedCellValueFactory(i - 1, image)
             map.add(element)
         }
     }
@@ -41,18 +45,29 @@ fun TableView<FileFormat.AnimationRow>.init(
 val TableView<FileFormat.AnimationRow>.poses: List<String>
     get() = items.map { it.pose }
 
-fun TableView<FileFormat.AnimationRow>.loadSerialized(spriteCanvasSelectionView: SpriteCanvasSelectionView, file: File) {
+fun TableView<FileFormat.AnimationRow>.loadSerialized(
+    spriteCanvasSelectionView: SpriteCanvasSelectionView,
+    file: File
+) {
     ObjectInputStream(FileInputStream(file)).use {
         val pose = it.readObject()
         when (pose) {
-            is FileFormat -> load(spriteCanvasSelectionView, file, pose)
+            is PoseFileFormat -> load(spriteCanvasSelectionView, file, pose)
+            is ProjectileFileFormat -> load(spriteCanvasSelectionView, file, pose)
+            is FileFormat -> {
+                println(pose.image)
+            }
             else -> println("Deserialization failed")
         }
     }
+
 }
 
-
-fun TableView<FileFormat.AnimationRow>.load(spriteCanvasSelectionView: SpriteCanvasSelectionView, file: File, format: FileFormat) {
+fun TableView<FileFormat.AnimationRow>.load(
+    spriteCanvasSelectionView: SpriteCanvasSelectionView,
+    file: File,
+    format: PoseFileFormat
+) {
     val imagePath = "${file.parentFile.parent}/sheets/${format.image}"
     val imageFile = File(imagePath)
     if (imageFile.exists()) {
@@ -72,6 +87,24 @@ fun TableView<FileFormat.AnimationRow>.load(spriteCanvasSelectionView: SpriteCan
     }
 }
 
+fun TableView<FileFormat.AnimationRow>.load(
+    spriteCanvasSelectionView: SpriteCanvasSelectionView,
+    file: File,
+    format: ProjectileFileFormat
+) {
+    val imagePath = "${file.parentFile.parent}/sheets/${format.image}"
+    val imageFile = File(imagePath)
+    if (imageFile.exists()) {
+        spriteCanvasSelectionView.file = imageFile
+        init(spriteCanvasSelectionView.image)
+        items.removeAll()
+        items.add(FileFormat.AnimationRow(mode.name, format.set))
+        refresh()
+    } else {
+        throw FileNotFoundException("$imagePath, Couldnt find relative to location")
+    }
+}
+
 
 fun TableView<FileFormat.AnimationRow>.hasPose(pose: String): Boolean {
     return items.any { it.pose.equals(pose, true) }
@@ -80,8 +113,8 @@ fun TableView<FileFormat.AnimationRow>.hasPose(pose: String): Boolean {
 fun TableView<FileFormat.AnimationRow>.find(pose: String): FileFormat.AnimationRow? {
     return items.find {
         it.pose.equals(
-                pose,
-                true
+            pose,
+            true
         )
     }
 }
@@ -99,36 +132,65 @@ fun TableView<FileFormat.AnimationRow>.removeLastInserted() {
     }
 }
 
-fun TableView<FileFormat.AnimationRow>.map(filename: String): FileFormat {
+fun TableView<FileFormat.AnimationRow>.map(filename: String): PoseFileFormat {
     val lists = LinkedList<FileFormat.AnimationRow>()
     lists.addAll(items)
-    return FileFormat(filename, lists)
+    return PoseFileFormat(filename, lists)
 }
 
-fun TableView<FileFormat.AnimationRow>.mapSelected(filename: String): FileFormat.AnimationRow {
-    return selectionModel.selectedItem ?: items.first()
+fun TableView<FileFormat.AnimationRow>.mapSelected(filename: String): ProjectileFileFormat {
+    val row = selectionModel.selectedItem ?: items.first()
+    return ProjectileFileFormat(filename, row.set)
 }
 
-fun TableView<FileFormat.AnimationRow>.map(image: File): FileFormat {
+fun TableView<FileFormat.AnimationRow>.map(image: File): PoseFileFormat {
     return map(image.name)
 }
 
-fun TableView<FileFormat.AnimationRow>.mapSelected(image: File): FileFormat.AnimationRow {
+fun TableView<FileFormat.AnimationRow>.mapSelected(image: File): ProjectileFileFormat {
     return mapSelected(image.name)
 }
 
+class ExtensionTableView {
+    enum class EDITOR(val file: File, val extensionFilter: FileChooser.ExtensionFilter) {
+        PROJECTILE(File("./assets/projectiles").also {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }, FileChooser.ExtensionFilter("Projectile", "*.projectile")),
+        POSE(File("./assets/poses").also {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }, FileChooser.ExtensionFilter("Pose", "*.pose"));
+    }
+
+    companion object {
+        var editor: EDITOR = EDITOR.POSE
+    }
+}
+
+var TableView<FileFormat.AnimationRow>.mode: ExtensionTableView.EDITOR
+    get() = ExtensionTableView.editor
+    set(value) {
+        ExtensionTableView.editor = value
+    }
 
 fun TableView<FileFormat.AnimationRow>.saveSerialized(file: File, imageFilename: File) {
-    ObjectOutputStream(FileOutputStream(file)).use {
-        it.writeObject(map(imageFilename))
+    val pathname = "./assets/sheets/${imageFilename.name}"
+    val imageToCopy = File(pathname);
+    if (!imageToCopy.exists()) {
+        imageFilename.copyTo(imageToCopy, false)
+    }
+    when (mode) {
+        ExtensionTableView.EDITOR.POSE -> ObjectOutputStream(FileOutputStream(file)).use {
+            it.writeObject(map(imageFilename))
+        }
+        ExtensionTableView.EDITOR.PROJECTILE -> ObjectOutputStream(FileOutputStream(file)).use {
+            it.writeObject(mapSelected(imageFilename))
+        }
+
     }
 }
-
-fun TableView<FileFormat.AnimationRow>.saveProjectile(file: File, imageFilename: File){
-    ObjectOutputStream(FileOutputStream(file)).use {
-        it.writeObject(mapSelected(imageFilename))
-    }
-}
-
 
 

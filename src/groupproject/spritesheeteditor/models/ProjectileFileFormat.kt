@@ -5,23 +5,27 @@ import java.io.FileInputStream
 import java.io.ObjectInputStream
 import java.io.Serializable
 
-data class ProjectTileFileFormat(
+data class ProjectileFileFormat(
     override var image: String,
-    var set: FileFormat.AnimationSet
-) : SingleFileFormat(image), Serializable {
+    var set: AnimationSet
+) : FileFormat(image), Serializable {
 
     companion object {
 
         private const val serialVersionUID = 20201204202000L
 
-        fun load(filename: String): ProjectTileFileFormat? {
-            return load(File("./assets/projectiles/$filename"))
+        fun load(filename: String): ProjectileFileFormat? {
+            var pathname = "./assets/projectiles/$filename"
+            if(!pathname.endsWith(".projectile")){
+                pathname += ".projectile"
+            }
+            return load(File(pathname))
         }
 
-        private fun load(file: File): ProjectTileFileFormat? {
+        private fun load(file: File): ProjectileFileFormat? {
             return ObjectInputStream(FileInputStream(file)).use {
                 return@use when (val pose = it.readObject()) {
-                    is ProjectTileFileFormat -> pose
+                    is ProjectileFileFormat -> pose
                     else -> null
                 }
             }

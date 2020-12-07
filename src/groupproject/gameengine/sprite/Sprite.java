@@ -1,7 +1,7 @@
 package groupproject.gameengine.sprite;
 
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
-import groupproject.spritesheeteditor.models.FileFormat;
+import groupproject.spritesheeteditor.models.PoseFileFormat;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
 
-public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animation>, FileFormat> {
+public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animation>, PoseFileFormat> {
 
     private static final String SPRITE_FOLDER = "assets/sprites/";
     private static final String SPRITE_SHEET_FOLDER = "assets/sheets/";
@@ -25,7 +25,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         super(spriteSheet, x, y, scaled, delay);
     }
 
-    protected Sprite(FileFormat format, int x, int y, int scaled, int delay) throws IOException {
+    protected Sprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
         super(format, x, y, scaled, delay);
     }
 
@@ -54,12 +54,12 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     }
 
     @SuppressWarnings("java:S1172")
-    public EnumMap<Pose, Animation> setupImages(FileFormat format, BufferedImage image, int delay) {
+    public EnumMap<Pose, Animation> setupImages(PoseFileFormat format, BufferedImage image, int delay) {
         EnumMap<Pose, Animation> map = new EnumMap<>(Pose.class);
-        for (FileFormat.AnimationRow row : format.getPoses()) {
+        for (PoseFileFormat.AnimationRow row : format.getPoses()) {
             Animation animation = Animation.with(delay);
-            for (FileFormat.SpriteBounds spriteBounds : row.getSet()) {
-                animation.addFrame(image.getSubimage(spriteBounds.getX(), spriteBounds.getY(), spriteBounds.getW(), spriteBounds.getH()));
+            for (PoseFileFormat.Bounds bounds : row.getSet()) {
+                animation.addFrame(image.getSubimage(bounds.getX(), bounds.getY(), bounds.getW(), bounds.getH()));
             }
             map.put(Pose.parse(row.getPose()), animation);
         }

@@ -1,28 +1,28 @@
 package groupproject.gameengine.sprite;
 
-import groupproject.spritesheeteditor.models.FileFormat;
-import groupproject.spritesheeteditor.models.ProjectTileFileFormat;
+import groupproject.spritesheeteditor.models.PoseFileFormat;
+import groupproject.spritesheeteditor.models.ProjectileFileFormat;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class ProjectTile extends AnimatedObject<Animation, ProjectTileFileFormat> {
+public abstract class ProjectTile extends AnimatedObject<Animation, ProjectileFileFormat> {
 
     private static final String PROJECTILE_FOLDER = "assets/projectiles/";
     private static final String PROJECTILE_SHEET_FOLDER = "assets/sheets/";
 
-    protected ProjectTile(ProjectTileFileFormat format, int x, int y, int scaled, int delay) throws IOException {
+    protected ProjectTile(ProjectileFileFormat format, int x, int y, int scaled, int delay) throws IOException {
         super(format, x, y, scaled, delay);
     }
 
     @Override
     @SuppressWarnings("java:S1172")
-    protected Animation setupImages(ProjectTileFileFormat format, BufferedImage image, int delay) {
+    protected Animation setupImages(ProjectileFileFormat format, BufferedImage image, int delay) {
         Animation animation = Animation.with(delay);
-        for (FileFormat.SpriteBounds spriteBounds : format.getSet()) {
-            animation.addFrame(image.getSubimage(spriteBounds.getX(), spriteBounds.getY(), spriteBounds.getW(), spriteBounds.getH()));
+        for (PoseFileFormat.Bounds bounds : format.getSet()) {
+            animation.addFrame(image.getSubimage(bounds.getX(), bounds.getY(), bounds.getW(), bounds.getH()));
         }
         return animation;
     }
