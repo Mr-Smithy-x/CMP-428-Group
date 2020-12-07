@@ -51,7 +51,7 @@ public class MapEditorController {
                 model.getMapModel().getTileSetFile()));
         mapEditorView.loadInitialMapView(
                 model.getTileSet().getTileImageList(), model.getMapModel());
-        mapEditorTileSetView.initTileSetView(model.getTileSet());
+        mapEditorTileSetView.initTileSetView();
         setEditorMode(EditorMode.PAINT);
         this.selectedTile = null;
     }
@@ -190,8 +190,8 @@ public class MapEditorController {
         return selectedTile;
     }
 
-    public void setSelectedTile(BufferedImage selectedTile) {
-        this.selectedTile = selectedTile;
+    public void setSelectedTile(int row, int col) {
+        this.selectedTile = model.getTileSet().getTileImageList().get((row * model.getTileSet().getTileSetColumns()) + col);
     }
 
     public EditorMode getEditorMode() {
@@ -251,5 +251,9 @@ public class MapEditorController {
 
     public int getObjectTileAtPoint(int row, int col) {
         return this.model.getMapModel().getObjectMap()[row][col];
+    }
+
+    public TileSet getTileSet() {
+        return model.getTileSet();
     }
 }
