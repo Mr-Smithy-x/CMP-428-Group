@@ -122,6 +122,8 @@ public class ZeldaContainer extends GameContainer {
                 GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.NORMAL);
             }
         }
+        minishLink.isProjectileHitting(octorok);
+        octorok.isProjectileHitting(minishLink);
         GlobalSoundEffect.getInstance().play(minishLink);
         GlobalSoundTrack.getInstance().play();
         GlobalCamera.getInstance().setOrigin(minishLink.getBounds(), getWidth(), getHeight());

@@ -1,7 +1,6 @@
 package groupproject.gameengine.contracts;
 
 import groupproject.gameengine.camera.BaseCamera;
-import groupproject.gameengine.camera.GlobalCamera;
 
 public interface CameraContract extends BoundingContract {
 

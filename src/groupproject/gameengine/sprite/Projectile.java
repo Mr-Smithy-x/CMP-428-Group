@@ -12,7 +12,6 @@ import java.io.IOException;
 public abstract class Projectile extends AnimatedObject<Animation, ProjectileFileFormat> {
 
     private static final String PROJECTILE_FOLDER = "assets/projectiles/";
-    private static final String PROJECTILE_SHEET_FOLDER = "assets/sheets/";
 
     protected Projectile(ProjectileFileFormat format, int x, int y, int scaled, int delay) throws IOException {
         super(format, x, y, scaled, delay);
@@ -73,19 +72,13 @@ public abstract class Projectile extends AnimatedObject<Animation, ProjectileFil
         return ImageIO.read(new File(String.format("%s%s", getSheetDirectory(), spriteSheet)));
     }
 
-    @Override
-    public String getSheetDirectory() {
-        return PROJECTILE_SHEET_FOLDER;
-    }
-
-    @Override
-    public String getFileDirectory() {
-        return PROJECTILE_FOLDER;
-    }
-
     protected void align(Sprite sprite) {
         Image currentFrame = sprite.getCurrentFrame();
         setDirection(sprite.getDirection());
-        setWorld(sprite.getX().intValue() + currentFrame.getWidth(null) / 4, sprite.getY().intValue() + currentFrame.getHeight(null) / 4);
+        int width = currentFrame.getWidth(null) / 4;
+        int height = currentFrame.getHeight(null) / 4;
+        int x = sprite.getX().intValue() + width;
+        int y = sprite.getY().intValue() + height;
+        setWorld(x, y);
     }
 }

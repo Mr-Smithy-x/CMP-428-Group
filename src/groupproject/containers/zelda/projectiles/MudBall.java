@@ -1,12 +1,13 @@
 package groupproject.containers.zelda.projectiles;
 
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
+import groupproject.gameengine.sprite.DamageProjectile;
 import groupproject.gameengine.sprite.Projectile;
 import groupproject.spritesheeteditor.models.ProjectileFileFormat;
 
 import java.io.IOException;
 
-public class MudBall extends Projectile {
+public class MudBall extends DamageProjectile {
 
     public MudBall() throws IOException {
         this(1);
@@ -22,7 +23,7 @@ public class MudBall extends Projectile {
     }
 
     @Override
-    protected void initAnimations() {
+    protected void onInitAnimations() {
 
     }
 
@@ -34,5 +35,10 @@ public class MudBall extends Projectile {
     @Override
     protected void playSound() {
         GlobalSoundEffect.getInstance().play(GlobalSoundEffect.Clips.CANE);
+    }
+
+    @Override
+    public double getDamagePoints() {
+        return 0.5;
     }
 }

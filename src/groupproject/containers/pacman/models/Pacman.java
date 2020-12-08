@@ -10,7 +10,7 @@ public class Pacman extends Sprite {
     }
 
     @Override
-    protected void initAnimations() {
+    protected void onInitAnimations() {
         /*
          * Don't need anything here yet.
          */

@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 public abstract class AnimatedObject<T, F extends FileFormat> implements Renderable, CameraContract, CollisionDetection {
 
-
+    protected static final String SPRITE_SHEET_FOLDER = "assets/sheets/";
     protected static final String SPRITE_FOLDER = "assets/sprites/";
 
     protected Logger logger = Logger.getLogger("GameEngine", null);
@@ -33,36 +33,36 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
     protected AnimatedObject(F format, int x, int y, int scaled, int delay) throws IOException {
         this.scaled = scaled;
         animDict = setupImages(format, initializeSheet(format.getImage()), delay);
-        initAnimations();
+        onInitAnimations();
         setupBox(x, y);
     }
 
     protected AnimatedObject(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
         this.scaled = scaled;
         animDict = setupImages(initializeSheet(spriteSheet), delay);
-        initAnimations();
+        onInitAnimations();
         setupBox(x, y);
     }
 
     protected AnimatedObject(int x, int y, String spritePrefix, int delay) {
         velocity = 1;
         animDict = setupImages(spritePrefix, delay);
-        initAnimations();
+        onInitAnimations();
         setupBox(x, y);
     }
 
 
     // For initializing anymore animations besides 4 basic ones for the projectiles.
 
-    protected abstract void initAnimations();
+    protected abstract void onInitAnimations();
 
     public abstract Animation getCurrentAnimation();
 
     public abstract Animation getSafeAnimation();
 
-    public abstract String getSheetDirectory();
-
-    public abstract String getFileDirectory();
+    public String getSheetDirectory() {
+        return SPRITE_SHEET_FOLDER;
+    }
 
     public String getSpriteDirectory() {
         return SPRITE_FOLDER + this.getClass().getSimpleName().toLowerCase();
@@ -120,11 +120,11 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
         } else {
             currentFrame = getCurrentAnimation().getFirstFrame();
         }
-        if(currentFrame == null){
+        if (currentFrame == null) {
             Animation safeAnimation = getSafeAnimation();
-            if(moving) {
+            if (moving) {
                 currentFrame = safeAnimation.getCurrentFrame();
-            }else{
+            } else {
                 currentFrame = safeAnimation.getFirstFrame();
             }
         }
@@ -210,11 +210,6 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
     }
 
     @Override
-    public Number getY() {
-        return bounds.getY();
-    }
-
-    @Override
     public void setY(Number y) {
         bounds.setY(y);
         if (y.intValue() > 0) {
@@ -222,6 +217,10 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
         }
     }
 
+    @Override
+    public Number getY() {
+        return bounds.getY();
+    }
 
     @Override
     public Number getWidth() {
@@ -233,7 +232,7 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
         bounds.setWidth(width);
     }
 
-    public Image getCurrentFrame(){
+    public Image getCurrentFrame() {
         return getCurrentAnimation().getCurrentFrame();
     }
 

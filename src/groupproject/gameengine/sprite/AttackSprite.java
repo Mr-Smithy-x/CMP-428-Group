@@ -1,17 +1,26 @@
 package groupproject.gameengine.sprite;
 
 
+import groupproject.containers.zelda.contracts.Damage;
 import groupproject.containers.zelda.contracts.Energy;
+import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.spritesheeteditor.models.PoseFileFormat;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
-public abstract class AttackSprite extends Sprite implements Energy {
+public abstract class AttackSprite<P extends DamageProjectile> extends Sprite implements Energy, Damage {
 
     private double health;
     private double energy;
+
+    public void isProjectileHitting(AttackSprite sprite) {
+        if (getProjectile() != null) {
+            getProjectile().damage(getProjectile(), sprite);
+        }
+    }
 
     protected AttackSprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
         super(format, x, y, scaled, delay);
@@ -30,13 +39,46 @@ public abstract class AttackSprite extends Sprite implements Energy {
     }
 
     @Override
-    public boolean shoot() {
-        canePose();
-        boolean shoot = super.shoot();
-        if (shoot) {
-            useEnergy(.5);
+    public double getDamagePoints() {
+        return getProjectile() != null ? getProjectile().getDamagePoints() : 0;
+    }
+
+    public abstract void setProjectile(P projectile);
+
+    public abstract P getProjectile();
+
+    protected void resetProjectile() {
+        if (getProjectile() != null) {
+            if (getProjectile().isOutsideCamera(GlobalCamera.getInstance())) {
+                this.getProjectile().align(this);
+                this.getProjectile().setVelocity(0);
+            } else if (getProjectile().getVelocity() == 0) {
+                this.getProjectile().align(this);
+            }
         }
-        return shoot;
+    }
+
+    protected boolean shootWhen() {
+        Pose[] poses = {Pose.ATTACK_LEFT_01, Pose.ATTACK_RIGHT_01, Pose.ATTACK_UP_01, Pose.ATTACK_DOWN_01};
+        if (Arrays.stream(poses).anyMatch(p -> p == currentPose)) {
+            return getCurrentAnimation().isLastFrame();
+        }
+        return false;
+    }
+
+    public boolean shoot() {
+        if (getProjectile() != null) {
+            canePose();
+            if (shootWhen()) {
+                getProjectile().setVelocity(20);
+                getProjectile().playSound();
+                useEnergy(.5);
+                return true;
+            } else {
+                getCurrentAnimation().holdLastFrame();
+            }
+        }
+        return false;
     }
 
     public void canePose() {
@@ -100,10 +142,17 @@ public abstract class AttackSprite extends Sprite implements Energy {
         }
     }
 
+    public void spin() {
+        moving = true;
+        setSpritePose(Pose.SPIN_ATTACK);
+    }
+
+
     @Override
-    protected void initAnimations() {
+    protected void onInitAnimations() {
         animDict.values().forEach(a -> a.scale(scaled));
     }
+
 
     @Override
     public void render(Graphics g) {
@@ -112,12 +161,24 @@ public abstract class AttackSprite extends Sprite implements Energy {
         } else if (currentPose == Pose.DEAD) {
             setSpritePose(Pose.DOWN);
         }
+        if (!isDead() && getProjectile() != null) {
+            if (getProjectile().isInsideCamera(GlobalCamera.getInstance()) && getProjectile().getVelocity() > 0) {
+                getProjectile().render(g);
+                getProjectile().move();
+            } else {
+                resetProjectile();
+            }
+        }
         super.render(g);
     }
 
-    public void spin() {
-        moving = true;
-        setSpritePose(Pose.SPIN_ATTACK);
+
+    @Override
+    public void move() {
+        super.move();
+        if (getProjectile() != null && getProjectile().getVelocity() == 0) {
+            getProjectile().align(this);
+        }
     }
 
     @Override
