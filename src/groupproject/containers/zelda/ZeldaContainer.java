@@ -25,7 +25,7 @@ public class ZeldaContainer extends GameContainer {
     BoundingBox damageBox;
     MinishLink minishLink;
 
-    protected ZeldaContainer(JFrame container, Canvas canvas) {
+    public ZeldaContainer(JFrame container, Canvas canvas) {
         super(container, canvas);
     }
 

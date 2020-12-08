@@ -1,8 +1,12 @@
 package secondGame;
 
+import groupproject.containers.zelda.ZeldaContainer;
+import groupproject.gameengine.GameContainer;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.Random;
 
 public class Menu extends MouseAdapter {
@@ -22,8 +26,13 @@ public class Menu extends MouseAdapter {
         if (game.gameState == Game.STATE.Menu){
             // Game1
             if (mouseOver(mx, my,300,150,300,80)){
-
-
+                game.gameState = Game.STATE.ZeldaGame;
+                GameContainer zeldaGame = ZeldaContainer.frame(800, 800);
+                try {
+                    zeldaGame.start();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
             // Game2
             if (mouseOver(mx, my,300,250,300,80)){

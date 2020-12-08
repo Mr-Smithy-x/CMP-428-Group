@@ -1,7 +1,9 @@
 package secondGame;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 import java.util.Random;
 
 public class Game extends Canvas implements Runnable{
@@ -58,7 +60,11 @@ public class Game extends Canvas implements Runnable{
             lastTime = now;
 
             if (delta >= 1) { // if delta reached 1 tick
-                tick();
+                try {
+                    tick();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 render();
 				ticks++;
                 delta--;
@@ -93,7 +99,9 @@ public class Game extends Canvas implements Runnable{
         }
     }
 
-    public void tick(){
+    private JFrame jFrame;
+    private Canvas canvas;
+    public void tick() throws IOException {
         handler.tick();
         if(gameState == STATE.Game){
             hud.tick();
@@ -103,8 +111,6 @@ public class Game extends Canvas implements Runnable{
         }else if (gameState == STATE.Help){
             menu.tick();
         }
-
-
     }
 
     public void render(){
@@ -117,7 +123,8 @@ public class Game extends Canvas implements Runnable{
         Graphics g = bs.getDrawGraphics();
 
         g.clearRect(0, 0, WIDTH, HEIGHT);
-        g.setColor(Color.BLACK);
+        Color myColor = new Color(70, 120, 70);
+        g.setColor(myColor);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         if(gameState == STATE.Game){
