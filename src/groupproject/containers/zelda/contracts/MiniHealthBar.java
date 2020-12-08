@@ -9,12 +9,17 @@ public interface MiniHealthBar extends Life, CameraContract {
 
     default void renderHud(Graphics graphics, BaseCamera camera) {
         if (!isDead()) {
-            int x = getCameraOffsetX(camera).intValue() + getWidth().intValue();
-            //int y = getCameraOffsetY(camera).intValue() + getHeight().intValue();
-
-
-            int alpha = Math.min(Math.max(0, x), Math.min(Math.max(x, 255), 255));
-
+            int x = getCameraOffsetX(camera).intValue();
+            int y = getCameraOffsetY(camera).intValue();
+            if (x > 255) {
+                x = 255 - (Math.max(-255, 255 - x) * -1);
+            }
+            if (y > 255) {
+                y = 255 - (Math.max(-255, 255 - y) * -1);
+            }
+            x = Math.max(0, x);
+            y = Math.max(0, y);
+            int alpha = Math.min(x, y);
             Color red = new Color(150, 70, 70, alpha);
             Color green = new Color(0, 150, 70, alpha);
             Color black = new Color(0, 0, 0, alpha);
