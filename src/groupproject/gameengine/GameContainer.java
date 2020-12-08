@@ -32,7 +32,6 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     private Thread t;
     private Image offScreenImage;
 
-
     protected GameContainer(JFrame container, Canvas canvas) {
         this.container = canvas;
         container.requestFocus();
@@ -122,6 +121,11 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         }
         onStop();
     }
+
+    public boolean isPaused() {
+        return !playing;
+    }
+
 
     protected void onStart() {
 

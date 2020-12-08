@@ -43,6 +43,15 @@ public class ZeldaContainer extends GameContainer {
         world.automate();
         world.adjust();
         world.manual(pressedKey);
+        //You can remove these below
+        if (world.getPlayer().isOverlapping(healthBox)) {
+            world.getPlayer().incrementHealth(.5);
+            world.getPlayer().incrementEnergy(.5, true);
+        }
+        if (world.getPlayer().isOverlapping(damageBox)) {
+            world.getPlayer().damageHealth(.5);
+            world.getPlayer().useEnergy(.25);
+        }
     }
 
     @Override

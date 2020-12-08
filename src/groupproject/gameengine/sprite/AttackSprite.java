@@ -8,6 +8,7 @@ import groupproject.spritesheeteditor.models.PoseFileFormat;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -238,4 +239,7 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
         this.energy = energy;
     }
 
+    public boolean isNear(ArrayList<AttackSprite> enemies) {
+        return enemies.stream().filter(e -> !e.isDead()).anyMatch(p -> p.distanceBetween(this) < 200);
+    }
 }

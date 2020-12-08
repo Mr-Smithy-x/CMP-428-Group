@@ -54,7 +54,6 @@ public class ZeldaWorldManager extends BaseWorldManager {
                     getPlayer().shoot();
                 }
             }
-            GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.NORMAL);
         } else {
             GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
         }
@@ -93,6 +92,13 @@ public class ZeldaWorldManager extends BaseWorldManager {
 
     @Override
     protected void renderGlobalSounds() {
+        if (isPlayerDead() || getContainer().isPaused()) {
+            GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
+        } else if (getPlayer().isNear(getEnemies())) {
+            GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.COMBAT);
+        } else {
+            GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.NORMAL);
+        }
         GlobalSoundEffect.getInstance().play(getPlayer());
         GlobalSoundTrack.getInstance().play();
     }
