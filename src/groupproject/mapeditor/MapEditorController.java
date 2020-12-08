@@ -261,4 +261,23 @@ public class MapEditorController {
     public BufferedImage getObjectTileImage(int row, int col) {
         return getTileSet().getTileImageList().get(model.getMapModel().getObjectMap()[row][col]);
     }
+
+    public void changeSelectedTileInView(String direction) {
+        switch (direction) {
+            case "up":
+                mapEditorTileSetView.changeSelectedRowAndColBy(-1, 0);
+                break;
+            case "down":
+                mapEditorTileSetView.changeSelectedRowAndColBy(1, 0);
+                break;
+            case "left":
+                mapEditorTileSetView.changeSelectedRowAndColBy(0, -1);
+                break;
+            case "right":
+                mapEditorTileSetView.changeSelectedRowAndColBy(0, 1);
+                break;
+            default:
+                break;
+        }
+    }
 }

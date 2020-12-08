@@ -91,8 +91,12 @@ public class MapEditorView extends JPanel {
     }
 
     private boolean isValidClick(int x, int y) {
-        return (x < mapView.getWidth() && y < mapView.getHeight()) &&
-                (x > 0 && y > 0);
+        try {
+            return (x < mapView.getWidth() && y < mapView.getHeight()) &&
+                    (x > 0 && y > 0);
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
     private void handleClick(MouseEvent e) {

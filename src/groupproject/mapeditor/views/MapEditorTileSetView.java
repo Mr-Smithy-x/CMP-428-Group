@@ -24,7 +24,7 @@ public class MapEditorTileSetView extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                setTileSelected(e.getX(), e.getY());
+                if (isValidClick(e.getX(), e.getY())) setTileSelected(e.getX(), e.getY());
             }
         });
     }
@@ -34,6 +34,15 @@ public class MapEditorTileSetView extends JPanel {
         super.paintComponent(g);
         if (tileSetView != null)
             g.drawImage(tileSetView, 0, 0, null);
+    }
+
+    private boolean isValidClick(int x, int y) {
+        try {
+            return (x < tileSetView.getWidth() && y < tileSetView.getHeight()) &&
+                    (x > 0 && y > 0);
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
     public void initTileSetView() {
@@ -86,5 +95,11 @@ public class MapEditorTileSetView extends JPanel {
         this.editorController.setSelectedTile(row, col);
         revalidate();
         repaint();
+    }
+
+    public void changeSelectedRowAndColBy(int rowChange, int colChange) {
+        if (selectedTileCol >= 0 && selectedTileRow >= 0 && selectedTileRow + rowChange >= 0 && selectedTileCol + colChange >= 0) {
+            setTileSelected(((selectedTileCol + colChange) * tileWidth), (selectedTileRow + rowChange) * tileHeight);
+        }
     }
 }
