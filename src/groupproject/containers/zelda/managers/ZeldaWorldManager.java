@@ -1,4 +1,4 @@
-package groupproject.containers.zelda.helpers;
+package groupproject.containers.zelda.managers;
 
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
@@ -89,11 +89,10 @@ public class ZeldaWorldManager extends BaseWorldManager {
                 enemy.shoot();
             }
         });
-        playGlobalSounds();
     }
 
     @Override
-    protected void playGlobalSounds() {
+    protected void renderGlobalSounds() {
         GlobalSoundEffect.getInstance().play(getPlayer());
         GlobalSoundTrack.getInstance().play();
     }

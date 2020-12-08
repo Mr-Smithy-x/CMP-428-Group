@@ -1,8 +1,7 @@
 package groupproject.containers.zelda;
 
 import groupproject.containers.zelda.helpers.GameTextDialog;
-import groupproject.containers.zelda.helpers.BaseWorldManager;
-import groupproject.containers.zelda.helpers.ZeldaWorldManager;
+import groupproject.containers.zelda.managers.ZeldaWorldManager;
 import groupproject.containers.zelda.models.Dog;
 import groupproject.containers.zelda.models.MinishLink;
 import groupproject.containers.zelda.models.Octorok;
@@ -18,6 +17,11 @@ import java.io.IOException;
 
 public class ZeldaContainer extends GameContainer {
 
+    /**
+     * @see ZeldaWorldManager - This contains the gameplay of the actual world
+     * In this class, handle minor things like pause menu, select menu etc
+     * The actual game code will be in the World manager and its really simple :)
+     */
     ZeldaWorldManager world = new ZeldaWorldManager(this);
     BoundingBox healthBox;
     BoundingBox damageBox;
@@ -73,7 +77,6 @@ public class ZeldaContainer extends GameContainer {
         world.setPlayer(new MinishLink(getWidth() / 2, getHeight() / 2, 1000 / 16));
         world.addEnemy(new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16));
         world.addEnemy(new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));
-        GlobalCamera.getInstance().setOrigin(world.getPlayer(), getWidth(), getHeight());
         healthBox = new BoundingBox((int) (getWidth() / 1.5), (int) (getHeight() / 1.5), 100, 100);
         damageBox = new BoundingBox((int) (getWidth() / 1.2), (int) (getHeight() / 1.2), 100, 100);
     }

@@ -1,4 +1,4 @@
-package groupproject.containers.zelda.helpers;
+package groupproject.containers.zelda.managers;
 
 import groupproject.containers.zelda.hud.EnergyHud;
 import groupproject.containers.zelda.hud.LifeHud;
@@ -54,7 +54,7 @@ public abstract class BaseWorldManager implements Renderable {
      */
     public abstract void automate();
 
-    protected abstract void playGlobalSounds();
+    protected abstract void renderGlobalSounds();
 
     public void setTileMap(TileMap map) {
         this.map = map;
@@ -82,6 +82,7 @@ public abstract class BaseWorldManager implements Renderable {
         player.render(g);
         LifeHud.getInstance().render(g);
         EnergyHud.getInstance().render(g);
+        renderGlobalSounds();
     }
 
     /**
