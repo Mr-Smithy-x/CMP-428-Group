@@ -12,9 +12,9 @@ public class Tile implements Renderable, CameraContract {
     private final int width;
     private final int height;
     private final BufferedImage tileImage;
+    private final int tileID;
     private int x;
     private int y;
-    private final int tileID;
     private BoundingBox boundsRect;
     private boolean collisionEnabled = false;
     private boolean collisionOverride = false;

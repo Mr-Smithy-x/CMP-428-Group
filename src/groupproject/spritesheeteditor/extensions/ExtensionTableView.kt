@@ -2,9 +2,9 @@ package groupproject.spritesheeteditor.extensions
 
 import groupproject.gameengine.sprite.Sprite
 import groupproject.spritesheeteditor.helpers.AnimatedCellValueFactory
+import groupproject.spritesheeteditor.models.FileFormat
 import groupproject.spritesheeteditor.models.PoseFileFormat
 import groupproject.spritesheeteditor.models.ProjectileFileFormat
-import groupproject.spritesheeteditor.models.FileFormat
 import groupproject.spritesheeteditor.views.SpriteCanvasSelectionView
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
@@ -12,17 +12,16 @@ import javafx.scene.control.cell.PropertyValueFactory
 import javafx.stage.FileChooser
 import java.awt.image.BufferedImage
 import java.io.*
-import java.nio.file.Files
 import java.util.*
 
 fun TableView<FileFormat.AnimationRow>.init(
-    spriteCanvasSelectionView: SpriteCanvasSelectionView
+        spriteCanvasSelectionView: SpriteCanvasSelectionView
 ): List<TableColumn<FileFormat.AnimationRow, Any>> {
     return init(spriteCanvasSelectionView.image)
 }
 
 fun TableView<FileFormat.AnimationRow>.init(
-    image: BufferedImage
+        image: BufferedImage
 ): List<TableColumn<FileFormat.AnimationRow, Any>> {
     val map = ArrayList<TableColumn<FileFormat.AnimationRow, Any>>()
     for (i in 0..16) {
@@ -46,8 +45,8 @@ val TableView<FileFormat.AnimationRow>.poses: List<String>
     get() = items.map { it.pose }
 
 fun TableView<FileFormat.AnimationRow>.loadSerialized(
-    spriteCanvasSelectionView: SpriteCanvasSelectionView,
-    file: File
+        spriteCanvasSelectionView: SpriteCanvasSelectionView,
+        file: File
 ) {
     ObjectInputStream(FileInputStream(file)).use {
         val pose = it.readObject()
@@ -64,9 +63,9 @@ fun TableView<FileFormat.AnimationRow>.loadSerialized(
 }
 
 fun TableView<FileFormat.AnimationRow>.load(
-    spriteCanvasSelectionView: SpriteCanvasSelectionView,
-    file: File,
-    format: PoseFileFormat
+        spriteCanvasSelectionView: SpriteCanvasSelectionView,
+        file: File,
+        format: PoseFileFormat
 ) {
     val imagePath = "${file.parentFile.parent}/sheets/${format.image}"
     val imageFile = File(imagePath)
@@ -88,9 +87,9 @@ fun TableView<FileFormat.AnimationRow>.load(
 }
 
 fun TableView<FileFormat.AnimationRow>.load(
-    spriteCanvasSelectionView: SpriteCanvasSelectionView,
-    file: File,
-    format: ProjectileFileFormat
+        spriteCanvasSelectionView: SpriteCanvasSelectionView,
+        file: File,
+        format: ProjectileFileFormat
 ) {
     val imagePath = "${file.parentFile.parent}/sheets/${format.image}"
     val imageFile = File(imagePath)
@@ -113,8 +112,8 @@ fun TableView<FileFormat.AnimationRow>.hasPose(pose: String): Boolean {
 fun TableView<FileFormat.AnimationRow>.find(pose: String): FileFormat.AnimationRow? {
     return items.find {
         it.pose.equals(
-            pose,
-            true
+                pose,
+                true
         )
     }
 }
@@ -178,7 +177,7 @@ var TableView<FileFormat.AnimationRow>.mode: ExtensionTableView.EDITOR
 
 fun TableView<FileFormat.AnimationRow>.saveSerialized(file: File, imageFilename: File) {
     val pathname = "./assets/sheets/${imageFilename.name}"
-    val imageToCopy = File(pathname);
+    val imageToCopy = File(pathname)
     if (!imageToCopy.exists()) {
         imageFilename.copyTo(imageToCopy, false)
     }

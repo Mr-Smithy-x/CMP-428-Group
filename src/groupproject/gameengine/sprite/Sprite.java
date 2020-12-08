@@ -83,7 +83,6 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     }
 
     //region Override Methods
-
     // Takes care of initializing animations for the 4 basic directions the sprite would face.
     // Can always override this to fit the needs of your sprite.
     @Override
@@ -173,15 +172,15 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
             this.direction = direction;
         }
 
-        public Direction getDirection() {
-            return direction;
-        }
-
         public static Pose parse(String pose) {
             if (pose.equals("NONE")) {
                 return DOWN;
             }
             return Pose.valueOf(pose.toUpperCase());
+        }
+
+        public Direction getDirection() {
+            return direction;
         }
 
         public boolean hasSoundFile() {

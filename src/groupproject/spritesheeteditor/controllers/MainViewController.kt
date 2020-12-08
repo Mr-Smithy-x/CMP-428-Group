@@ -100,10 +100,10 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
     }
 
     private fun alert(
-        title: String,
-        headerText: String,
-        contentText: String,
-        type: Alert.AlertType = Alert.AlertType.INFORMATION
+            title: String,
+            headerText: String,
+            contentText: String,
+            type: Alert.AlertType = Alert.AlertType.INFORMATION
     ) = Alert(type).also {
         it.title = title
         it.headerText = headerText
@@ -121,24 +121,24 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                 }.showAndWait()
                 when {
                     result.get().toIntOrNull() is Int -> spriteCanvasSelectionView.mode =
-                        SpriteCanvasSelectionView.SelectionMode.EVEN.also {
-                            it.dimension = result.get().toInt()
-                        }
+                            SpriteCanvasSelectionView.SelectionMode.EVEN.also {
+                                it.dimension = result.get().toInt()
+                            }
                     else -> {
                         alert(
-                            "Error",
-                            "Value isn't numeric",
-                            "The value specified is invalid, please enter a number",
-                            Alert.AlertType.ERROR
+                                "Error",
+                                "Value isn't numeric",
+                                "The value specified is invalid, please enter a number",
+                                Alert.AlertType.ERROR
                         ).showAndWait()
                     }
                 }
             }
             aboutMenuItem -> {
                 alert(
-                    "About",
-                    "Dev: Mr-Smithy-x@github.com",
-                    "Parsing & rearranging sheets is an nuisance"
+                        "About",
+                        "Dev: Mr-Smithy-x@github.com",
+                        "Parsing & rearranging sheets is an nuisance"
                 ).showAndWait()
             }
             newPoseMenuItem -> {
@@ -214,10 +214,10 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                         tableView.saveSerialized(file, imageFile)
                     }
                 } else alert(
-                    "Hmmm",
-                    "We ran into a issue",
-                    "There's nothing to save",
-                    Alert.AlertType.INFORMATION
+                        "Hmmm",
+                        "We ran into a issue",
+                        "There's nothing to save",
+                        Alert.AlertType.INFORMATION
                 ).showAndWait()
             }
             closeMenuItem -> {
@@ -225,7 +225,7 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                 exitProcess(0)
             }
             addPoseBtn -> {
-                if(tableView.mode == ExtensionTableView.EDITOR.POSE) {
+                if (tableView.mode == ExtensionTableView.EDITOR.POSE) {
                     val text = poseTextField.text.trim().toUpperCase()
                     poseTextField.clear()
                     addOption(text)
@@ -239,10 +239,10 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                     }
                 } else {
                     alert(
-                        "Error",
-                        "We ran into an issue",
-                        "App needs to be initialized",
-                        Alert.AlertType.ERROR
+                            "Error",
+                            "We ran into an issue",
+                            "App needs to be initialized",
+                            Alert.AlertType.ERROR
                     ).showAndWait()
                 }
             }
@@ -256,17 +256,17 @@ class MainViewController : EventHandler<ActionEvent>, SpriteCanvasSelectionView.
                 selectPoseCombobox.selectionModel.select(text)
                 tableView.addOption(text)
             } else alert(
-                "Error",
-                "We ran into a conflict",
-                "You already have '$text' listed already",
-                Alert.AlertType.ERROR
+                    "Error",
+                    "We ran into a conflict",
+                    "You already have '$text' listed already",
+                    Alert.AlertType.ERROR
             ).showAndWait()
         } else {
             alert(
-                "Error",
-                "We ran into an issue",
-                "App needs to be initialized",
-                Alert.AlertType.ERROR
+                    "Error",
+                    "We ran into an issue",
+                    "App needs to be initialized",
+                    Alert.AlertType.ERROR
             ).showAndWait()
         }
     }
