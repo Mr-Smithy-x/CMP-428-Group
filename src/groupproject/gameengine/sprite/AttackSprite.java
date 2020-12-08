@@ -34,7 +34,35 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
         super(x, y, spritePrefix, delay);
     }
 
-    public void attack(List<Sprite> objects) {
+    public void attack(List<AttackSprite> enemies) {
+        enemies.stream().filter(e -> e.distanceBetween(this) <= 50).forEach(e -> {
+            if (getCurrentAnimation().isFirstFrame()) {
+                switch (getDirection()) {
+                    case NONE:
+                        break;
+                    case UP:
+                        if (e.getY().intValue() < getY().intValue()) {
+                            e.damageHealth(getDamagePoints() / 2);
+                        }
+                        break;
+                    case DOWN:
+                        if (e.getY().intValue() > getY().intValue()) {
+                            e.damageHealth(getDamagePoints() / 2);
+                        }
+                        break;
+                    case LEFT:
+                        if (e.getX().intValue() < getX().intValue()) {
+                            e.damageHealth(getDamagePoints() / 2);
+                        }
+                        break;
+                    case RIGHT:
+                        if (e.getX().intValue() > getX().intValue()) {
+                            e.damageHealth(getDamagePoints() / 2);
+                        }
+                        break;
+                }
+            }
+        });
         this.attack();
     }
 
@@ -142,6 +170,15 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
         }
     }
 
+    public void spinAttack(List<AttackSprite> enemies) {
+        enemies.stream().filter(e -> e.distanceBetween(this) <= 70).forEach(e -> {
+            if (getCurrentAnimation().isFirstFrame()) {
+                e.damageHealth(getDamagePoints() * 4);
+            }
+        });
+        spin();
+    }
+
     public void spin() {
         moving = true;
         setSpritePose(Pose.SPIN_ATTACK);
@@ -200,4 +237,5 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
     public void setEnergy(double energy) {
         this.energy = energy;
     }
+
 }

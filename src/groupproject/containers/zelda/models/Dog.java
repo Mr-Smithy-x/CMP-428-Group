@@ -24,6 +24,14 @@ public class Dog extends AttackSprite implements MiniHealthBar {
     }
 
     @Override
+    protected void onInitAnimations() {
+        super.onInitAnimations();
+        setHealth(100);
+        setEnergy(50);
+    }
+
+
+    @Override
     public void setProjectile(DamageProjectile projectile) {
 
     }

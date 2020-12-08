@@ -1,35 +1,26 @@
 package groupproject.containers.zelda;
 
 import groupproject.containers.zelda.helpers.GameTextDialog;
-import groupproject.containers.zelda.hud.EnergyHud;
-import groupproject.containers.zelda.hud.LifeHud;
+import groupproject.containers.zelda.helpers.BaseWorldManager;
+import groupproject.containers.zelda.helpers.ZeldaWorldManager;
 import groupproject.containers.zelda.models.Dog;
 import groupproject.containers.zelda.models.MinishLink;
 import groupproject.containers.zelda.models.Octorok;
-import groupproject.containers.zelda.projectiles.EnergyBall;
-import groupproject.containers.zelda.projectiles.MudBall;
-import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
-import groupproject.gameengine.sprite.Sprite;
-import groupproject.gameengine.tile.TileMap;
 import groupproject.games.ZeldaTestGame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class ZeldaContainer extends GameContainer {
 
-    Octorok octorok;
-    Dog dog;
+    ZeldaWorldManager world = new ZeldaWorldManager(this);
     BoundingBox healthBox;
     BoundingBox damageBox;
-    MinishLink minishLink;
-    TileMap map;
 
     protected ZeldaContainer(JFrame container, Canvas canvas) {
         super(container, canvas);
@@ -45,88 +36,9 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onPlay() {
-        if(!octorok.isDead()) {
-            if (octorok.distanceBetween(minishLink) > 100) {
-                if (octorok.getX().intValue() > minishLink.getX().intValue()) {
-                    octorok.setSpritePose(Sprite.Pose.LEFT);
-                    octorok.move();
-                }
-                if (octorok.getY().intValue() > minishLink.getY().intValue()) {
-                    octorok.setSpritePose(Sprite.Pose.UP);
-                    octorok.move();
-                }
-                if (octorok.getX().intValue() < minishLink.getX().intValue()) {
-                    octorok.setSpritePose(Sprite.Pose.RIGHT);
-                    octorok.move();
-                }
-                if (octorok.getY().intValue() < minishLink.getY().intValue()) {
-                    octorok.setSpritePose(Sprite.Pose.DOWN);
-                    octorok.move();
-                }
-            } else {
-                //Basic AI, we can improve this
-                octorok.shoot();
-            }
-        }
-        if (pressedKey[KeyEvent.VK_D]) {
-            minishLink.damageHealth(1);
-        } else if (pressedKey[KeyEvent.VK_F]) {
-            minishLink.incrementHealth(1);
-        }
-        if (!minishLink.isDead()) {
-            if (pressedKey[KeyEvent.VK_LEFT]) {
-                if (pressedKey[KeyEvent.VK_R]) minishLink.roll();
-                else minishLink.setSpritePose(Sprite.Pose.LEFT);
-                minishLink.move();
-            } else if (pressedKey[KeyEvent.VK_RIGHT]) {
-                if (pressedKey[KeyEvent.VK_R]) minishLink.roll();
-                else minishLink.setSpritePose(Sprite.Pose.RIGHT);
-                minishLink.move();
-            } else if (pressedKey[KeyEvent.VK_UP]) {
-                if (pressedKey[KeyEvent.VK_R]) minishLink.roll();
-                else minishLink.setSpritePose(Sprite.Pose.UP);
-                minishLink.move();
-            } else if (pressedKey[KeyEvent.VK_DOWN]) {
-                if (pressedKey[KeyEvent.VK_R]) minishLink.roll();
-                else minishLink.setSpritePose(Sprite.Pose.DOWN);
-                minishLink.move();
-            }
-            if (minishLink.hasEnergy()) {
-                if (pressedKey[KeyEvent.VK_Z]) {
-                    minishLink.spin();
-                    minishLink.useEnergy(.5);
-                } else if (pressedKey[KeyEvent.VK_SPACE]) {
-                    minishLink.attack();
-                    minishLink.useEnergy(.1);
-                    octorok.damageHealth(1);
-                } else if (pressedKey[KeyEvent.VK_T]) {
-                    minishLink.shoot();
-                }
-            }
-            if (minishLink.isOverlapping(dog)) {
-                minishLink.pushes(dog);
-            }
-
-            if (octorok.isOverlapping(dog)) {
-                octorok.pushes(dog);
-            }
-            if (healthBox.isOverlapping(minishLink)) {
-                minishLink.incrementHealth(.1);
-                minishLink.incrementEnergy(.05);
-                GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
-            } else if (damageBox.isOverlapping(minishLink)) {
-                GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.COMBAT);
-                minishLink.damageHealth(.2);
-                minishLink.useEnergy(.1);
-            } else {
-                GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.NORMAL);
-            }
-        }
-        minishLink.isProjectileHitting(octorok);
-        octorok.isProjectileHitting(minishLink);
-        GlobalSoundEffect.getInstance().play(minishLink);
-        GlobalSoundTrack.getInstance().play();
-        GlobalCamera.getInstance().setOrigin(minishLink.getBounds(), getWidth(), getHeight());
+        world.automate();
+        world.adjust();
+        world.manual(pressedKey);
     }
 
     @Override
@@ -138,22 +50,15 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onPaint(Graphics g) {
-        g.setColor(new Color(70, 120, 70));
-        g.fillRect(0, 0, getWidth(), getHeight());
-        if (map != null) map.render(g);
-        dog.render(g);
-        octorok.render(g);
-        minishLink.render(g);
+        world.render(g);
         g.setColor(Color.GREEN);
         healthBox.render(g);
         g.setColor(Color.RED);
         damageBox.render(g);
-        LifeHud.getInstance().render(g);
-        EnergyHud.getInstance().render(g);
         if (ZeldaTestGame.inDebuggingMode()) {
             GlobalCamera.getInstance().render(g, getContainer());
         }
-        if (minishLink.isDead()) {
+        if (world.isPlayerDead()) {
             g.setColor(new Color(1, 1, 1, 0.4f));
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setFont(caveatFont);
@@ -164,23 +69,11 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onInitialize() throws IOException {
-        map = loadTileMap("forest_test.tilemap");
-        map.initializeMap();
-        octorok = new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16);
-        dog = new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2);
-        minishLink = new MinishLink(getWidth() / 2, getHeight() / 2, 1000 / 16);
-        octorok.setVelocity(2);
-        dog.setVelocity(10);
-        octorok.setProjectile(new MudBall());
-        minishLink.setProjectile(new EnergyBall());
-        minishLink.setVelocity(3);
-        GlobalCamera.getInstance().setOrigin(minishLink.getBounds(), getWidth(), getHeight());
-        octorok.setHealth(100);
-        octorok.setEnergy(100);
-        minishLink.setHealth(100);
-        minishLink.setEnergy(50);
-        LifeHud.getInstance().setLife(minishLink);
-        EnergyHud.getInstance().setEnergy(minishLink);
+        world.setTileMap(loadTileMap("forest_test.tilemap"));
+        world.setPlayer(new MinishLink(getWidth() / 2, getHeight() / 2, 1000 / 16));
+        world.addEnemy(new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16));
+        world.addEnemy(new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));
+        GlobalCamera.getInstance().setOrigin(world.getPlayer(), getWidth(), getHeight());
         healthBox = new BoundingBox((int) (getWidth() / 1.5), (int) (getHeight() / 1.5), 100, 100);
         damageBox = new BoundingBox((int) (getWidth() / 1.2), (int) (getHeight() / 1.2), 100, 100);
     }

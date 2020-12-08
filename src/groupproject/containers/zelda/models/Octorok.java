@@ -19,6 +19,14 @@ public class Octorok extends AttackSprite implements MiniHealthBar  {
         setProjectile(new MudBall());
     }
 
+
+    @Override
+    protected void onInitAnimations() {
+        super.onInitAnimations();
+        setHealth(100);
+        setEnergy(50);
+    }
+
     @Override
     public void render(Graphics g) {
         renderHud(g, GlobalCamera.getInstance());

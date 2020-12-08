@@ -16,6 +16,13 @@ public class Link extends AttackSprite {
     }
 
     @Override
+    protected void onInitAnimations() {
+        super.onInitAnimations();
+        setHealth(100);
+        setEnergy(50);
+    }
+
+    @Override
     public void setProjectile(DamageProjectile projectile) {
         this.projectile = projectile;
     }

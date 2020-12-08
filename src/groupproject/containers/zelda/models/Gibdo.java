@@ -13,6 +13,14 @@ public class Gibdo extends AttackSprite {
         super(PoseFileFormat.Companion.load(Gibdo.class.getSimpleName().toLowerCase()), positionX, positionY, 2, duration);
     }
 
+
+    @Override
+    protected void onInitAnimations() {
+        super.onInitAnimations();
+        setHealth(100);
+        setEnergy(50);
+    }
+
     @Override
     public void setProjectile(DamageProjectile projectile) {
 
