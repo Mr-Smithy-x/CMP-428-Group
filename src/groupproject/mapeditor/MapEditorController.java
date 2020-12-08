@@ -18,8 +18,8 @@ public class MapEditorController {
     private final MapEditorTileSetView mapEditorTileSetView;
     private BufferedImage selectedTile;
     private EditorMode editorMode;
-    private int currentHoveredRow;
-    private int currentHoveredColumn;
+    private int lastClickedRow;
+    private int lastClickedCol;
     private String loadedFile;
     private boolean mapNeedsSaving;
     private boolean viewCollisionTileStatus = true;
@@ -49,9 +49,8 @@ public class MapEditorController {
     private void initializeViews() {
         model.setTileSet(new TileSet(model.getMapModel().getPerTileWidth(), model.getMapModel().getPerTileHeight(),
                 model.getMapModel().getTileSetFile()));
-        mapEditorView.loadInitialMapView(
-                model.getTileSet().getTileImageList(), model.getMapModel());
-        mapEditorTileSetView.initTileSetView(model.getTileSet());
+        mapEditorView.loadInitialMapView(model.getMapModel());
+        mapEditorTileSetView.initTileSetView();
         setEditorMode(EditorMode.PAINT);
         this.selectedTile = null;
     }
@@ -88,13 +87,12 @@ public class MapEditorController {
                 }
             }
         }
-        mapEditorView.loadInitialMapView(
-                model.getTileSet().getTileImageList(), model.getMapModel());
+        mapEditorView.loadInitialMapView(model.getMapModel());
     }
 
     public void updateTileInMap(int row, int col, boolean setEmpty) {
         if (!setEmpty)
-            model.getMapModel().getMapLayout()[row][col] = model.getTileSet().getTileImageList().indexOf(selectedTile);
+            model.getMapModel().getMapLayout()[row][col] = getTileSet().getTileImageList().indexOf(selectedTile);
         else model.getMapModel().getMapLayout()[row][col] = -1;
     }
 
@@ -102,29 +100,26 @@ public class MapEditorController {
         for (int col = 0; col < model.getMapModel().getMapColumns(); col++) {
             switch (editorMode) {
                 case PAINT:
-                    updateTileInMap(currentHoveredRow, col, false);
+                    updateTileInMap(lastClickedRow, col, false);
                     break;
                 case COLLISION:
-                    updateCollisionTileInMap(currentHoveredRow, col);
+                    updateCollisionTileInMap(lastClickedRow, col, getCollisionStatusAt(lastClickedRow, col));
                     break;
                 case OBJECT:
-                    updateTileInObjectMap(currentHoveredRow, col, false);
+                    updateTileInObjectMap(lastClickedRow, col, false);
                     break;
             }
         }
-        mapEditorView.loadInitialMapView(
-                model.getTileSet().getTileImageList(), model.getMapModel());
+        mapEditorView.loadInitialMapView(model.getMapModel());
     }
 
-    public boolean updateCollisionTileInMap(int row, int col) {
-        boolean currentValue = model.getMapModel().getCollisionMap()[row][col];
-        model.getMapModel().getCollisionMap()[row][col] = !currentValue;
-        return !currentValue;
+    public void updateCollisionTileInMap(int row, int col, boolean status) {
+        model.getMapModel().getCollisionMap()[row][col] = status;
     }
 
     public void updateTileInObjectMap(int row, int col, boolean setEmpty) {
         if (!setEmpty)
-            model.getMapModel().getObjectMap()[row][col] = model.getTileSet().getTileImageList().indexOf(selectedTile);
+            model.getMapModel().getObjectMap()[row][col] = getTileSet().getTileImageList().indexOf(selectedTile);
         else model.getMapModel().getObjectMap()[row][col] = -1;
     }
 
@@ -132,18 +127,17 @@ public class MapEditorController {
         for (int row = 0; row < model.getMapModel().getMapRows(); row++) {
             switch (editorMode) {
                 case PAINT:
-                    updateTileInMap(row, currentHoveredColumn, false);
+                    updateTileInMap(row, lastClickedCol, false);
                     break;
                 case COLLISION:
-                    updateCollisionTileInMap(row, currentHoveredColumn);
+                    updateCollisionTileInMap(row, lastClickedCol, getCollisionStatusAt(row, lastClickedCol));
                     break;
                 case OBJECT:
-                    updateTileInObjectMap(row, currentHoveredColumn, false);
+                    updateTileInObjectMap(row, lastClickedCol, false);
                     break;
             }
         }
-        mapEditorView.loadInitialMapView(
-                model.getTileSet().getTileImageList(), model.getMapModel());
+        mapEditorView.loadInitialMapView(model.getMapModel());
     }
 
     public void addRowToLayout(String location) {
@@ -170,8 +164,7 @@ public class MapEditorController {
         model.getMapModel().setMapLayout(newMapLayout);
         model.getMapModel().setCollisionMap(newCollisionMap);
         model.getMapModel().setObjectMap(newObjectMap);
-        mapEditorView.loadInitialMapView(
-                model.getTileSet().getTileImageList(), model.getMapModel());
+        mapEditorView.loadInitialMapView(model.getMapModel());
     }
 
     public MapEditorView getMapEditorView() {
@@ -190,8 +183,8 @@ public class MapEditorController {
         return selectedTile;
     }
 
-    public void setSelectedTile(BufferedImage selectedTile) {
-        this.selectedTile = selectedTile;
+    public void setSelectedTile(int row, int col) {
+        this.selectedTile = getTileSet().getTileImageList().get((row * getTileSet().getTileSetColumns()) + col);
     }
 
     public EditorMode getEditorMode() {
@@ -203,12 +196,12 @@ public class MapEditorController {
         MapEditorMenuBar.setEditorMenuStatus(editorMode);
     }
 
-    public void setCurrentHoveredRow(int clickedY) {
-        this.currentHoveredRow = clickedY / model.getMapModel().getPerTileHeight();
+    public void setLastClickedRow(int clickedY) {
+        this.lastClickedRow = clickedY / model.getMapModel().getPerTileHeight();
     }
 
-    public void setCurrentHoveredColumn(int clickedX) {
-        this.currentHoveredColumn = clickedX / model.getMapModel().getPerTileWidth();
+    public void setLastClickedCol(int clickedX) {
+        this.lastClickedCol = clickedX / model.getMapModel().getPerTileWidth();
     }
 
     public String getLoadedFile() {
@@ -233,7 +226,7 @@ public class MapEditorController {
 
     public void setScaleFactor(double scaleFactor) {
         this.scaleFactor = scaleFactor;
-        mapEditorView.loadInitialMapView(model.getTileSet().getTileImageList(), model.getMapModel());
+        mapEditorView.loadInitialMapView(model.getMapModel());
     }
 
     public boolean isViewCollisionTileStatus() {
@@ -242,14 +235,49 @@ public class MapEditorController {
 
     public void setViewCollisionTileStatus(boolean viewCollisionTileStatus) {
         this.viewCollisionTileStatus = viewCollisionTileStatus;
-        mapEditorView.loadInitialMapView(model.getTileSet().getTileImageList(), model.getMapModel());
+        mapEditorView.loadInitialMapView(model.getMapModel());
     }
 
-    public int getTileAtPoint(int row, int col) {
+    public int getTileAt(int row, int col) {
         return this.model.getMapModel().getMapLayout()[row][col];
     }
 
-    public int getObjectTileAtPoint(int row, int col) {
+    public int getObjectTileAt(int row, int col) {
         return this.model.getMapModel().getObjectMap()[row][col];
+    }
+
+    public boolean getCollisionStatusAt(int row, int col) {
+        return model.getMapModel().getCollisionMap()[row][col];
+    }
+
+    public TileSet getTileSet() {
+        return model.getTileSet();
+    }
+
+    public BufferedImage getTileImage(int row, int col) {
+        return getTileSet().getTileImageList().get(model.getMapModel().getMapLayout()[row][col]);
+    }
+
+    public BufferedImage getObjectTileImage(int row, int col) {
+        return getTileSet().getTileImageList().get(model.getMapModel().getObjectMap()[row][col]);
+    }
+
+    public void changeSelectedTileInView(String direction) {
+        switch (direction) {
+            case "up":
+                mapEditorTileSetView.changeSelectedRowAndColBy(-1, 0);
+                break;
+            case "down":
+                mapEditorTileSetView.changeSelectedRowAndColBy(1, 0);
+                break;
+            case "left":
+                mapEditorTileSetView.changeSelectedRowAndColBy(0, -1);
+                break;
+            case "right":
+                mapEditorTileSetView.changeSelectedRowAndColBy(0, 1);
+                break;
+            default:
+                break;
+        }
     }
 }

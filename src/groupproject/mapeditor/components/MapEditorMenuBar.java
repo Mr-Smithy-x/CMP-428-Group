@@ -129,6 +129,22 @@ public class MapEditorMenuBar extends JMenuBar {
         KeyStroke fillColShortcut = KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
         fillCol.setAccelerator(fillColShortcut);
 
+        JMenuItem selectedMoveUp = new JMenuItem("Selected Tile - Move up");
+        KeyStroke selectedMoveUpKey = KeyStroke.getKeyStroke(KeyEvent.VK_W, 0);
+        selectedMoveUp.setAccelerator(selectedMoveUpKey);
+
+        JMenuItem selectedMoveDown = new JMenuItem("Selected Tile - Move down");
+        KeyStroke selectedMoveDownKey = KeyStroke.getKeyStroke(KeyEvent.VK_S, 0);
+        selectedMoveDown.setAccelerator(selectedMoveDownKey);
+
+        JMenuItem selectedMoveLeft = new JMenuItem("Selected Tile - Move left");
+        KeyStroke selectedMoveLeftKey = KeyStroke.getKeyStroke(KeyEvent.VK_A, 0);
+        selectedMoveLeft.setAccelerator(selectedMoveLeftKey);
+
+        JMenuItem selectedMoveRight = new JMenuItem("Selected Tile - Move right");
+        KeyStroke selectedMoveRightKey = KeyStroke.getKeyStroke(KeyEvent.VK_D, 0);
+        selectedMoveRight.setAccelerator(selectedMoveRightKey);
+
         JMenuItem addRowToTop = new JMenuItem("Add Row to Top");
         JMenuItem addRowToBottom = new JMenuItem("Add Row to Bottom");
 
@@ -137,12 +153,20 @@ public class MapEditorMenuBar extends JMenuBar {
         fillCol.addActionListener((ActionEvent event) -> editorController.fillColumnBasedOnEditorMode());
         addRowToTop.addActionListener((ActionEvent event) -> editorController.addRowToLayout("top"));
         addRowToBottom.addActionListener((ActionEvent event) -> editorController.addRowToLayout("bottom"));
+        selectedMoveUp.addActionListener((ActionEvent event) -> editorController.changeSelectedTileInView("up"));
+        selectedMoveDown.addActionListener((ActionEvent event) -> editorController.changeSelectedTileInView("down"));
+        selectedMoveLeft.addActionListener((ActionEvent event) -> editorController.changeSelectedTileInView("left"));
+        selectedMoveRight.addActionListener((ActionEvent event) -> editorController.changeSelectedTileInView("right"));
 
         editMenu.add(fillOption);
         editMenu.add(fillRow);
         editMenu.add(fillCol);
         editMenu.add(addRowToTop);
         editMenu.add(addRowToBottom);
+        editMenu.add(selectedMoveUp);
+        editMenu.add(selectedMoveDown);
+        editMenu.add(selectedMoveLeft);
+        editMenu.add(selectedMoveRight);
         this.add(editMenu);
     }
 

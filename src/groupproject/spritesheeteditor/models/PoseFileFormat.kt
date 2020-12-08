@@ -17,7 +17,7 @@ data class PoseFileFormat(
 
         fun load(filename: String): PoseFileFormat? {
             var pathname = "./assets/poses/$filename"
-            if(!pathname.endsWith(".pose")){
+            if (!pathname.endsWith(".pose")) {
                 pathname += ".pose"
             }
             return load(File(pathname))
