@@ -25,13 +25,13 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         super(spriteSheet, x, y, scaled, delay);
     }
 
+    protected Sprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
+        super(format, x, y, scaled, delay);
+    }
+
     @Override
     public Direction getDirection() {
         return currentPose.direction;
-    }
-
-    protected Sprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
-        super(format, x, y, scaled, delay);
     }
 
     // Takes care of initializing animations for the 4 basic directions the sprite would face.
@@ -88,11 +88,11 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
 
     public boolean shoot() {
         if (projectile != null) {
-            if(shootWhen()) {
+            if (shootWhen()) {
                 projectile.setVelocity(20);
                 projectile.playSound();
                 return true;
-            }else{
+            } else {
                 getCurrentAnimation().holdLastFrame();
             }
         }
@@ -203,15 +203,15 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
             this.direction = direction;
         }
 
-        public Direction getDirection() {
-            return direction;
-        }
-
         public static Pose parse(String pose) {
-            if(pose.equals("NONE")){
+            if (pose.equals("NONE")) {
                 return DOWN;
             }
             return Pose.valueOf(pose.toUpperCase());
+        }
+
+        public Direction getDirection() {
+            return direction;
         }
 
         public boolean hasSoundFile() {
