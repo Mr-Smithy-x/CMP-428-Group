@@ -4,9 +4,10 @@ import groupproject.containers.zelda.helpers.GameTextDialog;
 import groupproject.containers.zelda.hud.EnergyHud;
 import groupproject.containers.zelda.hud.LifeHud;
 import groupproject.containers.zelda.models.Dog;
-import groupproject.containers.zelda.models.Link;
 import groupproject.containers.zelda.models.MinishLink;
+import groupproject.containers.zelda.models.Octorok;
 import groupproject.containers.zelda.projectiles.EnergyBall;
+import groupproject.containers.zelda.projectiles.MudBall;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
@@ -23,7 +24,7 @@ import java.io.IOException;
 
 public class ZeldaContainer extends GameContainer {
 
-    Link link;
+    Octorok octorok;
     Dog dog;
     BoundingBox healthBox;
     BoundingBox damageBox;
@@ -44,6 +45,29 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onPlay() {
+        if(!octorok.isDead()) {
+            if (octorok.distanceBetween(minishLink) > 100) {
+                if (octorok.getX().intValue() > minishLink.getX().intValue()) {
+                    octorok.setSpritePose(Sprite.Pose.LEFT);
+                    octorok.move();
+                }
+                if (octorok.getY().intValue() > minishLink.getY().intValue()) {
+                    octorok.setSpritePose(Sprite.Pose.UP);
+                    octorok.move();
+                }
+                if (octorok.getX().intValue() < minishLink.getX().intValue()) {
+                    octorok.setSpritePose(Sprite.Pose.RIGHT);
+                    octorok.move();
+                }
+                if (octorok.getY().intValue() < minishLink.getY().intValue()) {
+                    octorok.setSpritePose(Sprite.Pose.DOWN);
+                    octorok.move();
+                }
+            } else {
+                //Basic AI, we can improve this
+                octorok.shoot();
+            }
+        }
         if (pressedKey[KeyEvent.VK_D]) {
             minishLink.damageHealth(1);
         } else if (pressedKey[KeyEvent.VK_F]) {
@@ -74,17 +98,17 @@ public class ZeldaContainer extends GameContainer {
                 } else if (pressedKey[KeyEvent.VK_SPACE]) {
                     minishLink.attack();
                     minishLink.useEnergy(.1);
+                    octorok.damageHealth(1);
                 } else if (pressedKey[KeyEvent.VK_T]) {
                     minishLink.shoot();
-                    minishLink.useEnergy(.5);
                 }
             }
             if (minishLink.isOverlapping(dog)) {
                 minishLink.pushes(dog);
             }
 
-            if (link.isOverlapping(dog)) {
-                link.pushes(dog);
+            if (octorok.isOverlapping(dog)) {
+                octorok.pushes(dog);
             }
             if (healthBox.isOverlapping(minishLink)) {
                 minishLink.incrementHealth(.1);
@@ -116,7 +140,7 @@ public class ZeldaContainer extends GameContainer {
         g.fillRect(0, 0, getWidth(), getHeight());
         if (map != null) map.render(g);
         dog.render(g);
-        link.render(g);
+        octorok.render(g);
         minishLink.render(g);
         g.setColor(Color.GREEN);
         healthBox.render(g);
@@ -140,16 +164,17 @@ public class ZeldaContainer extends GameContainer {
     protected void onInitialize() throws IOException {
         map = loadTileMap("forest_test.tilemap");
         map.initializeMap();
-        link = new Link(getWidth() / 2, getHeight() / 2, 1000 / 16);
+        octorok = new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16);
         dog = new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2);
         minishLink = new MinishLink(getWidth() / 2, getHeight() / 2, 1000 / 16);
-        link.setVelocity(10);
+        octorok.setVelocity(2);
         dog.setVelocity(10);
+        octorok.setProjectile(new MudBall());
         minishLink.setProjectile(new EnergyBall());
         minishLink.setVelocity(3);
         GlobalCamera.getInstance().setOrigin(minishLink.getBounds(), getWidth(), getHeight());
-        link.setHealth(100);
-        link.setEnergy(100);
+        octorok.setHealth(100);
+        octorok.setEnergy(100);
         minishLink.setHealth(100);
         minishLink.setEnergy(50);
         LifeHud.getInstance().setLife(minishLink);

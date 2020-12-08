@@ -1,6 +1,5 @@
 package groupproject.gameengine.sprite;
 
-import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.spritesheeteditor.models.PoseFileFormat;
 import groupproject.spritesheeteditor.models.ProjectileFileFormat;
 
@@ -52,9 +51,15 @@ public abstract class Projectile extends AnimatedObject<Animation, ProjectileFil
     }
 
     @Override
+    public Animation getSafeAnimation() {
+        return animDict;
+    }
+
+    protected abstract void playSound();
+
+    @Override
     public void render(Graphics g) {
         super.render(g);
-        GlobalSoundEffect.getInstance().play(GlobalSoundEffect.Clips.CANE);
     }
 
     // For initializing anymore animations besides 4 basic ones for the projectiles.
@@ -78,4 +83,9 @@ public abstract class Projectile extends AnimatedObject<Animation, ProjectileFil
         return PROJECTILE_FOLDER;
     }
 
+    protected void align(Sprite sprite) {
+        Image currentFrame = sprite.getCurrentFrame();
+        setDirection(sprite.getDirection());
+        setWorld(sprite.getX().intValue() + currentFrame.getWidth(null) / 4, sprite.getY().intValue() + currentFrame.getHeight(null) / 4);
+    }
 }

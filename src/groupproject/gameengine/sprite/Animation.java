@@ -85,6 +85,13 @@ public class Animation {
                 .collect(Collectors.toList());
     }
 
+    public boolean isLastFrame() {
+        return currentFrame == frames.size() - 1;
+    }
+    public boolean isFirstFrame() {
+        return currentFrame == 0;
+    }
+
     public Image getFirstFrame() {
         if (!frames.isEmpty()) {
             return frames.get(0);
@@ -94,6 +101,12 @@ public class Animation {
 
     public void setFirstFrame(Image image) {
         frames.add(0, image);
+    }
+
+    public void holdLastFrame() {
+        if (currentFrame == frames.size() - 1) {
+            currentFrame-=1;
+        }
     }
 
     private class AnimateTask extends TimerTask {

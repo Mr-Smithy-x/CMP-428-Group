@@ -58,6 +58,8 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
 
     public abstract Animation getCurrentAnimation();
 
+    public abstract Animation getSafeAnimation();
+
     public abstract String getSheetDirectory();
 
     public abstract String getFileDirectory();
@@ -117,6 +119,14 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
             currentFrame = getCurrentAnimation().getCurrentFrame();
         } else {
             currentFrame = getCurrentAnimation().getFirstFrame();
+        }
+        if(currentFrame == null){
+            Animation safeAnimation = getSafeAnimation();
+            if(moving) {
+                currentFrame = safeAnimation.getCurrentFrame();
+            }else{
+                currentFrame = safeAnimation.getFirstFrame();
+            }
         }
         g.drawImage(currentFrame,
                 getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
@@ -221,6 +231,10 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
     @Override
     public void setWidth(Number width) {
         bounds.setWidth(width);
+    }
+
+    public Image getCurrentFrame(){
+        return getCurrentAnimation().getCurrentFrame();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package groupproject.gameengine.sprite;
 
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
+import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.spritesheeteditor.models.PoseFileFormat;
 
 import java.awt.*;
@@ -13,8 +14,8 @@ import java.util.EnumMap;
 public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animation>, PoseFileFormat> {
 
     private static final String SPRITE_SHEET_FOLDER = "assets/sheets/";
-
     protected Pose currentPose = Pose.RIGHT;
+    protected Projectile projectile;
 
     protected Sprite(int x, int y, String spritePrefix, int delay) {
         super(x, y, spritePrefix, delay);
@@ -24,13 +25,13 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         super(spriteSheet, x, y, scaled, delay);
     }
 
-    protected Sprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
-        super(format, x, y, scaled, delay);
-    }
-
     @Override
     public Direction getDirection() {
         return currentPose.direction;
+    }
+
+    protected Sprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
+        super(format, x, y, scaled, delay);
     }
 
     // Takes care of initializing animations for the 4 basic directions the sprite would face.
@@ -72,6 +73,41 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     }
 
 
+    public void setProjectile(Projectile projectile) {
+        this.projectile = projectile;
+    }
+
+    protected void resetProjectile() {
+        if (projectile.isOutsideCamera(GlobalCamera.getInstance())) {
+            this.projectile.align(this);
+            this.projectile.setVelocity(0);
+        } else if (projectile.getVelocity() == 0) {
+            this.projectile.align(this);
+        }
+    }
+
+    public boolean shoot() {
+        if (projectile != null) {
+            if(shootWhen()) {
+                projectile.setVelocity(20);
+                projectile.playSound();
+                return true;
+            }else{
+                getCurrentAnimation().holdLastFrame();
+            }
+        }
+        return false;
+    }
+
+    protected boolean shootWhen() {
+        Pose[] poses = {Pose.ATTACK_LEFT_01, Pose.ATTACK_RIGHT_01, Pose.ATTACK_UP_01, Pose.ATTACK_DOWN_01};
+        if (Arrays.stream(poses).anyMatch(p -> p == currentPose)) {
+            return getCurrentAnimation().isLastFrame();
+        }
+        return false;
+    }
+
+
     public Animation getCurrentAnimation() {
         boolean hasKey = animDict.containsKey(currentPose);
         if (hasKey) {
@@ -82,6 +118,10 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         }
     }
 
+    @Override
+    public Animation getSafeAnimation() {
+        return animDict.get(Pose.parse(currentPose.direction.name()));
+    }
 
     @Override
     public String getSheetDirectory() {
@@ -102,6 +142,14 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     @Override
     public void render(Graphics g) {
         GlobalSoundEffect.getInstance().play(this);
+        if (projectile != null) {
+            if (projectile.isInsideCamera(GlobalCamera.getInstance()) && projectile.getVelocity() > 0) {
+                projectile.render(g);
+                projectile.move();
+            } else {
+                resetProjectile();
+            }
+        }
         super.render(g);
     }
 
@@ -109,6 +157,9 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     public void move() {
         this.direction = currentPose.direction;
         super.move();
+        if (projectile != null && projectile.getVelocity() == 0) {
+            projectile.align(this);
+        }
     }
 
     public Pose getSpritePose() {
@@ -117,12 +168,14 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
 
     public void setSpritePose(Pose currentPose) {
         this.currentPose = currentPose;
+        this.direction = currentPose.direction;
     }
 
+    //This is for fetching sound effects in the future for specific class by their classname
+    //ie. ./assets/sounds/effects/(classname)/filename.wav
     public String getPoseSoundEffect() {
         return String.format("%s/%s", this.getClass().getSimpleName().toLowerCase(), currentPose.getSoundFileName());
     }
-
 
     public enum Pose {
         UP(Direction.UP), DOWN(Direction.DOWN), LEFT(Direction.LEFT), RIGHT(Direction.RIGHT),
@@ -130,8 +183,8 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         ATTACK_LEFT("attack.wav", Direction.LEFT), ATTACK_RIGHT("attack.wav", Direction.RIGHT),
         SPIN_ATTACK("spin_attack.wav", Direction.NONE), ALL, JUMP, DEAD("dead.wav", Direction.NONE),
         ROLL_LEFT(Direction.LEFT), ROLL_RIGHT(Direction.RIGHT), ROLL_UP(Direction.UP), ROLL_DOWN(Direction.DOWN),
-        ATTACK_UP_01("cane.wav", Direction.UP), ATTACK_DOWN_01("cane.wav", Direction.DOWN),
-        ATTACK_LEFT_01("cane.wav", Direction.LEFT), ATTACK_RIGHT_01("cane.wav", Direction.RIGHT);
+        ATTACK_UP_01(Direction.UP), ATTACK_DOWN_01(Direction.DOWN),
+        ATTACK_LEFT_01(Direction.LEFT), ATTACK_RIGHT_01(Direction.RIGHT);
 
         private final String soundFileName;
         private final Direction direction;
@@ -150,12 +203,15 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
             this.direction = direction;
         }
 
-        public static Pose parse(String pose) {
-            return Pose.valueOf(pose.toUpperCase());
-        }
-
         public Direction getDirection() {
             return direction;
+        }
+
+        public static Pose parse(String pose) {
+            if(pose.equals("NONE")){
+                return DOWN;
+            }
+            return Pose.valueOf(pose.toUpperCase());
         }
 
         public boolean hasSoundFile() {
