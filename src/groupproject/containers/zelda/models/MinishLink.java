@@ -31,7 +31,7 @@ public class MinishLink extends Sprite implements Energy {
     @Override
     public void move() {
         super.move();
-        if(projectile != null && projectile.getVelocity() == 0){
+        if (projectile != null && projectile.getVelocity() == 0) {
             projectile.setDirection(getDirection());
             projectile.setWorld(getX(), getY());
         }
@@ -46,14 +46,14 @@ public class MinishLink extends Sprite implements Energy {
             this.projectile.setWorld(getX(), getY());
             this.projectile.setDirection(getDirection());
             this.projectile.setVelocity(0);
-        }else if(projectile.getVelocity() == 0){
+        } else if (projectile.getVelocity() == 0) {
             this.projectile.setWorld(getX(), getY());
             this.projectile.setDirection(getDirection());
         }
     }
 
-    public boolean shoot(){
-        if(projectile != null){
+    public boolean shoot() {
+        if (projectile != null) {
             projectile.setVelocity(20);
             return true;
         }
@@ -122,10 +122,10 @@ public class MinishLink extends Sprite implements Energy {
     @Override
     public void render(Graphics g) {
         if (projectile != null) {
-            if(projectile.isInsideCamera(GlobalCamera.getInstance()) && projectile.getVelocity() > 0){
+            if (projectile.isInsideCamera(GlobalCamera.getInstance()) && projectile.getVelocity() > 0) {
                 projectile.render(g);
                 projectile.move();
-            }else{
+            } else {
                 resetProjectile();
             }
         }

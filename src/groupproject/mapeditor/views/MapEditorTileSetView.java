@@ -84,7 +84,7 @@ public class MapEditorTileSetView extends JPanel {
         selectedTileRow = newRow;
         selectedTileCol = newCol;
         tileSetViewGraphics.setColor(Color.blue);
-        tileSetViewGraphics.drawRect(selectedTileCol * tileWidth,selectedTileRow * tileHeight, tileWidth - 1,
+        tileSetViewGraphics.drawRect(selectedTileCol * tileWidth, selectedTileRow * tileHeight, tileWidth - 1,
                 tileHeight - 1);
     }
 

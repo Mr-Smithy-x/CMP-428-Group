@@ -6,8 +6,8 @@ import java.io.ObjectInputStream
 import java.io.Serializable
 
 data class ProjectileFileFormat(
-    override var image: String,
-    var set: AnimationSet
+        override var image: String,
+        var set: AnimationSet
 ) : FileFormat(image), Serializable {
 
     companion object {
@@ -16,7 +16,7 @@ data class ProjectileFileFormat(
 
         fun load(filename: String): ProjectileFileFormat? {
             var pathname = "./assets/projectiles/$filename"
-            if(!pathname.endsWith(".projectile")){
+            if (!pathname.endsWith(".projectile")) {
                 pathname += ".projectile"
             }
             return load(File(pathname))

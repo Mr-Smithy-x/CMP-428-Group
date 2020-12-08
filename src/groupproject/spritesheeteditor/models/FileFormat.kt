@@ -1,10 +1,10 @@
 package groupproject.spritesheeteditor.models
 
 import java.io.Serializable
-import java.util.LinkedHashSet
+import java.util.*
 
 open class FileFormat(
-    open var image: String
+        open var image: String
 ) : Serializable {
 
     data class AnimationRow(var pose: String, var set: AnimationSet) : Serializable {

@@ -24,13 +24,13 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         super(spriteSheet, x, y, scaled, delay);
     }
 
+    protected Sprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
+        super(format, x, y, scaled, delay);
+    }
+
     @Override
     public Direction getDirection() {
         return currentPose.direction;
-    }
-
-    protected Sprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
-        super(format, x, y, scaled, delay);
     }
 
     // Takes care of initializing animations for the 4 basic directions the sprite would face.
@@ -130,7 +130,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         ATTACK_LEFT("attack.wav", Direction.LEFT), ATTACK_RIGHT("attack.wav", Direction.RIGHT),
         SPIN_ATTACK("spin_attack.wav", Direction.NONE), ALL, JUMP, DEAD("dead.wav", Direction.NONE),
         ROLL_LEFT(Direction.LEFT), ROLL_RIGHT(Direction.RIGHT), ROLL_UP(Direction.UP), ROLL_DOWN(Direction.DOWN),
-        ATTACK_UP_01("cane.wav", Direction.UP), ATTACK_DOWN_01("cane.wav",Direction.DOWN),
+        ATTACK_UP_01("cane.wav", Direction.UP), ATTACK_DOWN_01("cane.wav", Direction.DOWN),
         ATTACK_LEFT_01("cane.wav", Direction.LEFT), ATTACK_RIGHT_01("cane.wav", Direction.RIGHT);
 
         private final String soundFileName;
@@ -140,7 +140,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
             this(Direction.NONE);
         }
 
-        Pose(Direction direction){
+        Pose(Direction direction) {
             this.soundFileName = null;
             this.direction = direction;
         }
@@ -150,12 +150,12 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
             this.direction = direction;
         }
 
-        public Direction getDirection() {
-            return direction;
-        }
-
         public static Pose parse(String pose) {
             return Pose.valueOf(pose.toUpperCase());
+        }
+
+        public Direction getDirection() {
+            return direction;
         }
 
         public boolean hasSoundFile() {
