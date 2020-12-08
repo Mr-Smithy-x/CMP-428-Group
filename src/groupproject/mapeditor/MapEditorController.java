@@ -8,6 +8,7 @@ import groupproject.mapeditor.model.MapEditorModel;
 import groupproject.mapeditor.views.MapEditorTileSetView;
 import groupproject.mapeditor.views.MapEditorView;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -60,6 +61,23 @@ public class MapEditorController {
         initializeViews();
         loadedFile = null;
         mapNeedsSaving = true;
+    }
+
+    public void generateTileMap(String tileSetImageFile, int tileWidth, int tileHeight) {
+        try {
+            BufferedImage imageForGenerate = ImageIO.read(new File(TileSet.TILE_FOLDER + tileSetImageFile));
+            createTileMap(tileSetImageFile, tileWidth, tileHeight, imageForGenerate.getHeight() / tileHeight,
+                    imageForGenerate.getWidth() / tileWidth);
+            for (int row = 0; row < model.getMapModel().getMapRows(); row++) {
+                for (int col = 0; col < model.getMapModel().getMapColumns(); col++) {
+                    int nextTileIndex = (row * getTileSet().getTileSetColumns()) + col;
+                    model.getMapModel().getMapLayout()[row][col] = nextTileIndex;
+                }
+            }
+            mapEditorView.loadInitialMapView(model.getMapModel());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveTileMap(String mapFile) {

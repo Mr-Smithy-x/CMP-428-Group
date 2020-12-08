@@ -54,9 +54,11 @@ public class MapEditorMenuBar extends JMenuBar {
         JMenuItem newFile = new JMenuItem("Create Map..");
         JMenuItem openFile = new JMenuItem("Open Map..");
         JMenuItem saveFile = new JMenuItem("Save Map..");
+        JMenuItem generateMapFromImage = new JMenuItem("Generate Map From Image...");
         fileMenu.add(newFile);
         fileMenu.add(openFile);
         fileMenu.add(saveFile);
+        fileMenu.add(generateMapFromImage);
         this.add(fileMenu);
 
         KeyStroke newMapShortcut = KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
@@ -67,6 +69,7 @@ public class MapEditorMenuBar extends JMenuBar {
         saveFile.setAccelerator(saveFileShortcut);
 
         newFile.addActionListener((ActionEvent event) -> new NewMapDialog(editorController));
+        generateMapFromImage.addActionListener((ActionEvent event) -> new GenerateMapDialog(editorController));
 
         openFile.addActionListener((ActionEvent event) -> {
             JFileChooser fileChooser = new JFileChooser();
