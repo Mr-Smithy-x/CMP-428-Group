@@ -33,7 +33,7 @@ public class GlobalSoundEffect extends BaseSound {
         Sprite.Pose spritePose = sprite.getSpritePose();
         if (clips.containsKey(spritePose) && sprite.isActive()) {
             Clip clip = clips.get(spritePose);
-            if(sprite.getCurrentAnimation().isFirstFrame()){
+            if (sprite.getCurrentAnimation().isFirstFrame()) {
                 play(clip, false);
             }
         }

@@ -120,11 +120,11 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
         } else {
             currentFrame = getCurrentAnimation().getFirstFrame();
         }
-        if(currentFrame == null){
+        if (currentFrame == null) {
             Animation safeAnimation = getSafeAnimation();
-            if(moving) {
+            if (moving) {
                 currentFrame = safeAnimation.getCurrentFrame();
-            }else{
+            } else {
                 currentFrame = safeAnimation.getFirstFrame();
             }
         }
@@ -233,7 +233,7 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
         bounds.setWidth(width);
     }
 
-    public Image getCurrentFrame(){
+    public Image getCurrentFrame() {
         return getCurrentAnimation().getCurrentFrame();
     }
 

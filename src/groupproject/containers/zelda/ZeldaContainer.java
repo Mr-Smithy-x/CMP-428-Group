@@ -45,7 +45,7 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onPlay() {
-        if(!octorok.isDead()) {
+        if (!octorok.isDead()) {
             if (octorok.distanceBetween(minishLink) > 100) {
                 if (octorok.getX().intValue() > minishLink.getX().intValue()) {
                     octorok.setSpritePose(Sprite.Pose.LEFT);

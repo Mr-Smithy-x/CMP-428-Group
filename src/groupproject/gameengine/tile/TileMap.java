@@ -28,6 +28,16 @@ public class TileMap implements CameraContract, Renderable {
         this.objectLayerTiles = new Tile[mapModel.getMapRows()][mapModel.getMapColumns()];
     }
 
+    // Calculates the distance between two tiles via the Euclidean distance formula. (from their center points)
+    public static int euclideanDistanceBetweenTiles(Tile firstTile, Tile secondTile) {
+        int x1 = (firstTile.getX().intValue() + (firstTile.getWidth().intValue() / 2));
+        int y1 = (firstTile.getY().intValue() + (firstTile.getHeight().intValue() / 2));
+        int x2 = (secondTile.getX().intValue() + (secondTile.getWidth().intValue() / 2));
+        int y2 = (secondTile.getY().intValue() + (secondTile.getHeight().intValue() / 2));
+
+        return (int) Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
+
     public void initializeMap() {
         for (int row = 0; row < mapModel.getMapRows(); row++) {
             for (int col = 0; col < mapModel.getMapColumns(); col++) {
@@ -48,16 +58,6 @@ public class TileMap implements CameraContract, Renderable {
                 mainLayerTiles[row][col] = currentTile;
             }
         }
-    }
-
-    // Calculates the distance between two tiles via the Euclidean distance formula. (from their center points)
-    public static int euclideanDistanceBetweenTiles(Tile firstTile, Tile secondTile) {
-        int x1 = (firstTile.getX().intValue() + (firstTile.getWidth().intValue() / 2));
-        int y1 = (firstTile.getY().intValue() + (firstTile.getHeight().intValue() / 2));
-        int x2 = (secondTile.getX().intValue() + (secondTile.getWidth().intValue() / 2));
-        int y2 = (secondTile.getY().intValue() + (secondTile.getHeight().intValue() / 2));
-
-        return (int) Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
     @Override

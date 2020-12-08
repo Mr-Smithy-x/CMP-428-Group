@@ -100,7 +100,7 @@ public abstract class BaseCamera {
         y += dy;
     }
 
-    public void setFrame(double width, double height){
+    public void setFrame(double width, double height) {
         this.width = width;
         this.height = height;
     }
