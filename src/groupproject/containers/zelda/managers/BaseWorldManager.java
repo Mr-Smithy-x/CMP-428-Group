@@ -70,6 +70,8 @@ public abstract class BaseWorldManager implements Renderable {
         enemies.stream().filter(e -> !e.isDead()).forEach(e -> e.render(g));
         renderGame(g);
         player.render(g);
+        if (mapManager.getCurrentMapOverlay() != null)
+            mapManager.getCurrentMapOverlay().render(g);
         LifeHud.getInstance().render(g);
         EnergyHud.getInstance().render(g);
         renderGlobalSounds();

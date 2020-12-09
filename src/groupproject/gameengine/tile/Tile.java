@@ -41,9 +41,10 @@ public class Tile extends Node<Tile> implements Comparable<Node<Tile>>, Renderab
     }
 
     public void drawBoundsRect(Graphics g) {
-        if (collisionEnabled) g.setColor(Color.red);
-        else g.setColor(Color.green);
-        boundsRect.render(g);
+        if (collisionEnabled) {
+            g.setColor(Color.red);
+            boundsRect.render(g);
+        }
     }
 
     @Override

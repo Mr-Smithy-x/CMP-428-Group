@@ -82,7 +82,7 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onInitialize() throws IOException {
-        MapManager.getInstance().loadTileMap("hyrule_castle_entrance.tilemap");
+        MapManager.getInstance().loadTileMap("hyrule_castle_entrance");
         world.setPlayer(new MinishLink(360, 300, 1000 / 24));
         world.addEnemy(new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16));
         world.addEnemy(new Octorok(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));

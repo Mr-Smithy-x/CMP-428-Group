@@ -6,14 +6,15 @@ import groupproject.gameengine.tile.Tile;
 import groupproject.gameengine.tile.TileMap;
 import groupproject.gameengine.tile.TileMapModel;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
 public class MapManager {
 
     private static final MapManager instance = new MapManager();
     private TileMap currentMap;
+    private TileMap currentMapOverlay;
     private ATileStarAlgorithm aStar;
 
     private MapManager() {
@@ -24,18 +25,35 @@ public class MapManager {
     }
 
     public void loadTileMap(String mapFile) {
-        try (FileInputStream fis = new FileInputStream(TileMapModel.MAP_FOLDER + mapFile); ObjectInputStream is = new ObjectInputStream(fis)) {
+        try (FileInputStream fis = new FileInputStream(TileMapModel.MAP_FOLDER + mapFile + ".tilemap"); ObjectInputStream is = new ObjectInputStream(fis)) {
             TileMapModel mapModel = (TileMapModel) is.readObject();
             currentMap = new TileMap(mapModel);
             currentMap.initializeMap();
             aStar = new ATileStarAlgorithm(currentMap);
+            loadOverlayMap(TileMapModel.MAP_FOLDER + mapFile + "_overlay.tilemap");
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void loadOverlayMap(String overlayMapFile) {
+        if (new File(overlayMapFile).exists()) {
+            try (FileInputStream fis = new FileInputStream(overlayMapFile); ObjectInputStream is = new ObjectInputStream(fis)) {
+                TileMapModel mapModel = (TileMapModel) is.readObject();
+                currentMapOverlay = new TileMap(mapModel);
+                currentMapOverlay.initializeMap();
+            } catch (ClassNotFoundException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public TileMap getCurrentMap() {
         return currentMap;
+    }
+
+    public TileMap getCurrentMapOverlay() {
+        return currentMapOverlay;
     }
 
     // Basic collision detection based on the 8 map tiles surrounding a sprite.
