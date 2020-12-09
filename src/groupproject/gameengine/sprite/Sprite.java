@@ -135,18 +135,18 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
 
     @Override
     protected int getDrawImageXPosition(Image currentFrame) {
-        int imageWidth = currentFrame.getWidth(null) / 2;
+        int imageWidth = currentFrame.getWidth(null) / (scaled);
         int cameraX2Offset = getCameraOffsetX2(GlobalCamera.getInstance()).intValue();
-        int boundsWidth = getWidth().intValue() / 2;
+        int boundsWidth = getWidth().intValue() / (scaled);
         int realPositionX = cameraX2Offset - ((imageWidth + boundsWidth));
         return realPositionX;
     }
 
     @Override
     protected int getDrawImageYPosition(Image currentFrame) {
-        int imageHeight = currentFrame.getHeight(null) / 2;
+        int imageHeight = currentFrame.getHeight(null) / (scaled);
         int cameraY2Offset = getCameraOffsetY2(GlobalCamera.getInstance()).intValue();
-        int boundsHeight = getWidth().intValue() / 2;
+        int boundsHeight = getWidth().intValue() / (scaled);
         int realPositionY = cameraY2Offset - ((imageHeight + boundsHeight));
         return realPositionY;
     }

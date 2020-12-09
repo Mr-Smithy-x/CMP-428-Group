@@ -128,8 +128,10 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
             }
         }
         g.drawImage(currentFrame,
-               getDrawImageXPosition(currentFrame),
-                getDrawImageYPosition(currentFrame), null);
+                getDrawImageXPosition(currentFrame) - currentFrame.getWidth(null) / scaled,
+                getDrawImageYPosition(currentFrame) - currentFrame.getHeight(null) / scaled,
+                currentFrame.getWidth(null) * scaled,
+                currentFrame.getHeight(null) * scaled, null);
         if (inDebuggingMode()) {
             drawActualImageBounds(currentFrame, g);
             drawBounds(g);
@@ -139,19 +141,21 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
 
     /**
      * Need this to override
+     *
      * @param currentFrame
      * @return
      */
-    protected int getDrawImageXPosition(Image currentFrame){
+    protected int getDrawImageXPosition(Image currentFrame) {
         return getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4;
     }
 
     /**
      * To Override
+     *
      * @param currentFrame
      * @return
      */
-    protected int getDrawImageYPosition(Image currentFrame){
+    protected int getDrawImageYPosition(Image currentFrame) {
         return getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4;
     }
 
