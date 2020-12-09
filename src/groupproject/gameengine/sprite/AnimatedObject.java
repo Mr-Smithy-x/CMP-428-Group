@@ -26,10 +26,10 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
     protected Direction direction = Direction.NONE;
     protected CollisionDetection bounds;
     protected int velocity;
-    protected int scaled = 1;
+    protected double scaled = 1;
     protected boolean moving = false;
 
-    protected AnimatedObject(F format, int x, int y, int scaled, int delay) throws IOException {
+    protected AnimatedObject(F format, int x, int y, double scaled, int delay) throws IOException {
         this.scaled = scaled;
         animDict = setupImages(format, initializeSheet(format.getImage()), delay);
         onInitAnimations();
@@ -71,7 +71,7 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
 
     private void setupBox(int x, int y) {
         Image currentFrame = getFirstAnimation().getCurrentFrame();
-        this.bounds = new BoundingBox(x, y, currentFrame.getWidth(null) / scaled, currentFrame.getHeight(null) / scaled);
+        this.bounds = new BoundingBox(x, y, (int) (currentFrame.getWidth(null) / scaled), (int) (currentFrame.getHeight(null) / scaled));
     }
 
     protected Animation getFirstAnimation() {
@@ -128,8 +128,10 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
             }
         }
         g.drawImage(currentFrame,
-               getDrawImageXPosition(currentFrame),
-                getDrawImageYPosition(currentFrame), null);
+                (int) (getDrawImageXPosition(currentFrame) - currentFrame.getWidth(null) / scaled),
+                (int) (getDrawImageYPosition(currentFrame) - currentFrame.getHeight(null) / scaled),
+                (int) (currentFrame.getWidth(null) * scaled),
+                (int) (currentFrame.getHeight(null) * scaled), null);
         if (inDebuggingMode()) {
             drawActualImageBounds(currentFrame, g);
             drawBounds(g);
@@ -139,19 +141,21 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
 
     /**
      * Need this to override
+     *
      * @param currentFrame
      * @return
      */
-    protected int getDrawImageXPosition(Image currentFrame){
+    protected int getDrawImageXPosition(Image currentFrame) {
         return getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4;
     }
 
     /**
      * To Override
+     *
      * @param currentFrame
      * @return
      */
-    protected int getDrawImageYPosition(Image currentFrame){
+    protected int getDrawImageYPosition(Image currentFrame) {
         return getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4;
     }
 
