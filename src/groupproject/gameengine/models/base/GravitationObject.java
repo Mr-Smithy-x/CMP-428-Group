@@ -12,23 +12,8 @@ public abstract class GravitationObject extends MovableObject implements Gravita
     double dragY;
 
     @Override
-    public void setVelocityX(Number velocityX) {
-        this.velocityX = velocityX.doubleValue();
-    }
-
-    @Override
-    public void setVelocityY(Number velocityY) {
-        this.velocityY = velocityY.doubleValue();
-    }
-
-    @Override
-    public void setAccelerationX(Number accelerationX) {
-        this.accelerationX = accelerationX.doubleValue();
-    }
-
-    @Override
-    public void setAccelerationY(Number accelerationY) {
-        this.accelerationY = accelerationY.doubleValue();
+    public Number getDragX() {
+        return dragX;
     }
 
     @Override
@@ -37,18 +22,13 @@ public abstract class GravitationObject extends MovableObject implements Gravita
     }
 
     @Override
-    public void setDragY(Number dragY) {
-        this.dragY = dragY.doubleValue();
-    }
-
-    @Override
-    public Number getDragX() {
-        return dragX;
-    }
-
-    @Override
     public Number getDragY() {
         return dragY;
+    }
+
+    @Override
+    public void setDragY(Number dragY) {
+        this.dragY = dragY.doubleValue();
     }
 
     @Override
@@ -57,8 +37,18 @@ public abstract class GravitationObject extends MovableObject implements Gravita
     }
 
     @Override
+    public void setVelocityX(Number velocityX) {
+        this.velocityX = velocityX.doubleValue();
+    }
+
+    @Override
     public Number getVelocityY() {
         return velocityY;
+    }
+
+    @Override
+    public void setVelocityY(Number velocityY) {
+        this.velocityY = velocityY.doubleValue();
     }
 
     @Override
@@ -67,7 +57,17 @@ public abstract class GravitationObject extends MovableObject implements Gravita
     }
 
     @Override
+    public void setAccelerationX(Number accelerationX) {
+        this.accelerationX = accelerationX.doubleValue();
+    }
+
+    @Override
     public Number getAccelerationY() {
         return accelerationY;
+    }
+
+    @Override
+    public void setAccelerationY(Number accelerationY) {
+        this.accelerationY = accelerationY.doubleValue();
     }
 }

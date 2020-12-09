@@ -22,7 +22,8 @@ public abstract class BaseHud implements Renderable {
      * having to affect the main graphics for the game. using clip on parent
      * prevents parts of the screen from being render, so only clip onto the hud
      * otherwise, you can actually utilize the render function and keep this function empty
-     * @param hud Hud in which you're able to draw on
+     *
+     * @param hud    Hud in which you're able to draw on
      * @param parent the parent graphics in the event you need to draw onto the actual graphic
      */
     protected abstract void onRenderHud(Graphics hud, Graphics parent);

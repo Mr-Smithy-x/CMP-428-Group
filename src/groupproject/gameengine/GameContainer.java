@@ -17,7 +17,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
 
     protected final Logger logger = Logger.getLogger("GameEngine", null);
     protected final Font caveatFont = FontHelper.get("Caveat-Bold.ttf", 20);
-    protected final Font permanentMarkerFont = FontHelper.get("PermanentMarker-Regular.ttf",20);
+    protected final Font permanentMarkerFont = FontHelper.get("PermanentMarker-Regular.ttf", 20);
     private final Component container;
     protected boolean[] pressedKey = new boolean[255];
     protected boolean playing = true;
@@ -120,6 +120,11 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         }
         onStop();
     }
+
+    public boolean isPaused() {
+        return !playing;
+    }
+
 
     protected void onStart() {
 

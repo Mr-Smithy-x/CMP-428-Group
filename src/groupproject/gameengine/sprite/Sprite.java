@@ -1,338 +1,194 @@
 package groupproject.gameengine.sprite;
 
-import com.sun.istack.internal.Nullable;
+import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.gameengine.camera.GlobalCamera;
-import groupproject.gameengine.contracts.CameraContract;
-import groupproject.gameengine.contracts.CollisionDetection;
-import groupproject.gameengine.contracts.Renderable;
-import groupproject.gameengine.models.BoundingBox;
-import groupproject.games.ZeldaTestGame;
 import groupproject.spritesheeteditor.models.FileFormat;
+import groupproject.spritesheeteditor.models.PoseFileFormat;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-public abstract class Sprite implements Renderable, CameraContract, CollisionDetection {
+public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animation>, PoseFileFormat> {
 
-    private static final String SPRITE_FOLDER = "assets/sprites/";
-    private static final String SPRITE_SHEET_FOLDER = "assets/sheets/";
-    protected Logger logger = Logger.getLogger("GameEngine", null);
+    private static final String POSE_FOLDER = "./assets/poses/";
+
     protected Pose currentPose = Pose.RIGHT;
-    protected EnumMap<Pose, Animation> animDict = new EnumMap<>(Pose.class);
-    protected CollisionDetection bounds;
-    protected int velocity;
-    protected int scaled = 1;
-    protected boolean moving = false;
 
-    public Sprite(int x, int y, String spritePrefix, int delay) {
-        velocity = 1;
-        loadBaseAnimations(spritePrefix, delay);
-        initAnimations();
-        setupBox(x, y);
+    protected Sprite(int x, int y, String spritePrefix, int delay) {
+        super(x, y, spritePrefix, delay);
+        check();
     }
 
-    public Sprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
-        this.scaled = scaled;
-        animDict.putAll(setupImages(initializeSheet(spriteSheet), delay));
-        initAnimations();
-        setupBox(x, y);
+    protected Sprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
+        super(format, x, y, scaled, delay);
+        check();
     }
 
-    protected Sprite(FileFormat format, int x, int y, int scaled, int delay) throws IOException {
-        this.scaled = scaled;
-        animDict.putAll(setupImages(format, initializeSheet(format.getImage()), delay));
-        initAnimations();
-        setupBox(x, y);
-
+    protected Sprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
+        super(spriteSheet, x, y, scaled, delay);
+        check();
     }
 
-    public enum Pose {
-        UP, DOWN, LEFT, RIGHT,
-        ATTACK_UP, ATTACK_DOWN, ATTACK_LEFT, ATTACK_RIGHT,
-        SPIN_ATTACK, ALL, JUMP, DEAD,
-        ROLL_LEFT, ROLL_RIGHT, ROLL_UP, ROLL_DOWN,
-        ATTACK_UP_01, ATTACK_DOWN_01, ATTACK_LEFT_01, ATTACK_RIGHT_01;
+    /**
+     * For initializing anymore animations besides 4 basic ones for the sprite.
+     */
+    protected abstract void onInitAnimations();
 
-        public static Pose parse(String pose) {
-            return Pose.valueOf(pose.toUpperCase());
+    /**
+     * validating that you have the basic animations, up down left right
+     */
+    private void check()  {
+        List<Pose> poses = new ArrayList<>(Arrays.asList(Pose.UP, Pose.DOWN, Pose.LEFT, Pose.RIGHT));
+        poses.removeIf(p -> animDict.keySet().contains(p));
+        if(!poses.isEmpty()) {
+            String format = String.format("The following poses are missing: %s", poses.stream().map(pose -> pose.name()).collect(Collectors.joining(",")));
+            logger.log(Level.SEVERE, format);
+            return;
         }
+        logger.log(Level.FINE, "All basic poses were initialized!");
     }
 
-    // Takes care of initializing animations for the 4 basic directions the sprite would face.
-    // Can always override this to fit the needs of your sprite.
-    protected void loadBaseAnimations(String prefix, int delay) {
-        String[] directions = Arrays.stream(Pose.values()).map(d -> d.name().toLowerCase()).toArray(String[]::new);
-        for (String direction : directions) {
-            Animation anim = new Animation(delay, String.join("_", prefix, direction), getSpriteDirectory());
-            animDict.put(Pose.parse(direction), anim);
-        }
-    }
-
-    // For initializing anymore animations besides 4 basic ones for the sprite.
-    protected abstract void initAnimations();
-
-    private void setupBox(int x, int y) {
-        Image currentFrame = getFirstAnimation().getCurrentFrame();
-        this.bounds = new BoundingBox(x, y, currentFrame.getWidth(null) / scaled, currentFrame.getHeight(null) / scaled);
-    }
-
-    public String getSpriteDirectory() {
-        return SPRITE_FOLDER + this.getClass().getSimpleName().toLowerCase();
-    }
-
-    private Animation getFirstAnimation() {
-        Optional<Animation> firstAnim = animDict.values().stream().findFirst();
-        if (firstAnim.isPresent()) {
-            return firstAnim.get();
+    public Animation getCurrentAnimation() {
+        boolean hasKey = animDict.containsKey(currentPose);
+        if (hasKey) {
+            return animDict.get(currentPose);
         } else {
-            logger.log(Level.SEVERE, "No animations created for {0}!", this.getClass().getSimpleName());
-            throw new NoSuchElementException();
+            Collection<Animation> values = animDict.values();
+            return values.toArray(new Animation[0])[0];
         }
-    }
-
-    @SuppressWarnings("java:S1172")
-    private EnumMap<Pose, Animation> setupImages(@Nullable FileFormat format, BufferedImage image, int delay) {
-        EnumMap<Pose, Animation> map = new EnumMap<>(Pose.class);
-        for (FileFormat.AnimationRow row : format.getPoses()) {
-            Animation animation = Animation.with(delay);
-            for (FileFormat.SpriteBounds spriteBounds : row.getSet()) {
-                animation.addFrame(image.getSubimage(spriteBounds.getX(), spriteBounds.getY(), spriteBounds.getW(), spriteBounds.getH()));
-            }
-            map.put(Pose.parse(row.getPose()), animation);
-        }
-        return map;
-    }
-
-    @SuppressWarnings("java:S1172")
-    protected EnumMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
-        return new EnumMap<>(Pose.class);
-    }
-
-    protected BufferedImage initializeSheet(String spriteSheet) throws IOException {
-        return ImageIO.read(new File(String.format("%s%s", getSpriteSheetDirectory(), spriteSheet)));
-    }
-
-    public String getSpriteSheetDirectory() {
-        return SPRITE_SHEET_FOLDER;
-    }
-
-    protected BufferedImage pluck(BufferedImage image, int column, int row, int width, int height) {
-        return image.getSubimage((column * width), row * height, width, height);
-    }
-
-    protected Animation getAnimation(BufferedImage image, int column, int row, int width, int height, int count, int delay) {
-        Animation images = Animation.with(delay);
-        for (int i = 0; i < count; i++) {
-            int x = (column * width) + (i * width);
-            int y = row * height;
-            images.addFrame(image.getSubimage(x, y, width, height));
-        }
-        return images;
     }
 
     // Draws the sprite's current image based on its current state.
-    @Override
-    public void render(Graphics g) {
-        Image currentFrame;
-        if (animDict.containsKey(currentPose)) {
-            if (moving) {
-                currentFrame = animDict.get(currentPose).getCurrentFrame();
-            } else {
-                currentFrame = animDict.get(currentPose).getFirstFrame();
-            }
-            g.drawImage(currentFrame,
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4, null);
-
-            moving = false;
-        } else {
-            Animation firstAnim = getFirstAnimation();
-            currentFrame = firstAnim.getCurrentFrame();
-            g.drawImage(currentFrame,
-                    getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
-                    getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
-                    null);
-        }
-        if (ZeldaTestGame.inDebuggingMode()) {
-            drawActualImageBounds(currentFrame, g);
-            drawBounds(g);
-        }
-    }
-
-    public void drawActualImageBounds(Image currentFrame, Graphics g) {
-        // For debug purposes, draw the bounding box of the sprite.
-        g.setColor(Color.RED);
-        g.drawRect(getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
-                getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
-                currentFrame.getWidth(null)
-                , currentFrame.getHeight(null));
-
-
-    }
-
-    public void drawBounds(Graphics g) {
-        // For debug purposes, draw the bounding box of the sprite.
-        g.setColor(Color.blue);
-        ((Renderable) bounds).render(g);
-    }
-
-    public void move() {
-        switch (currentPose) {
-            case ROLL_UP:
-            case UP:
-                moveUp(velocity);
-                break;
-            case ROLL_DOWN:
-            case DOWN:
-                moveDown(velocity);
-                break;
-            case ROLL_LEFT:
-            case LEFT:
-                moveLeft(velocity);
-                break;
-            case ROLL_RIGHT:
-            case RIGHT:
-                moveRight(velocity);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public CollisionDetection getBounds() {
-        return bounds;
-    }
-
     public Pose getSpritePose() {
         return currentPose;
     }
 
     public void setSpritePose(Pose currentPose) {
         this.currentPose = currentPose;
+        this.direction = currentPose.direction;
     }
 
-    public int getVelocity() {
-        return velocity;
+    //This is for fetching sound effects in the future for specific class by their classname
+    //ie. ./assets/sounds/effects/(classname)/filename.wav
+    public String getPoseSoundEffect() {
+        return String.format("%s/%s", this.getClass().getSimpleName().toLowerCase(), currentPose.getSoundFileName());
     }
 
-    public void setVelocity(int velocity) {
-        this.velocity = velocity;
-    }
-
+    //region Override Methods
+    // Takes care of initializing animations for the 4 basic directions the sprite would face.
+    // Can always override this to fit the needs of your sprite.
     @Override
-    public Number getX() {
-        return bounds.getX();
-    }
-
-    @Override
-    public Number getY() {
-        return bounds.getY();
-    }
-
-    @Override
-    public Number getWidth() {
-        return bounds.getWidth();
-    }
-
-    @Override
-    public Number getHeight() {
-        return bounds.getHeight();
-    }
-
-    @Override
-    public void setHeight(Number height) {
-        bounds.setHeight(height);
-    }
-
-    @Override
-    public void setWidth(Number width) {
-        bounds.setWidth(width);
-    }
-
-    @Override
-    public void setY(Number y) {
-        bounds.setY(y);
-        if (y.intValue() > 0) {
-            moving = true;
+    protected EnumMap<Pose, Animation> setupImages(String spritePrefix, int delay) {
+        EnumMap<Pose, Animation> map = new EnumMap<>(Pose.class);
+        String[] directions = Arrays.stream(Sprite.Pose.values()).map(d -> d.name().toLowerCase()).toArray(String[]::new);
+        for (String direction : directions) {
+            String filename = String.join("_", spritePrefix, direction);
+            String directory = getSpriteDirectory();
+            if (Animation.isValidDirectory(filename, directory)) {
+                Animation anim = new Animation(delay, filename, directory);
+                map.put(Sprite.Pose.parse(direction), anim);
+            }
         }
+        return map;
     }
 
     @Override
-    public void setX(Number x) {
-        bounds.setX(x);
-        if (x.intValue() > 0) {
-            moving = true;
+    protected EnumMap<Pose, Animation> setupImages(PoseFileFormat format, BufferedImage image, int delay) {
+        EnumMap<Pose, Animation> map = new EnumMap<>(Pose.class);
+        for (FileFormat.AnimationRow row : format.getPoses()) {
+            Animation animation = Animation.with(delay);
+            for (FileFormat.Bounds bounds : row.getSet()) {
+                animation.addFrame(image.getSubimage(bounds.getX(), bounds.getY(), bounds.getW(), bounds.getH()));
+            }
+            map.put(Pose.parse(row.getPose()), animation);
         }
+        return map;
     }
 
     @Override
-    public void gravitate() {
-        bounds.gravitate();
+    protected EnumMap<Pose, Animation> setupImages(BufferedImage image, int delay) {
+        return new EnumMap<>(Pose.class);
     }
 
     @Override
-    public void setVelocityX(Number velocityX) {
-        bounds.setVelocityX(velocityX);
+    public Animation getSafeAnimation() {
+        return animDict.get(Pose.parse(currentPose.direction.name()));
     }
 
     @Override
-    public void setVelocityY(Number velocityY) {
-        bounds.setVelocityY(velocityY);
+    public String getSoundEffectFile() {
+        return currentPose.soundFileName;
     }
 
     @Override
-    public void setAccelerationX(Number accelerationX) {
-        bounds.setAccelerationX(accelerationX);
+    public void render(Graphics g) {
+        GlobalSoundEffect.getInstance().play(this);
+        super.render(g);
     }
 
     @Override
-    public void setAccelerationY(Number accelerationY) {
-        bounds.setAccelerationY(accelerationY);
+    public Direction getDirection() {
+        return currentPose.direction;
     }
 
     @Override
-    public void setDragX(Number dragX) {
-        bounds.setDragX(dragX);
+    public void move() {
+        this.direction = currentPose.direction;
+        super.move();
     }
+    //endregion
 
-    @Override
-    public void setDragY(Number dragY) {
-        bounds.setDragY(dragY);
-    }
+    public enum Pose {
+        UP(Direction.UP), DOWN(Direction.DOWN), LEFT(Direction.LEFT), RIGHT(Direction.RIGHT),
+        ATTACK_UP("attack.wav", Direction.UP), ATTACK_DOWN("attack.wav", Direction.DOWN),
+        ATTACK_LEFT("attack.wav", Direction.LEFT), ATTACK_RIGHT("attack.wav", Direction.RIGHT),
+        SPIN_ATTACK("spin_attack.wav", Direction.NONE), ALL, JUMP, DEAD("dead.wav", Direction.NONE),
+        ROLL_LEFT(Direction.LEFT), ROLL_RIGHT(Direction.RIGHT), ROLL_UP(Direction.UP), ROLL_DOWN(Direction.DOWN),
+        ATTACK_UP_01(Direction.UP), ATTACK_DOWN_01(Direction.DOWN),
+        ATTACK_LEFT_01(Direction.LEFT), ATTACK_RIGHT_01(Direction.RIGHT);
 
-    @Override
-    public Number getDragX() {
-        return bounds.getDragX();
-    }
+        private final String soundFileName;
+        private final Direction direction;
 
-    @Override
-    public Number getDragY() {
-        return bounds.getDragY();
-    }
+        Pose() {
+            this(Direction.NONE);
+        }
 
-    @Override
-    public Number getVelocityX() {
-        return bounds.getVelocityX();
-    }
+        Pose(Direction direction) {
+            this.soundFileName = null;
+            this.direction = direction;
+        }
 
-    @Override
-    public Number getVelocityY() {
-        return bounds.getVelocityY();
-    }
+        Pose(String soundFileName, Direction direction) {
+            this.soundFileName = soundFileName;
+            this.direction = direction;
+        }
 
-    @Override
-    public Number getAccelerationX() {
-        return bounds.getAccelerationX();
-    }
+        public static Pose parse(String pose) {
+            if (pose.equals("NONE")) {
+                return DOWN;
+            }
+            return Pose.valueOf(pose.toUpperCase());
+        }
 
-    @Override
-    public Number getAccelerationY() {
-        return bounds.getAccelerationY();
+        public Direction getDirection() {
+            return direction;
+        }
+
+        public boolean hasSoundFile() {
+            return soundFileName != null;
+        }
+
+        public String getSoundFileName() {
+            return soundFileName;
+        }
     }
 }

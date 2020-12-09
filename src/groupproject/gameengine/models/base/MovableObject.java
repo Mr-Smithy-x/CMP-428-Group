@@ -15,13 +15,28 @@ public abstract class MovableObject implements Movable {
     }
 
     @Override
+    public void setX(Number x) {
+        this.x = x.doubleValue();
+    }
+
+    @Override
     public Number getY() {
         return y;
     }
 
     @Override
+    public void setY(Number y) {
+        this.y = y.doubleValue();
+    }
+
+    @Override
     public Number getWidth() {
         return width;
+    }
+
+    @Override
+    public void setWidth(Number width) {
+        this.width = width.intValue();
     }
 
     @Override
@@ -32,20 +47,5 @@ public abstract class MovableObject implements Movable {
     @Override
     public void setHeight(Number height) {
         this.height = height.intValue();
-    }
-
-    @Override
-    public void setWidth(Number width) {
-        this.width = width.intValue();
-    }
-
-    @Override
-    public void setX(Number x) {
-        this.x = x.doubleValue();
-    }
-
-    @Override
-    public void setY(Number y) {
-        this.y = y.doubleValue();
     }
 }

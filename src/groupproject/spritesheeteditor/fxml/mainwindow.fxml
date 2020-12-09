@@ -5,13 +5,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
       fx:controller="groupproject.spritesheeteditor.controllers.MainViewController" maxWidth="Infinity"
       prefWidth="1400" minWidth="1400" maxHeight="600.0">
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
-            <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="Create New"/>
-            <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open File"/>
+            <Menu mnemonicParsing="false" text="New">
+                <MenuItem fx:id="newPoseMenuItem" mnemonicParsing="false" text="Sprite Animation"/>
+                <MenuItem fx:id="newProjectileMenuItem" mnemonicParsing="false" text="Projectile Animation"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Open">
+                <MenuItem fx:id="openPoseMenuItem" mnemonicParsing="false" text="Pose"/>
+                <MenuItem fx:id="openProjectileMenuItem" mnemonicParsing="false" text="Projectile"/>
+            </Menu>
             <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" text="Save File"/>
             <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" text="Close"/>
         </Menu>

@@ -25,7 +25,7 @@ public interface CollisionDetection extends Gravitation {
     }
 
 
-    default boolean isOverlapping(Movable box) {
+    default boolean isOverlapping(BoundingContract box) {
         return ((box.getX().doubleValue() + box.getWidth().doubleValue() >= getX().doubleValue()) &&
                 (getX().doubleValue() + getWidth().doubleValue() >= box.getX().doubleValue()) &&
                 (box.getY().doubleValue() + box.getHeight().doubleValue() >= getY().doubleValue()) &&
@@ -33,7 +33,7 @@ public interface CollisionDetection extends Gravitation {
     }
 
 
-    default boolean willOverlap(Movable r, int dx, int dy) {
+    default boolean willOverlap(BoundingContract r, int dx, int dy) {
         return !(getX().intValue() + dx > r.getDiagonalX().intValue() || getY().intValue() + dy > r.getDiagonalY().intValue() ||
                 r.getX().intValue() > getDiagonalX().intValue() + dx || r.getY().intValue() > getDiagonalY().intValue() + dy);
     }
@@ -48,6 +48,6 @@ public interface CollisionDetection extends Gravitation {
     default double distanceBetween(Movable movable) {
         double dx = movable.getX().doubleValue() - getX().doubleValue();
         double dy = movable.getY().doubleValue() - getY().doubleValue();
-        return Math.sqrt(dx * dx + dy + dy);
+        return Math.sqrt(dx * dx + dy * dy);
     }
 }

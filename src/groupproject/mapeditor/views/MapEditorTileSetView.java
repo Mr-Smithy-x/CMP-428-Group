@@ -2,58 +2,104 @@ package groupproject.mapeditor.views;
 
 import groupproject.gameengine.tile.TileSet;
 import groupproject.mapeditor.MapEditorController;
-import groupproject.mapeditor.components.MapEditorTileButton;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 public class MapEditorTileSetView extends JPanel {
     private final transient MapEditorController editorController;
-    private final JPanel tilesInSet;
-    private MapEditorTileButton selectedTileButton;
+    private transient BufferedImage tileSetView;
+    private transient int selectedTileRow;
+    private transient int selectedTileCol;
+    private transient int tileWidth;
+    private transient int tileHeight;
 
     public MapEditorTileSetView(MapEditorController controller) {
         this.editorController = controller;
-        tilesInSet = new JPanel();
-        tilesInSet.setLayout(new GridBagLayout());
-        tilesInSet.setBackground(Color.gray);
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        this.add(tilesInSet);
         this.setBackground(Color.gray);
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (isValidClick(e.getX(), e.getY())) setTileSelected(e.getX(), e.getY());
+            }
+        });
     }
 
-    public void initTileSetView(TileSet tileSet) {
-        tilesInSet.removeAll();
-        this.selectedTileButton = null;
-        GridBagConstraints constraints = new GridBagConstraints();
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (tileSetView != null)
+            g.drawImage(tileSetView, 0, 0, null);
+    }
+
+    private boolean isValidClick(int x, int y) {
+        try {
+            return (x < tileSetView.getWidth() && y < tileSetView.getHeight()) &&
+                    (x > 0 && y > 0);
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    public void initTileSetView() {
+        TileSet tileSet = editorController.getTileSet();
+        tileWidth = editorController.getTileWidth();
+        tileHeight = editorController.getTileHeight();
+        int tileSetImageWidth = tileWidth * tileSet.getTileSetColumns();
+        int tileSetImageHeight = tileHeight * tileSet.getTileSetRows();
+        tileSetView = new BufferedImage(tileSetImageWidth, tileSetImageHeight, BufferedImage.TYPE_3BYTE_BGR);
+        this.setPreferredSize(new Dimension(tileSetImageWidth, tileSetImageHeight));
+        selectedTileRow = -1;
+        selectedTileCol = -1;
+        Graphics tileSetViewGraphics = tileSetView.createGraphics();
+
         for (int row = 0; row < tileSet.getTileSetRows(); row++) {
             for (int col = 0; col < tileSet.getTileSetColumns(); col++) {
                 int tileIndex = (row * tileSet.getTileSetColumns()) + col;
-                MapEditorTileButton button = new MapEditorTileButton(tileSet.getTileImageList().get(tileIndex), row, col);
-                button.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        setTileSelected((MapEditorTileButton) e.getSource());
-                    }
-                });
-                constraints.gridx = col;
-                constraints.gridy = row;
-                constraints.insets = new Insets(0, 0, 1, 1);
-                tilesInSet.add(button, constraints);
+                int x = col * tileWidth;
+                int y = row * tileHeight;
+                tileSetViewGraphics.drawImage(tileSet.getTileImageList().get(tileIndex), x, y, null);
             }
         }
+
         revalidate();
         repaint();
     }
 
-    private void setTileSelected(MapEditorTileButton button) {
-        if (this.selectedTileButton != null) {
-            this.selectedTileButton.setBorder(UIManager.getBorder("Label.border"));
+    private void drawSelectedTileOutline(int newRow, int newCol) {
+        Graphics tileSetViewGraphics = tileSetView.createGraphics();
+
+        // Redraw white outline around old selected tile if there was one.
+        if (selectedTileRow >= 0 && selectedTileCol >= 0) {
+            int oldTileIndex = (selectedTileRow * editorController.getTileSet().getTileSetColumns()) + selectedTileCol;
+            tileSetViewGraphics.drawImage(editorController.getTileSet().getTileImageList().get(oldTileIndex),
+                    selectedTileCol * tileWidth, selectedTileRow * tileHeight, tileWidth, tileHeight, null);
         }
-        this.selectedTileButton = button;
-        button.setBorder(BorderFactory.createLineBorder(Color.blue));
-        this.editorController.setSelectedTile(button.getTileImage());
+
+        // Set new selected tile area, and draw the selected outline.
+        selectedTileRow = newRow;
+        selectedTileCol = newCol;
+        tileSetViewGraphics.setColor(Color.blue);
+        tileSetViewGraphics.drawRect(selectedTileCol * tileWidth, selectedTileRow * tileHeight, tileWidth - 1,
+                tileHeight - 1);
+    }
+
+    private void setTileSelected(int clickedX, int clickedY) {
+        int row = clickedY / tileHeight;
+        int col = clickedX / tileWidth;
+        drawSelectedTileOutline(row, col);
+        this.editorController.setSelectedTile(row, col);
+        revalidate();
+        repaint();
+    }
+
+    public void changeSelectedRowAndColBy(int rowChange, int colChange) {
+        if (selectedTileCol >= 0 && selectedTileRow >= 0 && selectedTileRow + rowChange >= 0 && selectedTileCol + colChange >= 0) {
+            setTileSelected(((selectedTileCol + colChange) * tileWidth), (selectedTileRow + rowChange) * tileHeight);
+        }
     }
 }

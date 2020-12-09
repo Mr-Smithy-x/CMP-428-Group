@@ -2,6 +2,10 @@ package groupproject.gameengine.helpers;
 
 public class MathHelper {
 
+    private MathHelper() {
+
+    }
+
     public static float newWidth(float newHeight, float aspectRatio) {
         return newHeight * aspectRatio;
     }
