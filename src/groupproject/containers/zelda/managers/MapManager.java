@@ -1,5 +1,6 @@
 package groupproject.containers.zelda.managers;
 
+import groupproject.containers.zelda.algorithms.ATileStarAlgorithm;
 import groupproject.gameengine.sprite.Sprite;
 import groupproject.gameengine.tile.Tile;
 import groupproject.gameengine.tile.TileMap;
@@ -13,6 +14,7 @@ public class MapManager {
 
     private static final MapManager instance = new MapManager();
     private TileMap currentMap;
+    private ATileStarAlgorithm aStar;
 
     private MapManager() {
     }
@@ -26,6 +28,7 @@ public class MapManager {
             TileMapModel mapModel = (TileMapModel) is.readObject();
             currentMap = new TileMap(mapModel);
             currentMap.initializeMap();
+            aStar = new ATileStarAlgorithm(currentMap);
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
@@ -70,5 +73,9 @@ public class MapManager {
         }
 
         return isColliding;
+    }
+
+    public ATileStarAlgorithm getAStar() {
+        return aStar;
     }
 }

@@ -1,5 +1,6 @@
 package groupproject.gameengine.tile;
 
+import groupproject.containers.zelda.ZeldaContainer;
 import groupproject.gameengine.algorithms.models.Network;
 import groupproject.gameengine.algorithms.models.Node;
 import groupproject.gameengine.camera.GlobalCamera;
@@ -40,7 +41,7 @@ public class Tile extends Node<Tile> implements Comparable<Node<Tile>>, Renderab
                 getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
                 getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
                 null);
-        if (ZeldaTestGame.inDebuggingMode() && boundsRect != null) drawBoundsRect(g);
+        if (System.getProperty("DEBUG").equals("true") && boundsRect != null) drawBoundsRect(g);
     }
 
     public void drawBoundsRect(Graphics g) {
