@@ -35,19 +35,7 @@ public class ZeldaWorldManager extends BaseWorldManager {
         }
 
         if (!isPlayerDead()) {
-            if ((keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_W]) && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.LEFT)) {
-                getPlayer().setSpritePose(Sprite.Pose.LEFT);
-                getPlayer().move();
-            } else if (keys[KeyEvent.VK_RIGHT] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.RIGHT)) {
-                getPlayer().setSpritePose(Sprite.Pose.RIGHT);
-                getPlayer().move();
-            } else if (keys[KeyEvent.VK_UP] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.UP)) {
-                getPlayer().setSpritePose(Sprite.Pose.UP);
-                getPlayer().move();
-            } else if (keys[KeyEvent.VK_DOWN] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.DOWN)) {
-                getPlayer().setSpritePose(Sprite.Pose.DOWN);
-                getPlayer().move();
-            }
+            handlePlayerMovement(keys);
 
             if (getPlayer().hasEnergy()) {
                 if (keys[KeyEvent.VK_Z]) {
@@ -62,6 +50,22 @@ public class ZeldaWorldManager extends BaseWorldManager {
             }
 
         } else GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
+    }
+
+    private void handlePlayerMovement(boolean[] keys) {
+        if ((keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_W]) && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.LEFT)) {
+            getPlayer().setSpritePose(Sprite.Pose.LEFT);
+            getPlayer().move();
+        } else if (keys[KeyEvent.VK_RIGHT] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.RIGHT)) {
+            getPlayer().setSpritePose(Sprite.Pose.RIGHT);
+            getPlayer().move();
+        } else if (keys[KeyEvent.VK_UP] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.UP)) {
+            getPlayer().setSpritePose(Sprite.Pose.UP);
+            getPlayer().move();
+        } else if (keys[KeyEvent.VK_DOWN] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.DOWN)) {
+            getPlayer().setSpritePose(Sprite.Pose.DOWN);
+            getPlayer().move();
+        }
     }
 
     /**
