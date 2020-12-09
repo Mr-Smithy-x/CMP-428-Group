@@ -147,8 +147,8 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         int imageHeight = currentFrame.getHeight(null) / 2;
         int cameraY2Offset = getCameraOffsetY2(GlobalCamera.getInstance()).intValue();
         int boundsHeight = getWidth().intValue() / 2;
-        int realPositionHeight = cameraY2Offset - ((imageHeight + boundsHeight));
-        return realPositionHeight;
+        int realPositionY = cameraY2Offset - ((imageHeight + boundsHeight));
+        return realPositionY;
     }
 
     @Override
