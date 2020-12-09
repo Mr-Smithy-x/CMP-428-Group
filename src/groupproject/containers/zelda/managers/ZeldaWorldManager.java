@@ -4,21 +4,17 @@ import groupproject.containers.zelda.algorithms.ATileStarAlgorithm;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
-import groupproject.gameengine.algorithms.AStar;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.sprite.AttackSprite;
 import groupproject.gameengine.sprite.Sprite;
-import groupproject.gameengine.tile.Tile;
 import groupproject.gameengine.tile.TileMap;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.PriorityQueue;
 
 public class ZeldaWorldManager extends BaseWorldManager {
 
     ATileStarAlgorithm aStar;
-    PriorityQueue<Tile> path;
 
     public ZeldaWorldManager(GameContainer container) {
         super(container);
@@ -81,33 +77,15 @@ public class ZeldaWorldManager extends BaseWorldManager {
         getEnemies().stream().filter(enemy -> !enemy.isDead()).forEach(enemy -> {
             getPlayer().isProjectileHitting(enemy);
             enemy.isProjectileHitting(getPlayer());
-            if (enemy.distanceBetween(getPlayer()) > 600) {
-                /*if (enemy.getX().intValue() > getPlayer().getX().intValue()) {
-                    enemy.setSpritePose(Sprite.Pose.LEFT);
-                    enemy.move();
-                }
-                if (enemy.getY().intValue() > getPlayer().getY().intValue()) {
-                    enemy.setSpritePose(Sprite.Pose.UP);
-                    enemy.move();
-                }
-                if (enemy.getX().intValue() < getPlayer().getX().intValue()) {
-                    enemy.setSpritePose(Sprite.Pose.RIGHT);
-                    enemy.move();
-                }
-                if (enemy.getY().intValue() < getPlayer().getY().intValue()) {
-                    enemy.setSpritePose(Sprite.Pose.DOWN);
-                    enemy.move();
-                }*/
-                if (enemy.distanceBetween(getPlayer()) < 100) {
-                    //Basic AI, we can improve this
-                    enemy.shoot();
-                } else if (enemy.isPathNullOrEmpty()) {
+            if (enemy.isInsideCamera(GlobalCamera.getInstance())) {
+                double distance = enemy.distanceBetween(getPlayer());
+                if(enemy.isPathNullOrEmpty()) {
                     calculatePath(enemy);
-                }else{
-                    enemy.move();
                 }
-            } else if(!enemy.isPathNullOrEmpty()) {
-                enemy.move();
+                if (distance <= 100) {
+                    enemy.shoot();
+                }
+                enemy.automate();
             }
         });
     }
@@ -128,14 +106,6 @@ public class ZeldaWorldManager extends BaseWorldManager {
     @Override
     protected void renderGame(Graphics g) {
         super.renderGame(g);
-        if (path != null) {
-            for (Tile tile : path) {
-                int width = tile.getWidth().intValue();
-                int height = tile.getHeight().intValue();
-                g.setColor(new Color(255, 0, 0, 80));
-                g.fillRect((int) ((tile.getPoint().x * width) - GlobalCamera.getInstance().getX()), (int) ((tile.getPoint().y * height) - GlobalCamera.getInstance().getY()), width, height);
-            }
-        }
         //The game already handles most of the rendering, if there any more rendering that needs to be done
         //do it here
     }
@@ -147,7 +117,7 @@ public class ZeldaWorldManager extends BaseWorldManager {
     }
 
 
-    public AStar<TileMap, Tile> getAStar() {
+    public ATileStarAlgorithm getAStar() {
         return aStar;
     }
 

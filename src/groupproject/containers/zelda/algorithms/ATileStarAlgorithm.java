@@ -8,7 +8,7 @@ import groupproject.gameengine.sprite.Sprite;
 import groupproject.gameengine.tile.Tile;
 import groupproject.gameengine.tile.TileMap;
 
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 
 //witty ;)
 public class ATileStarAlgorithm extends AStar<TileMap, Tile> implements PathFindingObserver<Tile> {
@@ -40,10 +40,10 @@ public class ATileStarAlgorithm extends AStar<TileMap, Tile> implements PathFind
     }
 
     @Override
-    public void update(PathFindingObservable<Tile> observer, LinkedList<Tile> path) {
-        System.out.println(path);
-        if (sprite != null) {
-            sprite.setPath(path);
+    public void update(PathFindingObservable<Tile> observer, LinkedHashSet<Tile> path) {
+        if (sprite != null && path != null) {
+            Tile[] tiles = path.toArray(new Tile[0]);
+            sprite.setPath(tiles);
         }
         sprite = null;
     }

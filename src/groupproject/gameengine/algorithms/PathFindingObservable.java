@@ -3,8 +3,8 @@ package groupproject.gameengine.algorithms;
 
 import groupproject.gameengine.algorithms.models.Node;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Vector;
 
 public class PathFindingObservable<N extends Node<N>> {
@@ -42,7 +42,7 @@ public class PathFindingObservable<N extends Node<N>> {
      * @see PathFindingObservable#hasChanged()
      * @see PathFindingObserver#update(PathFindingObservable, LinkedList)
      */
-    public void notifyObservers(LinkedList<N> arg) {
+    public void notifyObservers(LinkedHashSet<N> arg) {
         /*
          * a temporary array buffer, used as a snapshot of the state of
          * current Observers.
@@ -84,7 +84,7 @@ public class PathFindingObservable<N extends Node<N>> {
 
     /**
      * Indicates that this object has no longer changed
-     * @see PathFindingObservable#notifyObservers(LinkedList)
+     * @see PathFindingObservable#notifyObservers(LinkedHashSet)
      */
     protected synchronized void clearChanged() {
         changed = false;

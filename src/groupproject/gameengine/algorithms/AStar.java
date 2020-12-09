@@ -9,7 +9,7 @@ import java.util.*;
 public abstract class AStar<T extends Network<N>, N extends Node<N>> extends PathFindingObservable<N> {
 
     private T network;
-    private LinkedList<N> path;
+    private LinkedHashSet<N> path;
 
     private N start;
     private N end;
@@ -25,7 +25,7 @@ public abstract class AStar<T extends Network<N>, N extends Node<N>> extends Pat
         if (path != null && !path.isEmpty()) {
             this.path.clear();
         } else {
-            this.path = new LinkedList<>();
+            this.path = new LinkedHashSet<>();
         }
 
         if (start == null || end == null) {
@@ -90,7 +90,6 @@ public abstract class AStar<T extends Network<N>, N extends Node<N>> extends Pat
             this.path.add(temp.getParent());
             temp = temp.getParent();
         }
-        //this.path.add(start);
     }
 
     private N getLowestFunction() {
@@ -113,7 +112,7 @@ public abstract class AStar<T extends Network<N>, N extends Node<N>> extends Pat
         return network;
     }
 
-    public LinkedList<N> getPath() {
+    public LinkedHashSet<N> getPath() {
         return path;
     }
 

@@ -2,14 +2,12 @@ package groupproject.containers.zelda;
 
 import groupproject.containers.zelda.helpers.GameTextDialog;
 import groupproject.containers.zelda.managers.ZeldaWorldManager;
-import groupproject.containers.zelda.models.Dog;
 import groupproject.containers.zelda.models.MinishLink;
 import groupproject.containers.zelda.models.Octorok;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
-import groupproject.games.ZeldaTestGame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,7 +67,7 @@ public class ZeldaContainer extends GameContainer {
         healthBox.render(g);
         g.setColor(Color.RED);
         damageBox.render(g);
-        if (ZeldaTestGame.inDebuggingMode()) {
+        if (inDebuggingMode()) {
             GlobalCamera.getInstance().render(g, getContainer());
         }
         if (world.isPlayerDead()) {
@@ -84,9 +82,9 @@ public class ZeldaContainer extends GameContainer {
     @Override
     protected void onInitialize() throws IOException {
         world.setTileMap(loadTileMap("forest_test.tilemap"));
-        world.setPlayer(new MinishLink(getWidth() / 2, getHeight() / 2, 1000 / 16));
+        world.setPlayer(new MinishLink(getWidth() / 2 + 100, getHeight() / 2, 1000 / 16));
         world.addEnemy(new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16));
-        world.addEnemy(new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));
+        world.addEnemy(new Octorok(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));
         healthBox = new BoundingBox((int) (getWidth() / 1.5), (int) (getHeight() / 1.5), 100, 100);
         damageBox = new BoundingBox((int) (getWidth() / 1.2), (int) (getHeight() / 1.2), 100, 100);
     }
@@ -94,7 +92,7 @@ public class ZeldaContainer extends GameContainer {
     @Override
     public void keyReleased(KeyEvent e) {
         super.keyReleased(e);
-        if(e.getKeyCode() == KeyEvent.VK_J){
+        if (e.getKeyCode() == KeyEvent.VK_J) {
             world.calculatePath(world.getEnemies().get(1));
         }
     }

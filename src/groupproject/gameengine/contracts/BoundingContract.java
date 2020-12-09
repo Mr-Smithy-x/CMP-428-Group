@@ -1,6 +1,6 @@
 package groupproject.gameengine.contracts;
 
-public interface BoundingContract {
+public interface BoundingContract extends Debuggable {
 
     default Number getDiagonalX() {
         return getX2().intValue() - 1;
@@ -39,20 +39,21 @@ public interface BoundingContract {
         setY(y);
     }
 
-    default boolean isBelowOf(BoundingContract contract) {
-        return getY().intValue() > contract.getY().intValue();
+    default boolean isBelow(BoundingContract contract) {
+        return this.getY().intValue() > contract.getY2().intValue();
     }
 
-    default boolean isAboveOf(BoundingContract contract) {
-        return getY().intValue() < contract.getY().intValue();
-    }
-
-    default boolean isLeftOf(BoundingContract contract) {
-        return getX().intValue() < contract.getX().intValue();
+    default boolean isAbove(BoundingContract contract) {
+        return this.getY2().intValue() < contract.getY().intValue();
     }
 
     default boolean isRightOf(BoundingContract contract) {
-        return getX().intValue() > contract.getX().intValue();
+        return this.getX().intValue() > contract.getX2().intValue();
     }
+
+    default boolean isLeftOf(BoundingContract contract) {
+        return this.getX2().intValue() < contract.getX().intValue();
+    }
+
 
 }

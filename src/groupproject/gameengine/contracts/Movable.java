@@ -2,7 +2,11 @@ package groupproject.gameengine.contracts;
 
 public interface Movable extends BoundingContract {
     default void moveBy(Number dx, Number dy) {
-        this.setWorld(this.getX().doubleValue() + dx.doubleValue(), this.getY().doubleValue() + dy.doubleValue());
+        int y = this.getY().intValue() + dy.intValue();
+        int x = this.getX().intValue() + dx.intValue();
+        x = x - (x % 2); // make sure its even, it does justice a*
+        y = y - (y % 2);
+        this.setWorld(x, y);
     }
 
     default void moveLeft(Number speed) {
