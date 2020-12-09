@@ -13,6 +13,7 @@ import groupproject.games.ZeldaTestGame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class ZeldaContainer extends GameContainer {
@@ -88,6 +89,14 @@ public class ZeldaContainer extends GameContainer {
         world.addEnemy(new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));
         healthBox = new BoundingBox((int) (getWidth() / 1.5), (int) (getHeight() / 1.5), 100, 100);
         damageBox = new BoundingBox((int) (getWidth() / 1.2), (int) (getHeight() / 1.2), 100, 100);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        super.keyReleased(e);
+        if(e.getKeyCode() == KeyEvent.VK_J){
+            world.calculatePath(world.getEnemies().get(1));
+        }
     }
 
     /**
