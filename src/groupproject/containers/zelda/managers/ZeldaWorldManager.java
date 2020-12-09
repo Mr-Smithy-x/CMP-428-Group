@@ -1,14 +1,20 @@
 package groupproject.containers.zelda.managers;
 
+import groupproject.containers.zelda.algorithms.ATileStarAlgorithm;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
+import groupproject.gameengine.camera.GlobalCamera;
+import groupproject.gameengine.sprite.AttackSprite;
 import groupproject.gameengine.sprite.Sprite;
+import groupproject.gameengine.tile.TileMap;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class ZeldaWorldManager extends BaseWorldManager {
+
+    ATileStarAlgorithm aStar;
 
     public ZeldaWorldManager(GameContainer container) {
         super(container);
@@ -59,33 +65,27 @@ public class ZeldaWorldManager extends BaseWorldManager {
         }
     }
 
+    public void calculatePath(AttackSprite enemy) {
+        aStar.solvePath(enemy, getPlayer());
+    }
+
     /**
      * Enemy AI work and others
      */
     public void automate() {
+
         getEnemies().stream().filter(enemy -> !enemy.isDead()).forEach(enemy -> {
             getPlayer().isProjectileHitting(enemy);
             enemy.isProjectileHitting(getPlayer());
-            if (enemy.distanceBetween(getPlayer()) > 100) {
-                if (enemy.getX().intValue() > getPlayer().getX().intValue()) {
-                    enemy.setSpritePose(Sprite.Pose.LEFT);
-                    enemy.move();
+            if (enemy.isInsideCamera(GlobalCamera.getInstance())) {
+                double distance = enemy.distanceBetween(getPlayer());
+                if(enemy.isPathNullOrEmpty()) {
+                    calculatePath(enemy);
                 }
-                if (enemy.getY().intValue() > getPlayer().getY().intValue()) {
-                    enemy.setSpritePose(Sprite.Pose.UP);
-                    enemy.move();
+                if (distance <= 100) {
+                    enemy.shoot();
                 }
-                if (enemy.getX().intValue() < getPlayer().getX().intValue()) {
-                    enemy.setSpritePose(Sprite.Pose.RIGHT);
-                    enemy.move();
-                }
-                if (enemy.getY().intValue() < getPlayer().getY().intValue()) {
-                    enemy.setSpritePose(Sprite.Pose.DOWN);
-                    enemy.move();
-                }
-            } else {
-                //Basic AI, we can improve this
-                enemy.shoot();
+                enemy.automate();
             }
         });
     }
@@ -109,4 +109,17 @@ public class ZeldaWorldManager extends BaseWorldManager {
         //The game already handles most of the rendering, if there any more rendering that needs to be done
         //do it here
     }
+
+    @Override
+    public void setTileMap(TileMap map) {
+        super.setTileMap(map);
+        aStar = new ATileStarAlgorithm(map);
+    }
+
+
+    public ATileStarAlgorithm getAStar() {
+        return aStar;
+    }
+
+
 }

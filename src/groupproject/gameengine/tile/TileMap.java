@@ -1,23 +1,30 @@
 package groupproject.gameengine.tile;
 
+import groupproject.gameengine.algorithms.models.Network;
 import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.sprite.Sprite;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class TileMap implements CameraContract, Renderable {
+public class TileMap implements Iterable<Point>, CameraContract, Renderable, Network<Tile> {
     private final TileMapModel mapModel;
     private final TileSet tileSet;
     private final int mapWidth;
     private final int mapHeight;
     private final Tile[][] mainLayerTiles;
     private final Tile[][] objectLayerTiles;
+    private Set<Point> points = new LinkedHashSet<>();
+    private final Iterable<Tile> pointIterable = new Iterable<Tile>() {
+        @Override
+        public Iterator<Tile> iterator() {
+            return points.stream().map(point -> mainLayerTiles[point.x][point.y]).iterator();
+        }
+    };
 
     public TileMap(TileMapModel mapModel) {
         this.tileSet = new TileSet(mapModel.getPerTileWidth(), mapModel.getPerTileHeight(), mapModel.getTileSetFile());
@@ -34,7 +41,6 @@ public class TileMap implements CameraContract, Renderable {
         int y1 = (firstTile.getY().intValue() + (firstTile.getHeight().intValue() / 2));
         int x2 = (secondTile.getX().intValue() + (secondTile.getWidth().intValue() / 2));
         int y2 = (secondTile.getY().intValue() + (secondTile.getHeight().intValue() / 2));
-
         return (int) Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
@@ -55,7 +61,19 @@ public class TileMap implements CameraContract, Renderable {
                 currentTile.setX(mapModel.getPerTileWidth() * col);
                 currentTile.setY(mapModel.getPerTileHeight() * row);
                 currentTile.initBoundsRect();
+                Point point = new Point(col, row);
+                points.add(point);
+                currentTile.setMapPoint(point);
                 mainLayerTiles[row][col] = currentTile;
+            }
+        }
+        initializeNeighbors();
+    }
+
+    void initializeNeighbors(){
+        for (int row = 0; row < mapModel.getMapRows(); row++) {
+            for (int col = 0; col < mapModel.getMapColumns(); col++) {
+                mainLayerTiles[row][col].calculateNearestNodes(this);
             }
         }
     }
@@ -206,6 +224,34 @@ public class TileMap implements CameraContract, Renderable {
     @Override
     public void setHeight(Number height) {
         //Do Nothing
+    }
+
+    @Override
+    public Iterable<Tile> getNodes() {
+        return pointIterable;
+    }
+
+    @Override
+    public boolean hasCrossDirection() {
+        return false;
+    }
+
+
+    @Override
+    public Iterator<Point> iterator() {
+        return points.iterator();
+    }
+
+
+    public Tile find(int col, int row) {
+        row = Math.abs(row);
+        col = Math.abs(col);
+        if (mainLayerTiles.length > row) {
+            if (mainLayerTiles[row].length > col) {
+                return mainLayerTiles[row][col];
+            }
+        }
+        return null;
     }
 
 }
