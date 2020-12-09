@@ -82,10 +82,11 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onInitialize() throws IOException {
-        world.setTileMap(loadTileMap("forest_test.tilemap"));
-        world.setPlayer(new MinishLink(getWidth() / 2, getHeight() / 2, 1000 / 16));
+        world.setTileMap(loadTileMap("forest_wip.tilemap"));
+        world.setPlayer(new MinishLink(getWidth() / 2, getHeight() / 2, 1000 / 24));
         world.addEnemy(new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16));
         world.addEnemy(new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));
+        world.getPlayer().setVelocity(3);
         healthBox = new BoundingBox((int) (getWidth() / 1.5), (int) (getHeight() / 1.5), 100, 100);
         damageBox = new BoundingBox((int) (getWidth() / 1.2), (int) (getHeight() / 1.2), 100, 100);
     }
