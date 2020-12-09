@@ -4,6 +4,7 @@ import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
+import groupproject.games.ZeldaTestGame;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -32,6 +33,7 @@ public class Tile implements Renderable, CameraContract {
                 getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
                 getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
                 null);
+        if (ZeldaTestGame.inDebuggingMode() && boundsRect != null) drawBoundsRect(g);
     }
 
     public void drawBoundsRect(Graphics g) {

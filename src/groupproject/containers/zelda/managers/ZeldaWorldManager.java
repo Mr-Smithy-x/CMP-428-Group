@@ -4,6 +4,7 @@ import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.sprite.Sprite;
+import groupproject.games.ZeldaTestGame;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -21,15 +22,20 @@ public class ZeldaWorldManager extends BaseWorldManager {
      */
     public void manual(boolean[] keys) {
 
+        if (keys[KeyEvent.VK_9]) {
+            System.setProperty("DEBUG", "true");
+        } else if (keys[KeyEvent.VK_0]) {
+            System.setProperty("DEBUG", "false");
+        }
+
         // Used while debugging.
-        if (keys[KeyEvent.VK_D]) {
-            getPlayer().damageHealth(1);
-        } else if (keys[KeyEvent.VK_F]) {
-            getPlayer().incrementHealth(1);
+        if (ZeldaTestGame.inDebuggingMode()) {
+            if (keys[KeyEvent.VK_D]) getPlayer().damageHealth(1);
+            else if (keys[KeyEvent.VK_F]) getPlayer().incrementHealth(1);
         }
 
         if (!isPlayerDead()) {
-            if (keys[KeyEvent.VK_LEFT] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.LEFT)) {
+            if ((keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_W]) && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.LEFT)) {
                 getPlayer().setSpritePose(Sprite.Pose.LEFT);
                 getPlayer().move();
             } else if (keys[KeyEvent.VK_RIGHT] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.RIGHT)) {
