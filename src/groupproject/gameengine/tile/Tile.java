@@ -1,19 +1,15 @@
 package groupproject.gameengine.tile;
 
-import groupproject.containers.zelda.ZeldaContainer;
 import groupproject.gameengine.algorithms.models.Network;
 import groupproject.gameengine.algorithms.models.Node;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
-import groupproject.games.ZeldaTestGame;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Tile extends Node<Tile> implements Comparable<Node<Tile>>, Renderable, CameraContract {
