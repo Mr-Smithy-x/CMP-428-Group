@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Random;
 
 public class Menu extends MouseAdapter {
+    private ZeldaContainer zeldaGame;
     private Game game;
     private Handler handler;
     Random r = new Random();
@@ -19,6 +20,10 @@ public class Menu extends MouseAdapter {
         this.handler = handler;
     }
 
+    public Menu(ZeldaContainer zeldaGame, Handler handler){
+        this.zeldaGame = zeldaGame;
+        this.handler = handler;
+    }
     public void mousePressed(MouseEvent e){
         int mx = e.getX();
         int my = e.getY();
