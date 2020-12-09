@@ -1,6 +1,7 @@
 package groupproject.containers.zelda;
 
 import groupproject.containers.zelda.helpers.GameTextDialog;
+import groupproject.containers.zelda.managers.MapManager;
 import groupproject.containers.zelda.managers.ZeldaWorldManager;
 import groupproject.containers.zelda.models.MinishLink;
 import groupproject.containers.zelda.models.Octorok;
@@ -25,16 +26,16 @@ public class ZeldaContainer extends GameContainer {
     BoundingBox healthBox;
     BoundingBox damageBox;
 
-    protected ZeldaContainer(JFrame container, Canvas canvas) {
-        super(container, canvas);
+    protected ZeldaContainer(JFrame container, JPanel panel) {
+        super(container, panel);
     }
 
     public static GameContainer frame(int width, int height) {
         JFrame frame = make("Zelda Test Game", width, height);
-        Canvas canvas = make(width, height);
-        frame.add(canvas);
+        JPanel panel = make(width, height);
+        frame.add(panel);
         frame.pack();
-        return new ZeldaContainer(frame, canvas);
+        return new ZeldaContainer(frame, panel);
     }
 
     @Override
@@ -81,8 +82,8 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onInitialize() throws IOException {
-        world.setTileMap(loadTileMap("town.tilemap"));
-        world.setPlayer(new MinishLink(getWidth() / 2 + 100, getHeight() / 2, 1000 / 16));
+        MapManager.getInstance().loadTileMap("hyrule_castle_entrance.tilemap");
+        world.setPlayer(new MinishLink(360, 300, 1000 / 24));
         world.addEnemy(new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16));
         world.addEnemy(new Octorok(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));
         healthBox = new BoundingBox((int) (getWidth() / 1.5), (int) (getHeight() / 1.5), 100, 100);

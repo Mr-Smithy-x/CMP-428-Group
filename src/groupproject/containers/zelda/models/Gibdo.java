@@ -22,12 +22,12 @@ public class Gibdo extends AttackSprite {
     }
 
     @Override
-    public void setProjectile(DamageProjectile projectile) {
-
+    public DamageProjectile getProjectile() {
+        return null;
     }
 
     @Override
-    public DamageProjectile getProjectile() {
-        return null;
+    public void setProjectile(DamageProjectile projectile) {
+
     }
 }
