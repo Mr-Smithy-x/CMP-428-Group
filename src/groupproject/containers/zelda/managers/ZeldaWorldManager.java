@@ -29,16 +29,16 @@ public class ZeldaWorldManager extends BaseWorldManager {
         }
 
         if (!isPlayerDead()) {
-            if (keys[KeyEvent.VK_LEFT]) {
+            if (keys[KeyEvent.VK_LEFT] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.LEFT)) {
                 getPlayer().setSpritePose(Sprite.Pose.LEFT);
                 getPlayer().move();
-            } else if (keys[KeyEvent.VK_RIGHT]) {
+            } else if (keys[KeyEvent.VK_RIGHT] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.RIGHT)) {
                 getPlayer().setSpritePose(Sprite.Pose.RIGHT);
                 getPlayer().move();
-            } else if (keys[KeyEvent.VK_UP]) {
+            } else if (keys[KeyEvent.VK_UP] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.UP)) {
                 getPlayer().setSpritePose(Sprite.Pose.UP);
                 getPlayer().move();
-            } else if (keys[KeyEvent.VK_DOWN]) {
+            } else if (keys[KeyEvent.VK_DOWN] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.DOWN)) {
                 getPlayer().setSpritePose(Sprite.Pose.DOWN);
                 getPlayer().move();
             }

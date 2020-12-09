@@ -12,7 +12,6 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public abstract class BaseWorldManager implements Renderable {
-    private MapManager mapManager = MapManager.getInstance();
     private AttackSprite player;
     private ArrayList<AttackSprite> enemies;
     private GameContainer container;
@@ -28,6 +27,8 @@ public abstract class BaseWorldManager implements Renderable {
     public ArrayList<AttackSprite> getEnemies() {
         return enemies;
     }
+
+    protected MapManager mapManager = MapManager.getInstance();
 
     protected BaseWorldManager(GameContainer container) {
         this.container = container;
