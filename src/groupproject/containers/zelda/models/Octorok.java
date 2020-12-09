@@ -17,6 +17,8 @@ public class Octorok extends AttackSprite implements MiniHealthBar  {
     public Octorok(int positionX, int positionY, int duration) throws IOException {
         super(PoseFileFormat.Companion.load(Octorok.class.getSimpleName().toLowerCase()), positionX, positionY, 2, duration);
         setProjectile(new MudBall());
+        setWidth(16);
+        setHeight(16);
     }
 
 

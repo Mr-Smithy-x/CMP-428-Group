@@ -14,8 +14,8 @@ public class MinishLink extends AttackSprite {
     public MinishLink(int positionX, int positionY, int duration) throws IOException {
         super(PoseFileFormat.Companion.load("link_final_spritesheet"), positionX, positionY, 2, duration);
         setProjectile(new EnergyBall());
-        setWidth(32);
-        setHeight(32);
+        setWidth(16);
+        setHeight(16);
     }
 
     @Override
