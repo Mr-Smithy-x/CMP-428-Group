@@ -22,9 +22,7 @@ public class TileMap implements Iterable<Point>, CameraContract, Renderable, Net
     private final Iterable<Tile> pointIterable = new Iterable<Tile>() {
         @Override
         public Iterator<Tile> iterator() {
-
-            return points.stream().map(point ->
-                    mainLayerTiles[point.y][point.x]).iterator();
+            return points.stream().map(point -> mainLayerTiles[point.y][point.x]).iterator();
         }
     };
 
