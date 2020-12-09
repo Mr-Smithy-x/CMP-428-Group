@@ -36,7 +36,7 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
         setupBox(x, y);
     }
 
-    protected AnimatedObject(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
+    protected AnimatedObject(String spriteSheet, int x, int y, double scaled, int delay) throws IOException {
         this.scaled = scaled;
         animDict = setupImages(initializeSheet(spriteSheet), delay);
         onInitAnimations();
@@ -128,8 +128,8 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
             }
         }
         g.drawImage(currentFrame,
-                (int) (getDrawImageXPosition(currentFrame) - currentFrame.getWidth(null) / scaled),
-                (int) (getDrawImageYPosition(currentFrame) - currentFrame.getHeight(null) / scaled),
+                getDrawImageXPosition(currentFrame),
+                getDrawImageYPosition(currentFrame),
                 (int) (currentFrame.getWidth(null) * scaled),
                 (int) (currentFrame.getHeight(null) * scaled), null);
         if (inDebuggingMode()) {
@@ -164,8 +164,8 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
         g.setColor(Color.RED);
         g.drawRect(getDrawImageXPosition(currentFrame),
                 getDrawImageYPosition(currentFrame),
-                currentFrame.getWidth(null)
-                , currentFrame.getHeight(null));
+                (int)(currentFrame.getWidth(null) * scaled),
+                (int)(currentFrame.getHeight(null) * scaled));
     }
 
     public void drawBounds(Graphics g) {

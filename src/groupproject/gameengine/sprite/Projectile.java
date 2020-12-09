@@ -13,7 +13,7 @@ public abstract class Projectile extends AnimatedObject<Animation, ProjectileFil
 
     private static final String PROJECTILE_FOLDER = "assets/projectiles/";
 
-    protected Projectile(ProjectileFileFormat format, int x, int y, int scaled, int delay) throws IOException {
+    protected Projectile(ProjectileFileFormat format, int x, int y, double scaled, int delay) throws IOException {
         super(format, x, y, scaled, delay);
     }
 
@@ -74,10 +74,11 @@ public abstract class Projectile extends AnimatedObject<Animation, ProjectileFil
 
     protected void align(Sprite sprite) {
         setDirection(sprite.getDirection());
-        int width = sprite.getWidth().intValue()/4;
-        int height = sprite.getHeight().intValue()/4;
-        int x = sprite.getX().intValue() + width;
-        int y = sprite.getY().intValue() + height;
+        this.scaled = sprite.scaled/2;
+        int width = sprite.getWidth().intValue() / 2;
+        int height = sprite.getHeight().intValue() / 2;
+        int x = sprite.getX().intValue() + width/2;
+        int y = sprite.getY().intValue() + height/2;
         setWorld(x, y);
     }
 }
