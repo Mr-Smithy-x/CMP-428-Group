@@ -131,7 +131,7 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
         g.drawImage(currentFrame,
                 getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
                 getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4, null);
-        if (ZeldaTestGame.inDebuggingMode()) {
+        if (inDebuggingMode()) {
             drawActualImageBounds(currentFrame, g);
             drawBounds(g);
         }

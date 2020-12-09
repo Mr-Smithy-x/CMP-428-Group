@@ -95,7 +95,7 @@ public abstract class BaseWorldManager implements Renderable {
 
     public void addEnemy(AttackSprite enemy) {
         if (enemy.getVelocity() == 0) {
-            enemy.setVelocity(3);
+            enemy.setVelocity(4);
         }
         enemies.add(enemy);
 

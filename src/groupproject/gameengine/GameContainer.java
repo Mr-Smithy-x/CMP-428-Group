@@ -1,5 +1,7 @@
 package groupproject.gameengine;
 
+import groupproject.gameengine.contracts.Debuggable;
+
 import groupproject.gameengine.helpers.FontHelper;
 import groupproject.gameengine.tile.TileMap;
 import groupproject.gameengine.tile.TileMapModel;
@@ -13,7 +15,7 @@ import java.io.ObjectInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class GameContainer implements Runnable, KeyListener, MouseListener, MouseMotionListener {
+public abstract class GameContainer implements Runnable, KeyListener, MouseListener, MouseMotionListener, Debuggable {
 
     protected final Logger logger = Logger.getLogger("GameEngine", null);
     protected final Font caveatFont = FontHelper.get("Caveat-Bold.ttf", 20);
