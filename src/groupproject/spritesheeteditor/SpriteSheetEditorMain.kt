@@ -6,7 +6,7 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.stage.Stage
 
-class SpriteSheetEditorMain: Application() {
+class SpriteSheetEditorMain : Application() {
 
     override fun start(primaryStage: Stage?) {
         val root = FXMLLoader.load<Parent>(javaClass.getResource("fxml/mainwindow.fxml"))

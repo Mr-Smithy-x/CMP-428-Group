@@ -12,11 +12,11 @@ public interface BoundingContract {
 
     Number getX();
 
+    void setX(Number x);
+
     Number getWidth();
 
     void setWidth(Number width);
-
-    void setX(Number x);
 
     default Number getDiagonalY() {
         return getY2().intValue() - 1;
@@ -28,11 +28,11 @@ public interface BoundingContract {
 
     Number getY();
 
+    void setY(Number y);
+
     Number getHeight();
 
     void setHeight(Number height);
-
-    void setY(Number y);
 
     default void setWorld(Number x, Number y) {
         setX(x);

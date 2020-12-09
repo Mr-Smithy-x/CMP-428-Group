@@ -2,7 +2,6 @@ package groupproject.gameengine.camera;
 
 import groupproject.gameengine.contracts.BoundingContract;
 import groupproject.gameengine.models.BoundingBox;
-import groupproject.gameengine.sprite.Sprite;
 import groupproject.gameengine.tile.TileMap;
 
 import java.awt.*;
@@ -16,12 +15,14 @@ public abstract class BaseCamera {
     protected double vy;
     protected double ay;
     protected double av;
+    protected double width;
+    protected double height;
     protected double xOrigin;
     protected double yOrigin;
     protected int scaling = 1;
     protected int gravity = 1;
 
-    public BaseCamera(double xOrigin, double yOrigin) {
+    protected BaseCamera(double xOrigin, double yOrigin) {
         this.xOrigin = xOrigin;
         this.yOrigin = yOrigin;
     }
@@ -46,6 +47,7 @@ public abstract class BaseCamera {
         yOrigin = e.getY().doubleValue() - (screenHeight / 2) - e.getHeight().doubleValue() / 2;
         this.x = xOrigin + e.getWidth().doubleValue();
         this.y = yOrigin + e.getHeight().doubleValue();
+        setFrame(screenWidth, screenHeight);
     }
 
     public void setOffsetFromOrigin(double x, double y) {
@@ -96,6 +98,19 @@ public abstract class BaseCamera {
     public void moveBy(double dx, double dy) {
         x += dx;
         y += dy;
+    }
+
+    public void setFrame(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
     }
 
     public void moveUp(double dist) {

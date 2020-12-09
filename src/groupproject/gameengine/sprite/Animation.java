@@ -31,15 +31,25 @@ public class Animation {
         timer.scheduleAtFixedRate(task, 0, delay);
     }
 
-    public void loadFrames(String prefix, String folder) {
+    public static Animation with(int delay) {
+        return new Animation(delay);
+    }
+
+    public static boolean isValidDirectory(String prefix, String folder) {
         File directory = new File(folder);
         File[] frameFiles = directory.listFiles(file -> file.getName().startsWith(prefix));
-        if (frameFiles == null || frameFiles.length == 0) {
-            logger.log(Level.INFO, "No images file found for {0}.", prefix);
-        } else {
+        return frameFiles != null && frameFiles.length > 0;
+    }
+
+    public void loadFrames(String prefix, String folder) {
+        if (isValidDirectory(prefix, folder)) {
+            File directory = new File(folder);
+            File[] frameFiles = directory.listFiles(file -> file.getName().startsWith(prefix));
             for (File f : frameFiles) {
                 this.addFrame(f);
             }
+        } else {
+            logger.log(Level.INFO, "No images file found for {0}.", prefix);
         }
     }
 
@@ -56,10 +66,6 @@ public class Animation {
         frames.add(image);
     }
 
-    public static Animation with(int delay) {
-        return new Animation(delay);
-    }
-
     public Image getCurrentFrame() {
         try {
             return frames.get(currentFrame);
@@ -67,6 +73,10 @@ public class Animation {
             logger.log(Level.SEVERE, "No image files loaded for the current animation!");
             return null;
         }
+    }
+
+    public int getCurrentFrameIndex() {
+        return currentFrame;
     }
 
     public void scale(int scale) {
@@ -78,6 +88,14 @@ public class Animation {
                 .collect(Collectors.toList());
     }
 
+    public boolean isLastFrame() {
+        return currentFrame == frames.size() - 1;
+    }
+
+    public boolean isFirstFrame() {
+        return currentFrame == 0;
+    }
+
     public Image getFirstFrame() {
         if (!frames.isEmpty()) {
             return frames.get(0);
@@ -87,6 +105,12 @@ public class Animation {
 
     public void setFirstFrame(Image image) {
         frames.add(0, image);
+    }
+
+    public void holdLastFrame() {
+        if (currentFrame == frames.size() - 1) {
+            currentFrame -= 1;
+        }
     }
 
     private class AnimateTask extends TimerTask {

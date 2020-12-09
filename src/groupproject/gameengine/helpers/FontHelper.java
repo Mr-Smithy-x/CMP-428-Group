@@ -5,17 +5,18 @@ import java.io.File;
 
 public class FontHelper {
 
-    private FontHelper(){}
-
     protected static final String FONT_FOLDER = "assets/fonts";
 
-    public static Font get(String fontString, float size)  {
+    private FontHelper() {
+    }
+
+    public static Font get(String fontString, float size) {
         try {
             String fontPath = String.format("%s/%s", FONT_FOLDER, fontString);
             File file = new File(fontPath);
             Font font = Font.createFont(Font.TRUETYPE_FONT, file);
             return font.deriveFont(size);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new Font(Font.MONOSPACED, Font.PLAIN, (int) size);
         }
     }

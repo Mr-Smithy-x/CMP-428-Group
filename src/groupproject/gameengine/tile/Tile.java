@@ -12,16 +12,18 @@ public class Tile implements Renderable, CameraContract {
     private final int width;
     private final int height;
     private final BufferedImage tileImage;
+    private final int tileID;
     private int x;
     private int y;
     private BoundingBox boundsRect;
     private boolean collisionEnabled = false;
-    private boolean isObject = false;
+    private boolean collisionOverride = false;
 
-    public Tile(BufferedImage image) {
+    public Tile(BufferedImage image, int tileID) {
         this.tileImage = image;
         this.width = image.getWidth();
         this.height = image.getHeight();
+        this.tileID = tileID;
     }
 
     @Override
@@ -44,13 +46,30 @@ public class Tile implements Renderable, CameraContract {
     }
 
     @Override
+    public void setX(Number x) {
+        this.x = x.intValue();
+    }
+
+    @Override
     public Number getY() {
         return y;
     }
 
     @Override
+    public void setY(Number y) {
+        this.y = y.intValue();
+    }
+
+    @Override
     public Number getWidth() {
         return width;
+    }
+
+    @Override
+    public void setWidth(Number width) {
+        /*
+          Not needed.
+         */
     }
 
     @Override
@@ -65,23 +84,6 @@ public class Tile implements Renderable, CameraContract {
          */
     }
 
-    @Override
-    public void setWidth(Number width) {
-        /*
-          Not needed.
-         */
-    }
-
-    @Override
-    public void setX(Number x) {
-        this.x = x.intValue();
-    }
-
-    @Override
-    public void setY(Number y) {
-        this.y = y.intValue();
-    }
-
     public boolean isCollisionEnabled() {
         return collisionEnabled;
     }
@@ -90,16 +92,12 @@ public class Tile implements Renderable, CameraContract {
         this.collisionEnabled = collisionEnabled;
     }
 
-    public boolean isObject() {
-        return isObject;
+    public boolean isCollisionOverride() {
+        return collisionOverride;
     }
 
-    public void setObject(boolean object) {
-        isObject = object;
-    }
-
-    public BufferedImage getTileImage() {
-        return tileImage;
+    public void setCollisionOverride(boolean collisionOverride) {
+        this.collisionOverride = collisionOverride;
     }
 
     public BoundingBox getBoundsRect() {
@@ -108,5 +106,9 @@ public class Tile implements Renderable, CameraContract {
 
     public void initBoundsRect() {
         this.boundsRect = new BoundingBox(x, y, width, height);
+    }
+
+    public int getTileID() {
+        return tileID;
     }
 }

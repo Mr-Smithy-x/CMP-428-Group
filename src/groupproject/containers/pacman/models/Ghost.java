@@ -11,7 +11,7 @@ public class Ghost extends Sprite {
     }
 
     @Override
-    protected void initAnimations() {
+    protected void onInitAnimations() {
         /*
          * Not needed currently.
          */

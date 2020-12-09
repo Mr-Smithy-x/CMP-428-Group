@@ -7,15 +7,13 @@ import java.awt.*;
 
 public class EnergyHud extends BaseHud {
 
-    private Energy energy;
+    private static EnergyHud instance = null;
     private final Rectangle base;
-
+    private Energy energy;
 
     private EnergyHud() {
         this.base = new Rectangle(10, 40, 10, 20);
     }
-
-    private static EnergyHud instance = null;
 
     public static EnergyHud getInstance() {
         if (instance == null) {
