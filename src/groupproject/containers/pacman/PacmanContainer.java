@@ -2,6 +2,7 @@ package groupproject.containers.pacman;
 
 import groupproject.containers.pacman.models.Ghost;
 import groupproject.containers.pacman.models.Pacman;
+import groupproject.containers.zelda.managers.MapManager;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.sprite.Sprite;
@@ -21,17 +22,19 @@ public class PacmanContainer extends GameContainer {
     private final Pacman player = new Pacman(3, 11);
     private final Ghost redGhost = new Ghost(80, 11, "red", 100);
     private final List<TileMap> maps = new ArrayList<>();
+    private final MapManager mapManager = MapManager.getInstance();
 
-    protected PacmanContainer(JFrame container, Canvas canvas) {
-        super(container, canvas);
+    protected PacmanContainer(JFrame container, JPanel panel) {
+        super(container, panel);
     }
 
     public static GameContainer frame() {
         JFrame frame = make("Pacman Test Game", WINDOW_WIDTH, WINDOW_HEIGHT);
-        Canvas canvas = make(WINDOW_WIDTH, WINDOW_HEIGHT);
-        frame.add(canvas);
+        JPanel panel = make(WINDOW_WIDTH, WINDOW_HEIGHT);
+        frame.setBackground(Color.black);
+        frame.add(panel);
         frame.pack();
-        return new PacmanContainer(frame, canvas);
+        return new PacmanContainer(frame, panel);
     }
 
     @Override
@@ -65,7 +68,7 @@ public class PacmanContainer extends GameContainer {
             //Its important to note that when using the camera with tilemap call this method
             //do not use getWidth or getHeight of the component window when using it with the tilemap
             //player.getBounds is accurate in terms of centering the square
-            GlobalCamera.getInstance().setOrigin(player.getBounds(), maps.get(0));
+            GlobalCamera.getInstance().setOrigin(player.getBounds(), mapManager.getCurrentMap());
         }
     }
 
@@ -76,34 +79,22 @@ public class PacmanContainer extends GameContainer {
 
         switch (pose) {
             case RIGHT:
-                for (Tile tile : maps.get(0).getSurroundingTiles(
-                        sprite.getBounds().getX().intValue(),
-                        sprite.getBounds().getY().intValue(),
-                        Sprite.Pose.RIGHT))
+                for (Tile tile : mapManager.getCurrentMap().getSurroundingTiles(sprite.getBounds().getX().intValue(), sprite.getBounds().getY().intValue(), Sprite.Pose.RIGHT))
                     if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), velocity, 0))
                         isColliding = true;
                 break;
             case LEFT:
-                for (Tile tile : maps.get(0).getSurroundingTiles(
-                        sprite.getBounds().getX().intValue(),
-                        sprite.getBounds().getY().intValue(),
-                        Sprite.Pose.LEFT))
+                for (Tile tile : mapManager.getCurrentMap().getSurroundingTiles(sprite.getBounds().getX().intValue(), sprite.getBounds().getY().intValue(), Sprite.Pose.LEFT))
                     if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), -velocity, 0))
                         isColliding = true;
                 break;
             case UP:
-                for (Tile tile : maps.get(0).getSurroundingTiles(
-                        sprite.getBounds().getX().intValue(),
-                        sprite.getBounds().getY().intValue(),
-                        Sprite.Pose.UP))
+                for (Tile tile : mapManager.getCurrentMap().getSurroundingTiles(sprite.getBounds().getX().intValue(), sprite.getBounds().getY().intValue(), Sprite.Pose.UP))
                     if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, -velocity))
                         isColliding = true;
                 break;
             case DOWN:
-                for (Tile tile : maps.get(0).getSurroundingTiles(
-                        sprite.getBounds().getX().intValue(),
-                        sprite.getBounds().getY().intValue(),
-                        Sprite.Pose.DOWN))
+                for (Tile tile : mapManager.getCurrentMap().getSurroundingTiles(sprite.getBounds().getX().intValue(), sprite.getBounds().getY().intValue(), Sprite.Pose.DOWN))
                     if (tile.isCollisionEnabled() && sprite.getBounds().willOverlap(tile.getBoundsRect(), 0, velocity))
                         isColliding = true;
                 break;
@@ -116,13 +107,11 @@ public class PacmanContainer extends GameContainer {
 
     @Override
     protected void onPaint(Graphics g) {
-        if (!maps.isEmpty()) {
-            maps.get(0).render(g);
-            for (Tile tile : maps.get(0).getSurroundingTiles(
-                    player.getBounds().getX().intValue(),
-                    player.getBounds().getY().intValue(), Sprite.Pose.ALL))
-                tile.drawBoundsRect(g);
-        }
+        mapManager.getCurrentMap().render(g);
+        for (Tile tile : mapManager.getCurrentMap().getSurroundingTiles(
+                player.getBounds().getX().intValue(),
+                player.getBounds().getY().intValue(), Sprite.Pose.ALL))
+            tile.drawBoundsRect(g);
         player.render(g);
         redGhost.render(g);
         GlobalCamera.getInstance().render(g, getContainer());
@@ -131,9 +120,9 @@ public class PacmanContainer extends GameContainer {
     @Override
     protected void onInitialize() {
         try {
-            maps.add(loadTileMap("pacman.tilemap"));
-            maps.get(0).initializeMap();
-            GlobalCamera.getInstance().setOrigin(player.getBounds(), maps.get(0));
+            mapManager.loadTileMap("pacman.tilemap");
+            mapManager.getCurrentMap().initializeMap();
+            GlobalCamera.getInstance().setOrigin(player.getBounds(), mapManager.getCurrentMap());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,7 +145,7 @@ public class PacmanContainer extends GameContainer {
      */
     @Override
     public int getWidth() {
-        return maps.get(0).getWidth().intValue();
+        return mapManager.getCurrentMap().getWidth().intValue();
     }
 
     /**
@@ -166,6 +155,6 @@ public class PacmanContainer extends GameContainer {
      */
     @Override
     public int getHeight() {
-        return maps.get(0).getHeight().intValue();
+        return mapManager.getCurrentMap().getHeight().intValue();
     }
 }

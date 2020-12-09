@@ -20,29 +20,29 @@ public class ZeldaWorldManager extends BaseWorldManager {
      * @param keys
      */
     public void manual(boolean[] keys) {
+
+        // Used while debugging.
         if (keys[KeyEvent.VK_D]) {
             getPlayer().damageHealth(1);
         } else if (keys[KeyEvent.VK_F]) {
             getPlayer().incrementHealth(1);
         }
+
         if (!isPlayerDead()) {
             if (keys[KeyEvent.VK_LEFT]) {
-                if (keys[KeyEvent.VK_R]) getPlayer().roll();
-                else getPlayer().setSpritePose(Sprite.Pose.LEFT);
+                getPlayer().setSpritePose(Sprite.Pose.LEFT);
                 getPlayer().move();
             } else if (keys[KeyEvent.VK_RIGHT]) {
-                if (keys[KeyEvent.VK_R]) getPlayer().roll();
-                else getPlayer().setSpritePose(Sprite.Pose.RIGHT);
+                getPlayer().setSpritePose(Sprite.Pose.RIGHT);
                 getPlayer().move();
             } else if (keys[KeyEvent.VK_UP]) {
-                if (keys[KeyEvent.VK_R]) getPlayer().roll();
-                else getPlayer().setSpritePose(Sprite.Pose.UP);
+                getPlayer().setSpritePose(Sprite.Pose.UP);
                 getPlayer().move();
             } else if (keys[KeyEvent.VK_DOWN]) {
-                if (keys[KeyEvent.VK_R]) getPlayer().roll();
-                else getPlayer().setSpritePose(Sprite.Pose.DOWN);
+                getPlayer().setSpritePose(Sprite.Pose.DOWN);
                 getPlayer().move();
             }
+
             if (getPlayer().hasEnergy()) {
                 if (keys[KeyEvent.VK_Z]) {
                     getPlayer().spinAttack(getEnemies());
@@ -54,9 +54,8 @@ public class ZeldaWorldManager extends BaseWorldManager {
                     getPlayer().shoot();
                 }
             }
-        } else {
-            GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
-        }
+
+        } else GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
     }
 
     /**

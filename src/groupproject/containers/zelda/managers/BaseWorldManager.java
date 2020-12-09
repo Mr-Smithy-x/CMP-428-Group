@@ -12,9 +12,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public abstract class BaseWorldManager implements Renderable {
+    private MapManager mapManager = MapManager.getInstance();
     private AttackSprite player;
     private ArrayList<AttackSprite> enemies;
-    private TileMap map;
     private GameContainer container;
 
     public GameContainer getContainer() {
@@ -29,11 +29,7 @@ public abstract class BaseWorldManager implements Renderable {
         return enemies;
     }
 
-    public TileMap getMap() {
-        return map;
-    }
-
-    public BaseWorldManager(GameContainer container) {
+    protected BaseWorldManager(GameContainer container) {
         this.container = container;
         enemies = new ArrayList<>();
     }
@@ -56,11 +52,6 @@ public abstract class BaseWorldManager implements Renderable {
 
     protected abstract void renderGlobalSounds();
 
-    public void setTileMap(TileMap map) {
-        this.map = map;
-        this.map.initializeMap();
-    }
-
     public void setPlayer(AttackSprite player) {
         if (player.getVelocity() == 0) {
             player.setVelocity(5);
@@ -76,7 +67,7 @@ public abstract class BaseWorldManager implements Renderable {
 
     @Override
     public void render(Graphics g) {
-        map.render(g);
+        mapManager.getCurrentMap().render(g);
         enemies.stream().filter(e -> !e.isDead()).forEach(e -> e.render(g));
         renderGame(g);
         player.render(g);

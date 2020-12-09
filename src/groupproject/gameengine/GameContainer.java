@@ -2,15 +2,11 @@ package groupproject.gameengine;
 
 
 import groupproject.gameengine.helpers.FontHelper;
-import groupproject.gameengine.tile.TileMap;
-import groupproject.gameengine.tile.TileMapModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,8 +28,8 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     private Thread t;
     private Image offScreenImage;
 
-    protected GameContainer(JFrame container, Canvas canvas) {
-        this.container = canvas;
+    protected GameContainer(JFrame container, JPanel panel) {
+        this.container = panel;
         container.requestFocus();
         container.addKeyListener(this);
         container.addMouseListener(this);
@@ -50,15 +46,15 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         return frame;
     }
 
-    protected static Canvas make(int width, int height) {
-        Canvas canvas = new Canvas();
-        canvas.setFocusable(true);
-        canvas.setFocusTraversalKeysEnabled(true);
-        canvas.setPreferredSize(new Dimension(width, height));
-        canvas.setMaximumSize(new Dimension(width, height));
-        canvas.setMinimumSize(new Dimension(width, height));
-        canvas.setFocusable(false);
-        return canvas;
+    protected static JPanel make(int width, int height) {
+        JPanel panel = new JPanel();
+        panel.setFocusable(true);
+        panel.setFocusTraversalKeysEnabled(true);
+        panel.setPreferredSize(new Dimension(width, height));
+        panel.setMaximumSize(new Dimension(width, height));
+        panel.setMinimumSize(new Dimension(width, height));
+        panel.setFocusable(false);
+        return panel;
     }
 
     public void start() throws IOException {
@@ -236,15 +232,5 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         if (e.getKeyCode() == KeyEvent.VK_P) {
             playing = !playing;
         }
-    }
-
-    public TileMap loadTileMap(String mapFile) {
-        try (FileInputStream fis = new FileInputStream(TileMapModel.MAP_FOLDER + mapFile); ObjectInputStream is = new ObjectInputStream(fis)) {
-            TileMapModel mapModel = (TileMapModel) is.readObject();
-            return new TileMap(mapModel);
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }
