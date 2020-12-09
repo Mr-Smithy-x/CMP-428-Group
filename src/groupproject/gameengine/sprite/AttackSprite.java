@@ -189,7 +189,7 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
 
     @Override
     protected void onInitAnimations() {
-        animDict.values().forEach(a -> a.scale(scaled));
+
     }
 
 

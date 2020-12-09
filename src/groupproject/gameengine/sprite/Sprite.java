@@ -134,6 +134,24 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     }
 
     @Override
+    protected int getDrawImageXPosition(Image currentFrame) {
+        int imageWidth = currentFrame.getWidth(null) / 2;
+        int cameraX2Offset = getCameraOffsetX2(GlobalCamera.getInstance()).intValue();
+        int boundsWidth = getWidth().intValue() / 2;
+        int realPositionX = cameraX2Offset - ((imageWidth + boundsWidth));
+        return realPositionX;
+    }
+
+    @Override
+    protected int getDrawImageYPosition(Image currentFrame) {
+        int imageHeight = currentFrame.getHeight(null) / 2;
+        int cameraY2Offset = getCameraOffsetY2(GlobalCamera.getInstance()).intValue();
+        int boundsHeight = getWidth().intValue() / 2;
+        int realPositionY = cameraY2Offset - ((imageHeight + boundsHeight));
+        return realPositionY;
+    }
+
+    @Override
     public void render(Graphics g) {
         GlobalSoundEffect.getInstance().play(this);
         if (path != null && inDebuggingMode()) {
