@@ -81,7 +81,7 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onInitialize() throws IOException {
-        world.setTileMap(loadTileMap("forest_test.tilemap"));
+        world.setTileMap(loadTileMap("town.tilemap"));
         world.setPlayer(new MinishLink(getWidth() / 2 + 100, getHeight() / 2, 1000 / 16));
         world.addEnemy(new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16));
         world.addEnemy(new Octorok(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));
@@ -104,7 +104,7 @@ public class ZeldaContainer extends GameContainer {
      */
     @Override
     public int getWidth() {
-        return 600;
+        return 450;
     }
 
     /**
@@ -114,7 +114,7 @@ public class ZeldaContainer extends GameContainer {
      */
     @Override
     public int getHeight() {
-        return 600;
+        return 450;
     }
 
 }
