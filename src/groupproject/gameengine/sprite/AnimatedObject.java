@@ -5,7 +5,6 @@ import groupproject.gameengine.contracts.CameraContract;
 import groupproject.gameengine.contracts.CollisionDetection;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.models.BoundingBox;
-import groupproject.games.ZeldaTestGame;
 import groupproject.spritesheeteditor.models.FileFormat;
 
 import javax.imageio.ImageIO;
@@ -129,8 +128,8 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
             }
         }
         g.drawImage(currentFrame,
-                getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
-                getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4, null);
+               getDrawImageXPosition(currentFrame),
+                getDrawImageYPosition(currentFrame), null);
         if (inDebuggingMode()) {
             drawActualImageBounds(currentFrame, g);
             drawBounds(g);
@@ -138,11 +137,29 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
         moving = false;
     }
 
+    /**
+     * Need this to override
+     * @param currentFrame
+     * @return
+     */
+    protected int getDrawImageXPosition(Image currentFrame){
+        return getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4;
+    }
+
+    /**
+     * To Override
+     * @param currentFrame
+     * @return
+     */
+    protected int getDrawImageYPosition(Image currentFrame){
+        return getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4;
+    }
+
     public void drawActualImageBounds(Image currentFrame, Graphics g) {
         // For debug purposes, draw the bounding box of the sprite.
         g.setColor(Color.RED);
-        g.drawRect(getCameraOffsetX(GlobalCamera.getInstance()).intValue() - currentFrame.getWidth(null) / 4,
-                getCameraOffsetY(GlobalCamera.getInstance()).intValue() - currentFrame.getHeight(null) / 4,
+        g.drawRect(getDrawImageXPosition(currentFrame),
+                getDrawImageYPosition(currentFrame),
                 currentFrame.getWidth(null)
                 , currentFrame.getHeight(null));
     }
