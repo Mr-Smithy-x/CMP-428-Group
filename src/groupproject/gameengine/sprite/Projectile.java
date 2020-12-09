@@ -74,11 +74,11 @@ public abstract class Projectile extends AnimatedObject<Animation, ProjectileFil
 
     protected void align(Sprite sprite) {
         setDirection(sprite.getDirection());
-        this.scaled = sprite.scaled;
+        this.scaled = sprite.scaled/2;
         int width = sprite.getWidth().intValue() / 2;
         int height = sprite.getHeight().intValue() / 2;
-        int x = sprite.getX().intValue() + width;
-        int y = sprite.getY().intValue() + height;
+        int x = sprite.getX().intValue() + width/2;
+        int y = sprite.getY().intValue() + height/2;
         setWorld(x, y);
     }
 }
