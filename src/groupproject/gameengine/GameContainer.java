@@ -19,6 +19,7 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     private final Component container;
     protected boolean[] pressedKey = new boolean[255];
     protected boolean playing = true;
+    protected boolean runGameLoop = true;
     /**
      * Mouse Variables
      */
@@ -102,10 +103,9 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     public void run() {
         onStart();
         while (isRunning) {
-            if (playing) {
-                onPlay();
-            } else {
-                onPause();
+            if (runGameLoop) {
+                if (playing) onPlay();
+                else onPause();
             }
             onRepaint();
             try {
@@ -117,6 +117,13 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
             }
         }
         onStop();
+    }
+
+    public void pauseGameLoop(int delay) {
+        runGameLoop = false;
+        Timer pauseTimer = new Timer(delay, e -> runGameLoop = true);
+        pauseTimer.setRepeats(false);
+        pauseTimer.start();
     }
 
     public boolean isPaused() {

@@ -28,8 +28,11 @@ public class ZeldaWorldManager extends BaseWorldManager {
 
         // Used while debugging.
         if (getContainer().inDebuggingMode()) {
-            if (keys[KeyEvent.VK_D]) getPlayer().damageHealth(1);
-            else if (keys[KeyEvent.VK_F]) getPlayer().incrementHealth(1);
+            if (keys[KeyEvent.VK_G]) getPlayer().damageHealth(1);
+            else if (keys[KeyEvent.VK_H]) getPlayer().incrementHealth(1);
+            else if (keys[KeyEvent.VK_8]) {
+                MapManager.getInstance().loadTileMap("hyrule_castle_entrance");
+            }
         }
 
         if (!isPlayerDead()) {
@@ -51,16 +54,16 @@ public class ZeldaWorldManager extends BaseWorldManager {
     }
 
     private void handlePlayerMovement(boolean[] keys) {
-        if ((keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_W]) && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.LEFT)) {
+        if ((keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_A]) && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.LEFT)) {
             getPlayer().setSpritePose(Sprite.Pose.LEFT);
             getPlayer().move();
-        } else if (keys[KeyEvent.VK_RIGHT] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.RIGHT)) {
+        } else if ((keys[KeyEvent.VK_RIGHT] || keys[KeyEvent.VK_D]) && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.RIGHT)) {
             getPlayer().setSpritePose(Sprite.Pose.RIGHT);
             getPlayer().move();
-        } else if (keys[KeyEvent.VK_UP] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.UP)) {
+        } else if ((keys[KeyEvent.VK_UP] || keys[KeyEvent.VK_W]) && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.UP)) {
             getPlayer().setSpritePose(Sprite.Pose.UP);
             getPlayer().move();
-        } else if (keys[KeyEvent.VK_DOWN] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.DOWN)) {
+        } else if ((keys[KeyEvent.VK_DOWN] || keys[KeyEvent.VK_S]) && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.DOWN)) {
             getPlayer().setSpritePose(Sprite.Pose.DOWN);
             getPlayer().move();
         }

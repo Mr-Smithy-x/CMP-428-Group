@@ -84,6 +84,7 @@ public class ZeldaContainer extends GameContainer {
     protected void onInitialize() throws IOException {
         MapManager.getInstance().loadTileMap("hyrule_castle_entrance");
         world.setPlayer(new MinishLink(360, 300, 1000 / 24));
+        world.getPlayer().setVelocity(4);
         world.addEnemy(new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16));
         world.addEnemy(new Octorok(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));
         healthBox = new BoundingBox((int) (getWidth() / 1.5), (int) (getHeight() / 1.5), 100, 100);
