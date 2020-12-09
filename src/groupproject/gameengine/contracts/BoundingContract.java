@@ -38,4 +38,21 @@ public interface BoundingContract {
         setX(x);
         setY(y);
     }
+
+    default boolean isBelowOf(BoundingContract contract) {
+        return getY().intValue() > contract.getY().intValue();
+    }
+
+    default boolean isAboveOf(BoundingContract contract) {
+        return getY().intValue() < contract.getY().intValue();
+    }
+
+    default boolean isLeftOf(BoundingContract contract) {
+        return getX().intValue() < contract.getX().intValue();
+    }
+
+    default boolean isRightOf(BoundingContract contract) {
+        return getX().intValue() > contract.getX().intValue();
+    }
+
 }

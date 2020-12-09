@@ -1,5 +1,6 @@
 package groupproject.containers.zelda.managers;
 
+import groupproject.containers.zelda.algorithms.ATileStarAlgorithm;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
@@ -12,13 +13,11 @@ import groupproject.gameengine.tile.TileMap;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.PriorityQueue;
 
-public class ZeldaWorldManager extends BaseWorldManager implements Observer {
+public class ZeldaWorldManager extends BaseWorldManager {
 
-    AStar<TileMap, Tile> aStar;
+    ATileStarAlgorithm aStar;
     PriorityQueue<Tile> path;
 
     public ZeldaWorldManager(GameContainer container) {
@@ -71,17 +70,7 @@ public class ZeldaWorldManager extends BaseWorldManager implements Observer {
     }
 
     public void calculatePath(AttackSprite enemy) {
-        aStar.reset();
-        double x = getPlayer().getX().doubleValue();
-        double y = getPlayer().getY().doubleValue();
-        Tile pTile = getMap().getTileAtPoint(x, y);
-        aStar.setEndNode(pTile);
-        double eX = enemy.getX().doubleValue();
-        double eY = enemy.getY().doubleValue();
-        Tile eTile = getMap().getTileAtPoint(eX, eY);
-        aStar.setStartNode(eTile);
-        aStar.solve();
-        getMap().resetNetwork();
+        aStar.solvePath(enemy, getPlayer());
     }
 
     /**
@@ -92,8 +81,8 @@ public class ZeldaWorldManager extends BaseWorldManager implements Observer {
         getEnemies().stream().filter(enemy -> !enemy.isDead()).forEach(enemy -> {
             getPlayer().isProjectileHitting(enemy);
             enemy.isProjectileHitting(getPlayer());
-            if (enemy.distanceBetween(getPlayer()) > 100) {
-                if (enemy.getX().intValue() > getPlayer().getX().intValue()) {
+            if (enemy.distanceBetween(getPlayer()) > 600) {
+                /*if (enemy.getX().intValue() > getPlayer().getX().intValue()) {
                     enemy.setSpritePose(Sprite.Pose.LEFT);
                     enemy.move();
                 }
@@ -108,10 +97,17 @@ public class ZeldaWorldManager extends BaseWorldManager implements Observer {
                 if (enemy.getY().intValue() < getPlayer().getY().intValue()) {
                     enemy.setSpritePose(Sprite.Pose.DOWN);
                     enemy.move();
+                }*/
+                if (enemy.distanceBetween(getPlayer()) < 100) {
+                    //Basic AI, we can improve this
+                    enemy.shoot();
+                } else if (enemy.isPathNullOrEmpty()) {
+                    calculatePath(enemy);
+                }else{
+                    enemy.move();
                 }
-            } else {
-                //Basic AI, we can improve this
-                enemy.shoot();
+            } else if(!enemy.isPathNullOrEmpty()) {
+                enemy.move();
             }
         });
     }
@@ -147,8 +143,7 @@ public class ZeldaWorldManager extends BaseWorldManager implements Observer {
     @Override
     public void setTileMap(TileMap map) {
         super.setTileMap(map);
-        aStar = new AStar<>(map);
-        aStar.addObserver(this);
+        aStar = new ATileStarAlgorithm(map);
     }
 
 
@@ -156,9 +151,5 @@ public class ZeldaWorldManager extends BaseWorldManager implements Observer {
         return aStar;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        path = (PriorityQueue<Tile>) arg;
-    }
 
 }

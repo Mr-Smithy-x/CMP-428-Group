@@ -1,7 +1,5 @@
 package groupproject.gameengine.algorithms.models;
 
-import java.awt.*;
-
 public interface Network<N extends Node> {
 
     Iterable<N> getNodes();
@@ -9,5 +7,11 @@ public interface Network<N extends Node> {
     boolean hasCrossDirection();
 
     N find(int col, int row);
+
+    default void resetNetwork() {
+        for (N node : getNodes()) {
+            node.reset();
+        }
+    }
 
 }

@@ -7,12 +7,9 @@ import groupproject.gameengine.sprite.Sprite;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TileMap implements Iterable<Point>, CameraContract, Renderable, Network<Tile> {
     private final TileMapModel mapModel;
@@ -21,7 +18,7 @@ public class TileMap implements Iterable<Point>, CameraContract, Renderable, Net
     private final int mapHeight;
     private final Tile[][] mainLayerTiles;
     private final Tile[][] objectLayerTiles;
-    private List<Point> points;
+    private Set<Point> points = new LinkedHashSet<>();
     private final Iterable<Tile> pointIterable = new Iterable<Tile>() {
         @Override
         public Iterator<Tile> iterator() {
@@ -64,17 +61,21 @@ public class TileMap implements Iterable<Point>, CameraContract, Renderable, Net
                 currentTile.setX(mapModel.getPerTileWidth() * col);
                 currentTile.setY(mapModel.getPerTileHeight() * row);
                 currentTile.initBoundsRect();
-                currentTile.setMapPoint(new Point(col, row));
+                Point point = new Point(col, row);
+                points.add(point);
+                currentTile.setMapPoint(point);
                 mainLayerTiles[row][col] = currentTile;
             }
         }
+        initializeNeighbors();
+    }
 
+    void initializeNeighbors(){
         for (int row = 0; row < mapModel.getMapRows(); row++) {
             for (int col = 0; col < mapModel.getMapColumns(); col++) {
                 mainLayerTiles[row][col].calculateNearestNodes(this);
             }
         }
-
     }
 
     @Override
@@ -253,12 +254,5 @@ public class TileMap implements Iterable<Point>, CameraContract, Renderable, Net
         return null;
     }
 
-    public void resetNetwork() {
-        for (int row = 0; row < mapModel.getMapRows(); row++) {
-            for (int col = 0; col < mapModel.getMapColumns(); col++) {
-                mainLayerTiles[row][col].reset();
-            }
-        }
-    }
 }
 

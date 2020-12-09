@@ -6,11 +6,10 @@ import groupproject.gameengine.algorithms.models.Node;
 
 import java.util.*;
 
-public class AStar<T extends Network<N>, N extends Node<N>> extends Observable {
-
+public abstract class AStar<T extends Network<N>, N extends Node<N>> extends PathFindingObservable<N> {
 
     private T network;
-    private PriorityQueue<N> path;
+    private LinkedList<N> path;
 
     private N start;
     private N end;
@@ -26,7 +25,7 @@ public class AStar<T extends Network<N>, N extends Node<N>> extends Observable {
         if (path != null && !path.isEmpty()) {
             this.path.clear();
         } else {
-            this.path = new PriorityQueue<>();
+            this.path = new LinkedList<>();
         }
 
         if (start == null || end == null) {
@@ -43,6 +42,7 @@ public class AStar<T extends Network<N>, N extends Node<N>> extends Observable {
         this.openList.add(start);
 
         while (!openList.isEmpty()) {
+
             N current = getLowestFunction();
 
             if (current.equals(end)) {
@@ -52,6 +52,7 @@ public class AStar<T extends Network<N>, N extends Node<N>> extends Observable {
 
             openList.remove(current);
             closedList.add(current);
+
             for (N n : current.getNeighbours()) {
                 if (closedList.contains(n) || !n.isValid()) {
                     continue;
@@ -89,7 +90,7 @@ public class AStar<T extends Network<N>, N extends Node<N>> extends Observable {
             this.path.add(temp.getParent());
             temp = temp.getParent();
         }
-        this.path.add(start);
+        //this.path.add(start);
     }
 
     private N getLowestFunction() {
@@ -112,23 +113,23 @@ public class AStar<T extends Network<N>, N extends Node<N>> extends Observable {
         return network;
     }
 
-    public PriorityQueue<N> getPath() {
+    public LinkedList<N> getPath() {
         return path;
     }
 
-    public N getStartNode() {
+    protected N getStartNode() {
         return start;
     }
 
-    public N getEndNode() {
+    protected N getEndNode() {
         return end;
     }
 
-    public void setStartNode(N start) {
+    protected void setStartNode(N start) {
         this.start = start;
     }
 
-    public void setEndNode(N end) {
+    protected void setEndNode(N end) {
         this.end = end;
     }
 
