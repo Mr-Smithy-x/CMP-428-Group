@@ -10,13 +10,15 @@ import groupproject.spritesheeteditor.models.PoseFileFormat;
 import java.awt.*;
 import java.io.IOException;
 
-public class Octorok extends AttackSprite implements MiniHealthBar  {
+public class Octorok extends AttackSprite implements MiniHealthBar {
 
     private DamageProjectile projectile;
 
     public Octorok(int positionX, int positionY, int duration) throws IOException {
         super(PoseFileFormat.Companion.load(Octorok.class.getSimpleName().toLowerCase()), positionX, positionY, 2, duration);
         setProjectile(new MudBall());
+        setWidth(16);
+        setHeight(16);
     }
 
 
@@ -34,12 +36,12 @@ public class Octorok extends AttackSprite implements MiniHealthBar  {
     }
 
     @Override
-    public void setProjectile(DamageProjectile projectile) {
-        this.projectile = projectile;
+    public DamageProjectile getProjectile() {
+        return projectile;
     }
 
     @Override
-    public DamageProjectile getProjectile() {
-        return projectile;
+    public void setProjectile(DamageProjectile projectile) {
+        this.projectile = projectile;
     }
 }

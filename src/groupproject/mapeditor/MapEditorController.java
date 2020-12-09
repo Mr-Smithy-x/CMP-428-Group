@@ -121,7 +121,7 @@ public class MapEditorController {
                     updateTileInMap(lastClickedRow, col, false);
                     break;
                 case COLLISION:
-                    updateCollisionTileInMap(lastClickedRow, col, getCollisionStatusAt(lastClickedRow, col));
+                    updateCollisionTileInMap(lastClickedRow, col, !getCollisionStatusAt(lastClickedRow, col));
                     break;
                 case OBJECT:
                     updateTileInObjectMap(lastClickedRow, col, false);
@@ -148,7 +148,7 @@ public class MapEditorController {
                     updateTileInMap(row, lastClickedCol, false);
                     break;
                 case COLLISION:
-                    updateCollisionTileInMap(row, lastClickedCol, getCollisionStatusAt(row, lastClickedCol));
+                    updateCollisionTileInMap(row, lastClickedCol, !getCollisionStatusAt(row, lastClickedCol));
                     break;
                 case OBJECT:
                     updateTileInObjectMap(row, lastClickedCol, false);

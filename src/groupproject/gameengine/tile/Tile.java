@@ -9,9 +9,7 @@ import groupproject.gameengine.models.BoundingBox;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Tile extends Node<Tile> implements Comparable<Node<Tile>>, Renderable, CameraContract {
@@ -39,12 +37,14 @@ public class Tile extends Node<Tile> implements Comparable<Node<Tile>>, Renderab
                 getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
                 getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
                 null);
+        if (System.getProperty("DEBUG").equals("true") && boundsRect != null) drawBoundsRect(g);
     }
 
     public void drawBoundsRect(Graphics g) {
-        if (collisionEnabled) g.setColor(Color.red);
-        else g.setColor(Color.green);
-        boundsRect.render(g);
+        if (collisionEnabled) {
+            g.setColor(Color.red);
+            boundsRect.render(g);
+        }
     }
 
     @Override

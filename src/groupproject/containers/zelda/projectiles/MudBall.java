@@ -2,7 +2,6 @@ package groupproject.containers.zelda.projectiles;
 
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.gameengine.sprite.DamageProjectile;
-import groupproject.gameengine.sprite.Projectile;
 import groupproject.spritesheeteditor.models.ProjectileFileFormat;
 
 import java.io.IOException;
