@@ -73,10 +73,9 @@ public abstract class Projectile extends AnimatedObject<Animation, ProjectileFil
     }
 
     protected void align(Sprite sprite) {
-        Image currentFrame = sprite.getCurrentFrame();
         setDirection(sprite.getDirection());
-        int width = currentFrame.getWidth(null) / 4;
-        int height = currentFrame.getHeight(null) / 4;
+        int width = sprite.getWidth().intValue()/4;
+        int height = sprite.getHeight().intValue()/4;
         int x = sprite.getX().intValue() + width;
         int y = sprite.getY().intValue() + height;
         setWorld(x, y);
