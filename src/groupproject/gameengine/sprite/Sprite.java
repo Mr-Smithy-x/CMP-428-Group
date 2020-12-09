@@ -28,12 +28,12 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         check();
     }
 
-    protected Sprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
+    protected Sprite(PoseFileFormat format, int x, int y, double scaled, int delay) throws IOException {
         super(format, x, y, scaled, delay);
         check();
     }
 
-    protected Sprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
+    protected Sprite(String spriteSheet, int x, int y, double scaled, int delay) throws IOException {
         super(spriteSheet, x, y, scaled, delay);
         check();
     }
@@ -134,6 +134,24 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     }
 
     @Override
+    protected int getDrawImageXPosition(Image currentFrame) {
+        int imageWidth = (int) (currentFrame.getWidth(null) * scaled) / 2;
+        int cameraX2Offset = getCameraOffsetX2(GlobalCamera.getInstance()).intValue();
+        int boundsWidth = (int) (getWidth().intValue() * scaled) / 2;
+        int realPositionX = (int) (cameraX2Offset - (imageWidth + boundsWidth/scaled));
+        return realPositionX;
+    }
+
+    @Override
+    protected int getDrawImageYPosition(Image currentFrame) {
+        int imageHeight = (int) (currentFrame.getHeight(null) * scaled / 2);
+        int cameraY2Offset = getCameraOffsetY2(GlobalCamera.getInstance()).intValue();
+        int boundsHeight = (int) (getHeight().intValue() * scaled) / 2; //intentional to align from the bottom of the sprite
+        int realPositionY = cameraY2Offset - ((imageHeight + boundsHeight));
+        return realPositionY;
+    }
+
+    @Override
     public void render(Graphics g) {
         GlobalSoundEffect.getInstance().play(this);
         if (path != null && inDebuggingMode()) {
@@ -159,7 +177,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     }
 
     public void automate() {
-        if(path != null) {
+        if (path != null) {
             if (targetTile == null) {
                 if (!path.isEmpty()) {
                     this.targetTile = path.removeLast();

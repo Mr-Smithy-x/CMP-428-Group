@@ -18,11 +18,11 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
     private double health;
     private double energy;
 
-    protected AttackSprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
+    protected AttackSprite(PoseFileFormat format, int x, int y, double scaled, int delay) throws IOException {
         super(format, x, y, scaled, delay);
     }
 
-    public AttackSprite(String spriteSheet, int x, int y, int scaled, int delay) throws IOException {
+    public AttackSprite(String spriteSheet, int x, int y, double scaled, int delay) throws IOException {
         super(spriteSheet, x, y, scaled, delay);
     }
 
@@ -189,7 +189,7 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
 
     @Override
     protected void onInitAnimations() {
-        animDict.values().forEach(a -> a.scale(scaled));
+
     }
 
 
