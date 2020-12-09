@@ -14,10 +14,11 @@ public class MapManager {
     private static final MapManager instance = new MapManager();
     private TileMap currentMap;
 
-    private MapManager() { }
+    private MapManager() {
+    }
 
     public static MapManager getInstance() {
-     return instance;
+        return instance;
     }
 
     public void loadTileMap(String mapFile) {

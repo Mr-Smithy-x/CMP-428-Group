@@ -10,7 +10,7 @@ import groupproject.spritesheeteditor.models.PoseFileFormat;
 import java.awt.*;
 import java.io.IOException;
 
-public class Octorok extends AttackSprite implements MiniHealthBar  {
+public class Octorok extends AttackSprite implements MiniHealthBar {
 
     private DamageProjectile projectile;
 
@@ -34,12 +34,12 @@ public class Octorok extends AttackSprite implements MiniHealthBar  {
     }
 
     @Override
-    public void setProjectile(DamageProjectile projectile) {
-        this.projectile = projectile;
+    public DamageProjectile getProjectile() {
+        return projectile;
     }
 
     @Override
-    public DamageProjectile getProjectile() {
-        return projectile;
+    public void setProjectile(DamageProjectile projectile) {
+        this.projectile = projectile;
     }
 }

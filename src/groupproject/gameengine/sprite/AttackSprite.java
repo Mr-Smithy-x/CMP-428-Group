@@ -17,12 +17,6 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
     private double health;
     private double energy;
 
-    public void isProjectileHitting(AttackSprite sprite) {
-        if (getProjectile() != null) {
-            getProjectile().damage(getProjectile(), sprite);
-        }
-    }
-
     protected AttackSprite(PoseFileFormat format, int x, int y, int scaled, int delay) throws IOException {
         super(format, x, y, scaled, delay);
     }
@@ -33,6 +27,12 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
 
     public AttackSprite(int x, int y, String spritePrefix, int delay) {
         super(x, y, spritePrefix, delay);
+    }
+
+    public void isProjectileHitting(AttackSprite sprite) {
+        if (getProjectile() != null) {
+            getProjectile().damage(getProjectile(), sprite);
+        }
     }
 
     public void attack(List<AttackSprite> enemies) {
@@ -72,9 +72,9 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
         return getProjectile() != null ? getProjectile().getDamagePoints() : 0;
     }
 
-    public abstract void setProjectile(P projectile);
-
     public abstract P getProjectile();
+
+    public abstract void setProjectile(P projectile);
 
     protected void resetProjectile() {
         if (getProjectile() != null) {

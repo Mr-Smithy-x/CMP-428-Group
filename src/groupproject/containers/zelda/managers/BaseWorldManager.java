@@ -6,15 +6,20 @@ import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.sprite.AttackSprite;
-import groupproject.gameengine.tile.TileMap;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public abstract class BaseWorldManager implements Renderable {
+    protected MapManager mapManager = MapManager.getInstance();
     private AttackSprite player;
     private ArrayList<AttackSprite> enemies;
     private GameContainer container;
+
+    protected BaseWorldManager(GameContainer container) {
+        this.container = container;
+        enemies = new ArrayList<>();
+    }
 
     public GameContainer getContainer() {
         return container;
@@ -24,15 +29,21 @@ public abstract class BaseWorldManager implements Renderable {
         return player;
     }
 
+    public void setPlayer(AttackSprite player) {
+        if (player.getVelocity() == 0) {
+            player.setVelocity(5);
+        }
+        this.player = player;
+        LifeHud.getInstance().setLife(player);
+        EnergyHud.getInstance().setEnergy(player);
+    }
+
     public ArrayList<AttackSprite> getEnemies() {
         return enemies;
     }
 
-    protected MapManager mapManager = MapManager.getInstance();
-
-    protected BaseWorldManager(GameContainer container) {
-        this.container = container;
-        enemies = new ArrayList<>();
+    public void setEnemies(ArrayList<AttackSprite> enemies) {
+        this.enemies = enemies;
     }
 
     /**
@@ -53,19 +64,6 @@ public abstract class BaseWorldManager implements Renderable {
 
     protected abstract void renderGlobalSounds();
 
-    public void setPlayer(AttackSprite player) {
-        if (player.getVelocity() == 0) {
-            player.setVelocity(5);
-        }
-        this.player = player;
-        LifeHud.getInstance().setLife(player);
-        EnergyHud.getInstance().setEnergy(player);
-    }
-
-    public void setEnemies(ArrayList<AttackSprite> enemies) {
-        this.enemies = enemies;
-    }
-
     @Override
     public void render(Graphics g) {
         mapManager.getCurrentMap().render(g);
@@ -79,9 +77,10 @@ public abstract class BaseWorldManager implements Renderable {
 
     /**
      * In the event you want to render more
+     *
      * @param g
      */
-    protected void renderGame(Graphics g){
+    protected void renderGame(Graphics g) {
 
     }
 

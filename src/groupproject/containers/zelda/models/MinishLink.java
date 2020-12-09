@@ -24,12 +24,12 @@ public class MinishLink extends AttackSprite {
     }
 
     @Override
-    public void setProjectile(DamageProjectile projectile) {
-        this.projectile = projectile;
+    public DamageProjectile getProjectile() {
+        return projectile;
     }
 
     @Override
-    public DamageProjectile getProjectile() {
-        return projectile;
+    public void setProjectile(DamageProjectile projectile) {
+        this.projectile = projectile;
     }
 }

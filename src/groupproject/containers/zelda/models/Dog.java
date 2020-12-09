@@ -4,7 +4,6 @@ import groupproject.containers.zelda.contracts.MiniHealthBar;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.sprite.AttackSprite;
 import groupproject.gameengine.sprite.DamageProjectile;
-import groupproject.gameengine.sprite.Sprite;
 import groupproject.spritesheeteditor.models.PoseFileFormat;
 
 import java.awt.*;
@@ -30,15 +29,14 @@ public class Dog extends AttackSprite implements MiniHealthBar {
         setEnergy(50);
     }
 
+    @Override
+    public DamageProjectile getProjectile() {
+        return null;
+    }
 
     @Override
     public void setProjectile(DamageProjectile projectile) {
 
-    }
-
-    @Override
-    public DamageProjectile getProjectile() {
-        return null;
     }
 
 }

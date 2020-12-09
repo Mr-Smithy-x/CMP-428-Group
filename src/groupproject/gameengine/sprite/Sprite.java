@@ -1,19 +1,15 @@
 package groupproject.gameengine.sprite;
 
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
-import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.spritesheeteditor.models.FileFormat;
 import groupproject.spritesheeteditor.models.PoseFileFormat;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animation>, PoseFileFormat> {
@@ -45,10 +41,10 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     /**
      * validating that you have the basic animations, up down left right
      */
-    private void check()  {
+    private void check() {
         List<Pose> poses = new ArrayList<>(Arrays.asList(Pose.UP, Pose.DOWN, Pose.LEFT, Pose.RIGHT));
         poses.removeIf(p -> animDict.keySet().contains(p));
-        if(!poses.isEmpty()) {
+        if (!poses.isEmpty()) {
             String format = String.format("The following poses are missing: %s", poses.stream().map(pose -> pose.name()).collect(Collectors.joining(",")));
             logger.log(Level.SEVERE, format);
             return;

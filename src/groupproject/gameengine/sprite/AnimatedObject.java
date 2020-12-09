@@ -210,16 +210,16 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
     }
 
     @Override
+    public Number getY() {
+        return bounds.getY();
+    }
+
+    @Override
     public void setY(Number y) {
         bounds.setY(y);
         if (y.intValue() > 0) {
             moving = true;
         }
-    }
-
-    @Override
-    public Number getY() {
-        return bounds.getY();
     }
 
     @Override
