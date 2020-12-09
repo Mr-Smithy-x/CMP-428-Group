@@ -6,6 +6,7 @@ import groupproject.containers.zelda.hud.LifeHud;
 import groupproject.containers.zelda.models.Dog;
 import groupproject.containers.zelda.models.MinishLink;
 import groupproject.containers.zelda.models.Octorok;
+import groupproject.containers.zelda.models.Gibdo;
 import groupproject.containers.zelda.projectiles.EnergyBall;
 import groupproject.containers.zelda.projectiles.MudBall;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
@@ -30,6 +31,7 @@ public class ZeldaContainer extends GameContainer {
     BoundingBox damageBox;
     MinishLink minishLink;
     TileMap map;
+    Gibdo gibdo;
 
     protected ZeldaContainer(JFrame container, Canvas canvas) {
         super(container, canvas);
@@ -66,10 +68,17 @@ public class ZeldaContainer extends GameContainer {
             } else {
                 //Basic AI, we can improve this
                 octorok.shoot();
-                octorok.isProjectileHitting(minishLink);
-                if(octorok.isOverlapping(minishLink)){
+                    octorok.isProjectileHitting(minishLink);
+
+                if (octorok.isOverlapping(minishLink) && (octorok.getX().intValue() == minishLink.getX().intValue())){
                     minishLink.damageHealth(0.5);
                 }
+            }
+        }
+        if(!gibdo.isDead()){
+            if(gibdo.getX().intValue() > gibdo.getX().intValue() + 50){
+                gibdo.setSpritePose(Sprite.Pose.RIGHT);
+                gibdo.move();
             }
         }
         if (pressedKey[KeyEvent.VK_D]) {
@@ -103,8 +112,11 @@ public class ZeldaContainer extends GameContainer {
                     minishLink.attack();
                     minishLink.useEnergy(.1);
                     octorok.damageHealth(1);
+                    gibdo.damageHealth(1);
                 } else if (pressedKey[KeyEvent.VK_T]) {
                     minishLink.shoot();
+                    minishLink.isProjectileHitting(gibdo);
+                    minishLink.isProjectileHitting(octorok);
                 }
             }
             if (minishLink.isOverlapping(dog)) {
@@ -145,6 +157,7 @@ public class ZeldaContainer extends GameContainer {
         if (map != null) map.render(g);
         dog.render(g);
         octorok.render(g);
+        gibdo.render(g);
         minishLink.render(g);
         g.setColor(Color.GREEN);
         healthBox.render(g);
@@ -171,8 +184,10 @@ public class ZeldaContainer extends GameContainer {
         octorok = new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16);
         dog = new Dog(getWidth() / 2 - 100, getHeight() / 2 - 50, 2);
         minishLink = new MinishLink(getWidth() / 2, getHeight() / 2, 1000 / 16);
+        gibdo = new Gibdo(getWidth() / 2, getHeight() / 2 + 50, 1000 / 16);
         octorok.setVelocity(2);
         dog.setVelocity(10);
+        gibdo.setVelocity(2);
         octorok.setProjectile(new MudBall());
         minishLink.setProjectile(new EnergyBall());
         minishLink.setVelocity(3);
