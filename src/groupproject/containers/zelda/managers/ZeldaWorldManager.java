@@ -1,20 +1,16 @@
 package groupproject.containers.zelda.managers;
 
-import groupproject.containers.zelda.algorithms.ATileStarAlgorithm;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.sprite.AttackSprite;
 import groupproject.gameengine.sprite.Sprite;
-import groupproject.gameengine.tile.TileMap;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class ZeldaWorldManager extends BaseWorldManager {
-
-    ATileStarAlgorithm aStar;
 
     public ZeldaWorldManager(GameContainer container) {
         super(container);
@@ -26,29 +22,19 @@ public class ZeldaWorldManager extends BaseWorldManager {
      * @param keys
      */
     public void manual(boolean[] keys) {
-        if (keys[KeyEvent.VK_D]) {
-            getPlayer().damageHealth(1);
-        } else if (keys[KeyEvent.VK_F]) {
-            getPlayer().incrementHealth(1);
+
+        if (keys[KeyEvent.VK_9]) getContainer().setDebug(true);
+        else if (keys[KeyEvent.VK_0]) getContainer().setDebug(false);
+
+        // Used while debugging.
+        if (getContainer().inDebuggingMode()) {
+            if (keys[KeyEvent.VK_D]) getPlayer().damageHealth(1);
+            else if (keys[KeyEvent.VK_F]) getPlayer().incrementHealth(1);
         }
+
         if (!isPlayerDead()) {
-            if (keys[KeyEvent.VK_LEFT]) {
-                if (keys[KeyEvent.VK_R]) getPlayer().roll();
-                else getPlayer().setSpritePose(Sprite.Pose.LEFT);
-                getPlayer().move();
-            } else if (keys[KeyEvent.VK_RIGHT]) {
-                if (keys[KeyEvent.VK_R]) getPlayer().roll();
-                else getPlayer().setSpritePose(Sprite.Pose.RIGHT);
-                getPlayer().move();
-            } else if (keys[KeyEvent.VK_UP]) {
-                if (keys[KeyEvent.VK_R]) getPlayer().roll();
-                else getPlayer().setSpritePose(Sprite.Pose.UP);
-                getPlayer().move();
-            } else if (keys[KeyEvent.VK_DOWN]) {
-                if (keys[KeyEvent.VK_R]) getPlayer().roll();
-                else getPlayer().setSpritePose(Sprite.Pose.DOWN);
-                getPlayer().move();
-            }
+            handlePlayerMovement(keys);
+
             if (getPlayer().hasEnergy()) {
                 if (keys[KeyEvent.VK_Z]) {
                     getPlayer().spinAttack(getEnemies());
@@ -60,20 +46,34 @@ public class ZeldaWorldManager extends BaseWorldManager {
                     getPlayer().shoot();
                 }
             }
-        } else {
-            GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
+
+        } else GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.PAUSE);
+    }
+
+    private void handlePlayerMovement(boolean[] keys) {
+        if ((keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_W]) && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.LEFT)) {
+            getPlayer().setSpritePose(Sprite.Pose.LEFT);
+            getPlayer().move();
+        } else if (keys[KeyEvent.VK_RIGHT] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.RIGHT)) {
+            getPlayer().setSpritePose(Sprite.Pose.RIGHT);
+            getPlayer().move();
+        } else if (keys[KeyEvent.VK_UP] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.UP)) {
+            getPlayer().setSpritePose(Sprite.Pose.UP);
+            getPlayer().move();
+        } else if (keys[KeyEvent.VK_DOWN] && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.DOWN)) {
+            getPlayer().setSpritePose(Sprite.Pose.DOWN);
+            getPlayer().move();
         }
     }
 
     public void calculatePath(AttackSprite enemy) {
-        aStar.solvePath(enemy, getPlayer());
+        mapManager.getAStar().solvePath(enemy, getPlayer());
     }
 
     /**
      * Enemy AI work and others
      */
     public void automate() {
-
         getEnemies().stream().filter(enemy -> !enemy.isDead()).forEach(enemy -> {
             getPlayer().isProjectileHitting(enemy);
             enemy.isProjectileHitting(getPlayer());
@@ -109,17 +109,4 @@ public class ZeldaWorldManager extends BaseWorldManager {
         //The game already handles most of the rendering, if there any more rendering that needs to be done
         //do it here
     }
-
-    @Override
-    public void setTileMap(TileMap map) {
-        super.setTileMap(map);
-        aStar = new ATileStarAlgorithm(map);
-    }
-
-
-    public ATileStarAlgorithm getAStar() {
-        return aStar;
-    }
-
-
 }

@@ -25,7 +25,7 @@ public class ZeldaContainer extends GameContainer {
     BoundingBox healthBox;
     BoundingBox damageBox;
 
-    public ZeldaContainer(JFrame container, Canvas canvas) {
+    protected ZeldaContainer(JFrame container, Canvas canvas) {
         super(container, canvas);
     }
 
