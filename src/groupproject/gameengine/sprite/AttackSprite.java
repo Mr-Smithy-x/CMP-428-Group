@@ -3,6 +3,7 @@ package groupproject.gameengine.sprite;
 
 import groupproject.containers.zelda.contracts.Damage;
 import groupproject.containers.zelda.contracts.Energy;
+import groupproject.gameengine.algorithms.AStar;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.spritesheeteditor.models.PoseFileFormat;
 

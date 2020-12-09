@@ -7,6 +7,8 @@ import java.awt.*;
 
 public interface MiniHealthBar extends Life, CameraContract {
 
+    Polygon triangle = new Polygon(new int[]{0, 10, 20}, new int[]{0, 10, 0}, 3);
+
     default void renderHud(Graphics graphics, BaseCamera camera) {
         if (!isDead()) {
             int x = getCameraOffsetX(camera).intValue();
@@ -26,23 +28,34 @@ public interface MiniHealthBar extends Life, CameraContract {
             graphics.setColor(red);
             int maxWidth = (int) getMaxHealth() / 2;
             int width = (int) getHealth() / 2;
+            int xDraw = getCameraOffsetX(camera).intValue() - width / 8;
+            int yDraw = getCameraOffsetY(camera).intValue() - getHeight().intValue() / 2;
             graphics.fillRect(
-                    getCameraOffsetX(camera).intValue() - width / 8,
-                    getCameraOffsetY(camera).intValue() - getHeight().intValue() / 2,
+                    xDraw,
+                    yDraw,
                     maxWidth,
                     5);
             graphics.setColor(green);
             graphics.fillRect(
-                    getCameraOffsetX(camera).intValue() - width / 8,
-                    getCameraOffsetY(camera).intValue() - getHeight().intValue() / 2,
+                    xDraw,
+                    yDraw,
                     width,
                     5);
             graphics.setColor(black);
             graphics.drawRect(
-                    getCameraOffsetX(camera).intValue() - width / 8,
-                    getCameraOffsetY(camera).intValue() - getHeight().intValue() / 2,
+                    xDraw,
+                    yDraw,
                     maxWidth,
                     5);
+            if (isOutsideCamera(camera)) {
+                int[] xPoints = new int[3];
+                int[] yPoints = new int[3];
+                for (int i = 0; i < xPoints.length; i++) {
+                    xPoints[i] = (int) Math.max(0, camera.getWidth() / 2 - 20);
+                    yPoints[i] = (int) Math.max(0, camera.getHeight() / 2 - 20);
+                }
+                graphics.fillPolygon(xPoints, yPoints, 3);
+            }
         }
     }
 }

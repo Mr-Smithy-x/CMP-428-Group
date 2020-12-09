@@ -1,6 +1,8 @@
 package groupproject.gameengine.sprite;
 
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
+import groupproject.gameengine.camera.GlobalCamera;
+import groupproject.gameengine.tile.Tile;
 import groupproject.spritesheeteditor.models.FileFormat;
 import groupproject.spritesheeteditor.models.PoseFileFormat;
 
@@ -17,6 +19,9 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     private static final String POSE_FOLDER = "./assets/poses/";
 
     protected Pose currentPose = Pose.RIGHT;
+
+    private LinkedList<Tile> path;
+    private Tile targetTile;
 
     protected Sprite(int x, int y, String spritePrefix, int delay) {
         super(x, y, spritePrefix, delay);
@@ -78,6 +83,10 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         return String.format("%s/%s", this.getClass().getSimpleName().toLowerCase(), currentPose.getSoundFileName());
     }
 
+    public boolean isPathNullOrEmpty() {
+        return path == null || path.isEmpty();
+    }
+
     //region Override Methods
     // Takes care of initializing animations for the 4 basic directions the sprite would face.
     // Can always override this to fit the needs of your sprite.
@@ -127,7 +136,21 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     @Override
     public void render(Graphics g) {
         GlobalSoundEffect.getInstance().play(this);
+        if (path != null && inDebuggingMode()) {
+            for (Tile tile : path) {
+                int width = tile.getWidth().intValue();
+                int height = tile.getHeight().intValue();
+                g.setColor(new Color(255, 0, 0, 80));
+                g.fillRect((int) ((tile.getPoint().x * width) - GlobalCamera.getInstance().getX()), (int) ((tile.getPoint().y * height) - GlobalCamera.getInstance().getY()), width, height);
+            }
+        }
         super.render(g);
+
+    }
+
+    @Override
+    public void setVelocity(int velocity) {
+        super.setVelocity(velocity - (velocity % 2));
     }
 
     @Override
@@ -135,10 +158,46 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         return currentPose.direction;
     }
 
+    public void automate() {
+        if(path != null) {
+            if (targetTile == null) {
+                if (!path.isEmpty()) {
+                    this.targetTile = path.removeLast();
+                }
+            } else if (!path.isEmpty()) {
+                if (isAbove(targetTile)) {
+                    setSpritePose(Pose.DOWN);
+                }
+                if (isBelow(targetTile)) {
+                    setSpritePose(Pose.UP);
+                }
+                if (isRightOf(targetTile)) {
+                    setSpritePose(Pose.LEFT);
+                }
+                if (isLeftOf(targetTile)) {
+                    setSpritePose(Pose.RIGHT);
+                }
+                if (!path.isEmpty()) {
+                    super.move();
+                }
+                if (isOverlapping(targetTile)) {
+                    this.targetTile = null;
+                }
+            }
+        }
+    }
+
     @Override
     public void move() {
         this.direction = currentPose.direction;
         super.move();
+    }
+
+    public void setPath(Tile[] path) {
+        if (path.length > 0) {
+            this.path = new LinkedList<>(Arrays.asList(path));
+            this.path.removeLast();
+        }
     }
     //endregion
 
