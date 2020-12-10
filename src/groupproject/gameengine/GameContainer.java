@@ -123,6 +123,10 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         return !playing;
     }
 
+    public void setPlaying(){
+        this.playing = true;
+    }
+
 
     protected void onStart() {
 
@@ -157,13 +161,15 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         g.dispose();
     }
 
-    protected void drawTextCentered(Graphics g, String text) {
+    public void drawTextCentered(Graphics g, String text) {
         drawTextCenteredOffset(g, text, 0, 0);
     }
 
-    protected void drawTextCenteredOffset(Graphics g, String text, int offsetX, int offsetY) {
+    public void drawTextCenteredOffset(Graphics g, String text, int offsetX, int offsetY) {
         int strWidth = g.getFontMetrics().stringWidth(text);
-        g.drawString(text, (getWidth() / 2) - (strWidth / 2) - offsetX, (getHeight() / 2) + (g.getFontMetrics().getHeight() / 2) - offsetY);
+        g.drawString(text,
+                (getWidth() / 2) - (strWidth / 2) - offsetX,
+                (getHeight() / 2) + (g.getFontMetrics().getHeight() / 2) - offsetY);
     }
 
     protected abstract void onPaint(Graphics g);
@@ -220,6 +226,22 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
         /*
          * Will be implemented later if needed.
          */
+    }
+
+    public int getMidX(){
+        return getWidth() / 2;
+    }
+
+    public int getMidY(){
+        return getHeight() / 2;
+    }
+
+    public int getComponentMidX(){
+        return getContainer().getWidth() / 2;
+    }
+
+    public int getComponentMidY(){
+        return getContainer().getHeight() / 2;
     }
 
     @Override
