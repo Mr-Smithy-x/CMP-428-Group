@@ -94,6 +94,17 @@ public class ZeldaWorldManager extends BaseWorldManager {
                     calculatePath(enemy);
                 }
                 if (distance <= 100) {
+                    if(enemy.isAbove(getPlayer())){
+                        enemy.setSpritePose(Sprite.Pose.DOWN);
+                    }else if(enemy.isBelow(getPlayer())){
+                        enemy.setSpritePose(Sprite.Pose.UP);
+                    }
+                    if(enemy.isRightOf(getPlayer())){
+                        enemy.setSpritePose(Sprite.Pose.LEFT);
+                    }else if(enemy.isLeftOf(getPlayer())){
+                        enemy.setSpritePose(Sprite.Pose.RIGHT);
+                    }
+
                     enemy.shoot();
                     enemy.isProjectileHitting(getPlayer());
                     if(enemy.isOverlapping(getPlayer()) &&

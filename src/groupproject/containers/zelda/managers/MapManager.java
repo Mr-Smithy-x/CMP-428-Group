@@ -33,11 +33,6 @@ public class MapManager {
         };
         public static Rectangle[] HYRULE_GARDEN = new Rectangle[]{
                 new Rectangle(992, 0, 80, 48), //top of garden
-                new Rectangle(960, 960, 80, 48) //bottom of garden
-        };
-
-        public static Rectangle[] FOREST = new Rectangle[]{
-                new Rectangle(736, 0, 176, 16), //top of garden
         };
 
         public static Rectangle[] CASTLE_BASEMENT = new Rectangle[]{
@@ -121,12 +116,6 @@ public class MapManager {
                 case CASTLE_GARDEN:
                     rectangle = HYRULE_GARDEN[0];
                     set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(424, 1104), TransitionTile.Map.CASTLE_HYRULE));
-                    rectangle = HYRULE_GARDEN[1];
-                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(824, 16), TransitionTile.Map.FOREST));
-                    break;
-                case FOREST:
-                    rectangle = FOREST[0];
-                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(HYRULE_GARDEN[1].x + HYRULE_GARDEN[1].width/2, HYRULE_GARDEN[1].y-32), TransitionTile.Map.CASTLE_GARDEN));
                     break;
             }
             return set;
