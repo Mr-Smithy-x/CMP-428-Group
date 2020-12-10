@@ -20,6 +20,10 @@ public class ATileStarAlgorithm extends AStar<TileMap, Tile> implements PathFind
         addObserver(this);
     }
 
+    public void setNetwork(TileMap map) {
+        this.network = map;
+    }
+
     public Tile getTileAtPosition(BoundingContract position) {
         double x = position.getX().doubleValue();
         double y = position.getY().doubleValue();
@@ -28,6 +32,7 @@ public class ATileStarAlgorithm extends AStar<TileMap, Tile> implements PathFind
 
     /**
      * We always want to store the staring sprite to give it its path
+     *
      * @param start
      */
     protected void setStartNode(Sprite start) {

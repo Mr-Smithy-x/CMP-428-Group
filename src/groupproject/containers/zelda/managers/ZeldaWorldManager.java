@@ -1,5 +1,6 @@
 package groupproject.containers.zelda.managers;
 
+import groupproject.containers.zelda.models.TransitionTile;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
@@ -67,6 +68,13 @@ public class ZeldaWorldManager extends BaseWorldManager {
             getPlayer().setSpritePose(Sprite.Pose.DOWN);
             getPlayer().move();
         }
+        TransitionTile transitionTile = MapManager.getInstance().checkTransitionTile(getPlayer());
+        if (transitionTile.getMap() != TransitionTile.Map.NONE) {
+            if (inDebuggingMode()) {
+                System.out.printf("Entering: %s\n", transitionTile.getMap());
+            }
+            MapManager.getInstance().transition(getPlayer(), transitionTile);
+        }
     }
 
     public void calculatePath(AttackSprite enemy) {
@@ -82,10 +90,21 @@ public class ZeldaWorldManager extends BaseWorldManager {
             enemy.isProjectileHitting(getPlayer());
             if (enemy.isInsideCamera(GlobalCamera.getInstance())) {
                 double distance = enemy.distanceBetween(getPlayer());
-                if(enemy.isPathNullOrEmpty()) {
+                if (enemy.isPathNullOrEmpty()) {
                     calculatePath(enemy);
                 }
                 if (distance <= 100) {
+                    if(enemy.isAbove(getPlayer())){
+                        enemy.setSpritePose(Sprite.Pose.DOWN);
+                    }else if(enemy.isBelow(getPlayer())){
+                        enemy.setSpritePose(Sprite.Pose.UP);
+                    }
+                    if(enemy.isRightOf(getPlayer())){
+                        enemy.setSpritePose(Sprite.Pose.LEFT);
+                    }else if(enemy.isLeftOf(getPlayer())){
+                        enemy.setSpritePose(Sprite.Pose.RIGHT);
+                    }
+
                     enemy.shoot();
                     enemy.isProjectileHitting(getPlayer());
                     if(enemy.isOverlapping(getPlayer()) &&

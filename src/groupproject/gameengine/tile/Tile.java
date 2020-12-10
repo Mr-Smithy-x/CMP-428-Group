@@ -22,7 +22,16 @@ public class Tile extends Node<Tile> implements Comparable<Node<Tile>>, Renderab
     private BoundingBox boundsRect;
     private boolean collisionEnabled = false;
     private boolean collisionOverride = false;
-    private transient Point point = new Point(0, 0); //set default point
+    protected transient Point point = new Point(0, 0); //set default point
+
+    public Tile(int x, int y, int width, int height){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        tileID = 0;
+        tileImage = null;
+    }
 
     public Tile(BufferedImage image, int tileID) {
         this.tileImage = image;
