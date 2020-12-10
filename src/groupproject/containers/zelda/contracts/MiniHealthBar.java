@@ -1,6 +1,7 @@
 package groupproject.containers.zelda.contracts;
 
 import groupproject.gameengine.camera.BaseCamera;
+import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.contracts.CameraContract;
 
 import java.awt.*;
@@ -28,8 +29,8 @@ public interface MiniHealthBar extends Life, CameraContract {
             graphics.setColor(red);
             int maxWidth = (int) getMaxHealth() / 2;
             int width = (int) getHealth() / 2;
-            int xDraw = getCameraOffsetX(camera).intValue() - width / 8;
-            int yDraw = getCameraOffsetY(camera).intValue() - getHeight().intValue() / 2;
+            int xDraw = getCameraOffsetX(camera).intValue() - width / 3;
+            int yDraw = getCameraOffsetY(camera).intValue() - getHeight().intValue() * 2;
             graphics.fillRect(
                     xDraw,
                     yDraw,

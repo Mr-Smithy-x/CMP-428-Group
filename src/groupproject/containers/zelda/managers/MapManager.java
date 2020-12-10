@@ -2,7 +2,7 @@ package groupproject.containers.zelda.managers;
 
 import groupproject.containers.zelda.algorithms.ATileStarAlgorithm;
 import groupproject.containers.zelda.models.TransitionTile;
-import groupproject.gameengine.sprite.AttackSprite;
+import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.sprite.Sprite;
 import groupproject.gameengine.tile.Tile;
 import groupproject.gameengine.tile.TileMap;
@@ -17,7 +17,22 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 
-public class MapManager {
+public class MapManager implements Renderable, TransitionManager.OnTransition {
+
+    @Override
+    public void render(Graphics g) {
+        getCurrentMap().render(g);
+    }
+
+    public void renderOverlay(Graphics g) {
+        getCurrentMapOverlay().render(g);
+    }
+
+    @Override
+    public void onTransition(Sprite sprite, TransitionTile tile) {
+        sprite.setWorld(tile.getSpawn().x, tile.getSpawn().y);
+        loadTileMap(tile.getMap().getFile());
+    }
 
     private static class Points {
 
@@ -71,7 +86,7 @@ public class MapManager {
                     break;
                 case CASTLE_BEDROOM:
                     rectangle = CASTLE_BEDROOM[0];//bottom
-                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(CASTLE_THRONE_ROOM[1].x-32, CASTLE_THRONE_ROOM[1].y), TransitionTile.Map.CASTLE_THRONE_ROOM));
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(CASTLE_THRONE_ROOM[1].x - 32, CASTLE_THRONE_ROOM[1].y), TransitionTile.Map.CASTLE_THRONE_ROOM));
                     break;
                 case CASTLE_BOSS_ROOM:
                     break;
@@ -79,21 +94,21 @@ public class MapManager {
                     rectangle = CASTLE_BASEMENT_ENTRANCE[0];//top
                     set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(CASTLE_BASEMENT_HALL[1].x, CASTLE_BASEMENT_HALL[1].y - 32), TransitionTile.Map.CASTLE_BASEMENT_HALL));
                     rectangle = CASTLE_BASEMENT_ENTRANCE[1];//borrom
-                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(248+8, 16), TransitionTile.Map.CASTLE_BASEMENT));
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(248 + 8, 16), TransitionTile.Map.CASTLE_BASEMENT));
                     break;
                 case CASTLE_BASEMENT_HALL:
                     rectangle = CASTLE_BASEMENT_HALL[0];//top
                     set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(552, 592), TransitionTile.Map.CASTLE_BOSS_ROOM));
                     rectangle = CASTLE_BASEMENT_HALL[1];//bottom
-                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(256+8, 16), TransitionTile.Map.CASTLE_BASEMENT_ENTRANCE));
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(256 + 8, 16), TransitionTile.Map.CASTLE_BASEMENT_ENTRANCE));
                     break;
                 case CASTLE_BASEMENT:
                     rectangle = CASTLE_BASEMENT[0];//left
-                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(160+8, 96), TransitionTile.Map.CASTLE_MAIN_HALL));
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(160 + 8, 96), TransitionTile.Map.CASTLE_MAIN_HALL));
                     rectangle = CASTLE_BASEMENT[1];//right
                     set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(800 + 8, 96), TransitionTile.Map.CASTLE_MAIN_HALL));
                     rectangle = CASTLE_BASEMENT[2];//mid
-                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(256+8, 240), TransitionTile.Map.CASTLE_BASEMENT_ENTRANCE));
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(256 + 8, 240), TransitionTile.Map.CASTLE_BASEMENT_ENTRANCE));
                     break;
                 case CASTLE_HYRULE:
                     rectangle = HYRULE_CASTLE[0];//to gar
@@ -109,7 +124,7 @@ public class MapManager {
                     rectangle = CASTLE_MAIN_HALL[2];//bottom
                     set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(424, 64), TransitionTile.Map.CASTLE_HYRULE));
                     rectangle = CASTLE_MAIN_HALL[3];//top
-                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(272, 688-16), TransitionTile.Map.CASTLE_THRONE_ROOM));
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(272, 688 - 16), TransitionTile.Map.CASTLE_THRONE_ROOM));
                     break;
                 case NONE:
                     break;
@@ -137,6 +152,8 @@ public class MapManager {
     }
 
 
+
+
     public static MapManager getInstance() {
         return instance;
     }
@@ -152,8 +169,8 @@ public class MapManager {
     }
 
     public void transition(Sprite sprite, TransitionTile tile) {
-        sprite.setWorld(tile.getSpawn().x, tile.getSpawn().y);
-        loadTileMap(tile.getMap().getFile());
+        TransitionManager.getInstance().setTransition(this);
+        TransitionManager.getInstance().setFor(sprite, tile);
     }
 
     public void loadTileMap(String mapFile) {

@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 
 public class ZeldaWorldManager extends BaseWorldManager {
 
+
     public ZeldaWorldManager(GameContainer container) {
         super(container);
     }
@@ -81,6 +82,7 @@ public class ZeldaWorldManager extends BaseWorldManager {
         mapManager.getAStar().solvePath(enemy, getPlayer());
     }
 
+
     /**
      * Enemy AI work and others
      */
@@ -90,28 +92,27 @@ public class ZeldaWorldManager extends BaseWorldManager {
             enemy.isProjectileHitting(getPlayer());
             if (enemy.isInsideCamera(GlobalCamera.getInstance())) {
                 double distance = enemy.distanceBetween(getPlayer());
-                if (enemy.isPathNullOrEmpty()) {
-                    calculatePath(enemy);
-                }
-                if (distance <= 100) {
-                    if(enemy.isAbove(getPlayer())){
+                calculatePath(enemy);
+
+
+                if (distance <= 50) {
+                    if (enemy.isAbove(getPlayer())) {
                         enemy.setSpritePose(Sprite.Pose.DOWN);
-                    }else if(enemy.isBelow(getPlayer())){
+                    } else if (enemy.isBelow(getPlayer())) {
                         enemy.setSpritePose(Sprite.Pose.UP);
                     }
-                    if(enemy.isRightOf(getPlayer())){
+                    if (enemy.isRightOf(getPlayer())) {
                         enemy.setSpritePose(Sprite.Pose.LEFT);
-                    }else if(enemy.isLeftOf(getPlayer())){
+                    } else if (enemy.isLeftOf(getPlayer())) {
                         enemy.setSpritePose(Sprite.Pose.RIGHT);
                     }
-
-                    enemy.shoot();
-                    enemy.isProjectileHitting(getPlayer());
-                    if(enemy.isOverlapping(getPlayer()) &&
+                    if (enemy.isOverlapping(getPlayer()) &&
                             (enemy.getX().intValue() == getPlayer().getX().intValue()) &&
-                                (enemy.getY().intValue() == getPlayer().getY().intValue())){
+                            (enemy.getY().intValue() == getPlayer().getY().intValue())) {
                         getPlayer().damageHealth(0.5);
                     }
+                } else if (distance <= 100) {
+                    enemy.shoot();
                 }
                 enemy.automate();
             }
