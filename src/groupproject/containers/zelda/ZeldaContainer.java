@@ -10,6 +10,7 @@ import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.models.BoundingBox;
+import groupproject.gameengine.sprite.AttackSprite;
 
 import javax.swing.*;
 import java.awt.*;
@@ -130,6 +131,9 @@ public class ZeldaContainer extends GameContainer {
         super.mouseClicked(e);
         if (!playing) {
             game.onEvent(e);
+        } else {
+            AttackSprite player = world.getPlayer();
+            System.out.printf("POS: (%s, %s)\n", player.getX(), player.getY());
         }
     }
 

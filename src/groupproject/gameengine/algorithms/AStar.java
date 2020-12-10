@@ -8,7 +8,7 @@ import java.util.*;
 
 public abstract class AStar<T extends Network<N>, N extends Node<N>> extends PathFindingObservable<N> {
 
-    private T network;
+    protected T network;
     private LinkedHashSet<N> path;
 
     private N start;

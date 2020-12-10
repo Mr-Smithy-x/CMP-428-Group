@@ -1,5 +1,6 @@
 package groupproject.containers.zelda.managers;
 
+import groupproject.containers.zelda.models.TransitionTile;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
@@ -66,6 +67,11 @@ public class ZeldaWorldManager extends BaseWorldManager {
         } else if ((keys[KeyEvent.VK_DOWN] || keys[KeyEvent.VK_S]) && !mapManager.isSpriteCollidingWithMap(getPlayer(), Sprite.Pose.DOWN)) {
             getPlayer().setSpritePose(Sprite.Pose.DOWN);
             getPlayer().move();
+        }
+        TransitionTile transitionTile = MapManager.getInstance().checkTransitionTile(getPlayer());
+        if(transitionTile.getMap() != TransitionTile.Map.NONE){
+            System.out.println(transitionTile.getMap());
+            MapManager.getInstance().transition(getPlayer(), transitionTile);
         }
     }
 
