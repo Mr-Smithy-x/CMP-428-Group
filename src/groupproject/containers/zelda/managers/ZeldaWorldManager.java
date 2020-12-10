@@ -96,6 +96,12 @@ public class ZeldaWorldManager extends BaseWorldManager implements Debuggable {
                 }
                 if (distance <= 100) {
                     enemy.shoot();
+                    enemy.isProjectileHitting(getPlayer());
+                    if(enemy.isOverlapping(getPlayer()) &&
+                            (enemy.getX().intValue() == getPlayer().getX().intValue()) &&
+                                (enemy.getY().intValue() == getPlayer().getY().intValue())){
+                        getPlayer().damageHealth(0.5);
+                    }
                 }
                 enemy.automate();
             }
