@@ -1,5 +1,6 @@
 package groupproject.containers.zelda;
 
+import groupproject.containers.zelda.managers.MenuScreenManager;
 import groupproject.containers.zelda.helpers.GameTextDialog;
 import groupproject.containers.zelda.managers.MapManager;
 import groupproject.containers.zelda.managers.ZeldaWorldManager;
@@ -13,9 +14,11 @@ import groupproject.gameengine.models.BoundingBox;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class ZeldaContainer extends GameContainer {
+
 
     /**
      * @see ZeldaWorldManager - This contains the gameplay of the actual world
@@ -25,9 +28,11 @@ public class ZeldaContainer extends GameContainer {
     ZeldaWorldManager world = new ZeldaWorldManager(this);
     BoundingBox healthBox;
     BoundingBox damageBox;
+    MenuScreenManager game;
 
     protected ZeldaContainer(JFrame container, JPanel panel) {
         super(container, panel);
+        game = new MenuScreenManager(this);
     }
 
     public static GameContainer frame(int width, int height) {
@@ -97,6 +102,17 @@ public class ZeldaContainer extends GameContainer {
         if (e.getKeyCode() == KeyEvent.VK_J) {
             world.calculatePath(world.getEnemies().get(1));
         }
+        if (e.getKeyCode() == KeyEvent.VK_P) {
+            if (!playing) {
+                game.setState(MenuScreenManager.State.Pause);
+            }
+        }
+    }
+
+
+    @Override
+    protected void onPausePaint(Graphics g) {
+        game.render(g);
     }
 
     /**
@@ -107,6 +123,14 @@ public class ZeldaContainer extends GameContainer {
     @Override
     public int getWidth() {
         return 450;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        super.mouseClicked(e);
+        if (!playing) {
+            game.onEvent(e);
+        }
     }
 
     /**
