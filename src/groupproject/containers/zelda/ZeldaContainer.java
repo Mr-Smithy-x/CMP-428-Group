@@ -92,7 +92,7 @@ public class ZeldaContainer extends GameContainer {
                 gibdo.setSpritePose(Sprite.Pose.UP);
                 gibdo.move();
             }
-            if(gibdo.isOverlapping(minishLink)){
+            if(gibdo.isOverlapping(minishLink) && (gibdo.getX().intValue() == minishLink.getX().intValue())){
                 minishLink.damageHealth(1);
             }
         }
