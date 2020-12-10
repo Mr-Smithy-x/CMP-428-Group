@@ -91,8 +91,8 @@ public class ZeldaContainer extends GameContainer {
         MapManager.getInstance().loadTileMap("hyrule_castle/castle_garden");
         world.setPlayer(new MinishLink(360, 300, 1000 / 24));
         world.getPlayer().setVelocity(4);
-        world.addEnemy(new Octorok(getWidth() / 2, getHeight() / 2, 1000 / 16));
-        world.addEnemy(new Octorok(getWidth() / 2 - 100, getHeight() / 2 - 50, 2));
+        world.addEnemy(new Octorok(getWidth() / 2, 300, 1000 / 16));
+        world.addEnemy(new Octorok(getWidth() / 2 - 100, 300, 2));
         healthBox = new BoundingBox((int) (getWidth() / 1.5), (int) (getHeight() / 1.5), 100, 100);
         damageBox = new BoundingBox((int) (getWidth() / 1.2), (int) (getHeight() / 1.2), 100, 100);
     }
