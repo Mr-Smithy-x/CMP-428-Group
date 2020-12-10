@@ -129,8 +129,10 @@ public class MapEditorView extends JPanel {
                 }
                 break;
             case COLLISION:
-                editorController.updateCollisionTileInMap(row, col, true);
-                drawCollisionBorder(true, mapViewGraphics, row, col, tileWidth, tileHeight);
+                if (editorController.getTileAt(row, col) >= 0) {
+                    editorController.updateCollisionTileInMap(row, col, true);
+                    drawCollisionBorder(true, mapViewGraphics, row, col, tileWidth, tileHeight);
+                }
                 break;
             case OBJECT:
                 if (editorController.getSelectedTile() != null && editorController.getTileAt(row, col) > 0) {
@@ -167,7 +169,7 @@ public class MapEditorView extends JPanel {
                 }
                 break;
             case COLLISION:
-                if (editorController.getCollisionStatusAt(row, col)) {
+                if (editorController.getTileAt(row, col) >= 0 && editorController.getCollisionStatusAt(row, col)) {
                     editorController.updateCollisionTileInMap(row, col, false);
                     mapViewGraphics.drawImage(editorController.getTileImage(row, col), col * tileWidth, row * tileHeight, null);
                 }
