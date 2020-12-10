@@ -8,8 +8,8 @@ import java.util.*;
 
 public abstract class AStar<T extends Network<N>, N extends Node<N>> extends PathFindingObservable<N> {
 
-    private T network;
-    private LinkedHashSet<N> path;
+    protected T network;
+    protected LinkedHashSet<N> path;
 
     private N start;
     private N end;
@@ -72,7 +72,6 @@ public abstract class AStar<T extends Network<N>, N extends Node<N>> extends Pat
                 n.setFunction(n.getCost() + n.getHeuristic());
             }
         }
-        updateUI();
     }
 
     public void reset() {

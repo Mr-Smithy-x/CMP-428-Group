@@ -8,7 +8,7 @@ import groupproject.gameengine.sprite.Sprite;
 import groupproject.gameengine.tile.Tile;
 import groupproject.gameengine.tile.TileMap;
 
-import java.util.LinkedHashSet;
+import java.util.*;
 
 //witty ;)
 public class ATileStarAlgorithm extends AStar<TileMap, Tile> implements PathFindingObserver<Tile> {
@@ -32,7 +32,6 @@ public class ATileStarAlgorithm extends AStar<TileMap, Tile> implements PathFind
      */
     protected void setStartNode(Sprite start) {
         super.setStartNode(getTileAtPosition(start));
-        this.sprite = start;
     }
 
     protected void setEndNode(Sprite end) {
@@ -50,9 +49,20 @@ public class ATileStarAlgorithm extends AStar<TileMap, Tile> implements PathFind
 
     public void solvePath(Sprite start, Sprite end) {
         reset();
-        setStartNode(start);
-        setEndNode(end);
-        solve();
+        this.sprite = start;
+        if (start.getX().intValue() > end.getX().intValue()) {
+            setStartNode(end);
+            setEndNode(start);
+            solve();
+            List list = new ArrayList(path);
+            Collections.sort(list, Collections.reverseOrder());
+            path = new LinkedHashSet(list);
+        } else if (start.getX().intValue() < end.getX().intValue()) {
+            setStartNode(start);
+            setEndNode(end);
+            solve();
+        }
+        updateUI();
         getNetwork().resetNetwork();
     }
 }

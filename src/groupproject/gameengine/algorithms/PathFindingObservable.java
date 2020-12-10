@@ -40,7 +40,7 @@ public class PathFindingObservable<N extends Node<N>> {
      * @param arg any object.
      * @see PathFindingObservable#clearChanged()
      * @see PathFindingObservable#hasChanged()
-     * @see PathFindingObserver#update(PathFindingObservable, LinkedList)
+     * @see PathFindingObserver#update(PathFindingObservable, LinkedHashSet)
      */
     public void notifyObservers(LinkedHashSet<N> arg) {
         /*
