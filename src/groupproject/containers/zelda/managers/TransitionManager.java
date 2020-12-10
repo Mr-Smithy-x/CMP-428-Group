@@ -132,8 +132,7 @@ public class TransitionManager extends BaseHud implements Renderable {
     }
 
     public boolean isFinishedTransitioning() {
-        boolean b = ((int) circle.getWidth()) == max_bounds || ((int) circle.getWidth()) == min_bounds;
-        return b;
+        return ((int) circle.getWidth()) == max_bounds || ((int) circle.getWidth()) == min_bounds;
     }
 
 
@@ -147,7 +146,7 @@ public class TransitionManager extends BaseHud implements Renderable {
     protected void onRenderHud(Graphics hud, Graphics parent) {
         hud.setColor(Color.BLACK);
         hud.fillRect(base.x, base.y, base.width, base.height);
-        hud.setClip(circle);
+        hud.setClip(calculateRectOutside(circle));
     }
 
     public void set(int size) {
@@ -156,22 +155,20 @@ public class TransitionManager extends BaseHud implements Renderable {
 
 
     public boolean shouldTrigger() {
-        return ((int)circle.getWidth()) >= max_bounds;
+        return ((int)circle.getWidth()) <= min_bounds;
     }
 
     class TransitionTask extends TimerTask {
 
         @Override
         public void run() {
-            if (!playing) {
-                double size = Math.min(Math.min(circle.getWidth() + 2, max_bounds), max_bounds);
-                set((int) size);
-            } else {
-
-                double size = Math.max(Math.max(circle.getWidth() - 2, min_bounds), min_bounds);
-                set((int) size);
+            double size;
+            if (playing) {
+                size = Math.min(Math.min(circle.getWidth() + 2, max_bounds), max_bounds);
+             } else {
+                size = Math.max(Math.max(circle.getWidth() - 2, min_bounds), min_bounds);
             }
-
+            set((int) size);
         }
     }
 }
