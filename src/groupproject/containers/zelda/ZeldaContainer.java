@@ -76,9 +76,24 @@ public class ZeldaContainer extends GameContainer {
             }
         }
         if(!gibdo.isDead()){
-            if(gibdo.getX().intValue() > gibdo.getX().intValue() + 50){
+            if(gibdo.getX().intValue() <= 310 && gibdo.getY().intValue() == 350){
+                gibdo.setSpritePose(Sprite.Pose.LEFT);
+                gibdo.move();
+            }
+            if(gibdo.getX().intValue() == 140 && gibdo.getY().intValue() >= 350){
+                gibdo.setSpritePose(Sprite.Pose.DOWN);
+                gibdo.move();
+            }
+            if(gibdo.getX().intValue() >= 140 && gibdo.getY().intValue() == 450){
                 gibdo.setSpritePose(Sprite.Pose.RIGHT);
                 gibdo.move();
+            }
+            if(gibdo.getX().intValue() == 310 && gibdo.getY().intValue() <= 450){
+                gibdo.setSpritePose(Sprite.Pose.UP);
+                gibdo.move();
+            }
+            if(gibdo.isOverlapping(minishLink)){
+                minishLink.damageHealth(1);
             }
         }
         if (pressedKey[KeyEvent.VK_D]) {
