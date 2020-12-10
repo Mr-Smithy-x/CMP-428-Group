@@ -22,28 +22,72 @@ public class MapManager {
     private static class Points {
 
         public static Rectangle[] HYRULE_CASTLE = new Rectangle[]{
-                new Rectangle(384, 1120, 80, 16), //Bottom Of Hyrule Castle
-                //BOTTOM: x: (384.0 - 464.0),(y:1136.0);
-                //LEFT_ENTRANCE: (128-144), 416.0
-                //RIGHT:  (704, 720) - 416.0
-                //TOP: (416-432) - 32
+                new Rectangle(384, 1120, 80, 16), //Bottom Of Hyrule Castle - TO CASTLE GARDEN
+                new Rectangle(416, 0, 32, 48), //Top Of Hyrule Castle - TO MAIN HALL
+        };
+        public static Rectangle[] CASTLE_MAIN_HALL = new Rectangle[]{
+                new Rectangle(800, 64, 16, 16), //Top Of left Main Hall - TO BASEMENT
+                new Rectangle(160, 48, 16, 32), //Top Of right Main Hall - TO BASEMENT
+                new Rectangle(480, 1040 - 16, 16, 16), //Bottom Main Hall - TO Entrance Hall
+                new Rectangle(480, 0, 16, 48), //Bottom Main Hall - To Throne Room
+        };
+        public static Rectangle[] HYRULE_GARDEN = new Rectangle[]{
+                new Rectangle(992, 0, 80, 48) //top of garden
         };
 
-        public static Rectangle[] HYRULE_GARDEN = new Rectangle[]{
-                new Rectangle(992, 0, 80, 16) //top of garden
-                //BOTTOM: x: (384.0 - 464.0),(y:1136.0);
-                //LEFT_ENTRANCE: (128-144), 416.0
-                //RIGHT:  (704, 720) - 416.0
-                //TOP: (416-432) - 32
+        public static Rectangle[] CASTLE_BASEMENT = new Rectangle[]{
+                new Rectangle(192, 32, 16, 16), // top left of castle_basement
+                new Rectangle(896, 32, 16, 16), // top right of castle_basement
+                new Rectangle(544, 896, 16, 16) // mid of castle_basement
+        };
+        public static Rectangle[] CASTLE_BASEMENT_HALL = new Rectangle[]{
+                new Rectangle(256, 16, 16, 32), // top  of basement_hall
+                new Rectangle(256, 16*13, 16, 16), // bottom  of basement_hall
+        };
+        public static Rectangle[] CASTLE_BASEMENT_ENTRANCE = new Rectangle[]{
+                new Rectangle(256, 0, 16, 16), // top  of basement_entrance
+                new Rectangle(256, 304, 16, 16), // bottom  of basement_entrance
         };
 
         public static LinkedHashSet<TransitionTile> getTiles(TransitionTile.Map map) {
             LinkedHashSet<TransitionTile> set = new LinkedHashSet<>();
             Rectangle rectangle;
-            switch (map) {
+            switch (map) { //16x14
+                case CASTLE_BASEMENT_ENTRANCE:
+                    rectangle = CASTLE_BASEMENT_ENTRANCE[0];//top
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(16 * 9 + 8, 0), TransitionTile.Map.CASTLE_BASEMENT_HALL));
+                    rectangle = CASTLE_BASEMENT_ENTRANCE[1];//borrom
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(16 * 9 + 8, 16*10), TransitionTile.Map.CASTLE_BASEMENT));
+                    break;
+                case CASTLE_BASEMENT_HALL:
+                    rectangle = CASTLE_BASEMENT_HALL[0];//bottom
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(16 * 9 + 8, 16 * 17), TransitionTile.Map.CASTLE_BOSS_ROOM));
+                    rectangle = CASTLE_BASEMENT_HALL[1];//top
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(16 * 9 + 8, 16), TransitionTile.Map.CASTLE_BASEMENT_ENTRANCE));
+                    break;
+                case CASTLE_BASEMENT:
+                    rectangle = CASTLE_BASEMENT[0];//left
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(16 * 8 + 8, 96), TransitionTile.Map.CASTLE_MAIN_HALL));
+                    rectangle = CASTLE_BASEMENT[1];//right
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(800 + 8, 96), TransitionTile.Map.CASTLE_MAIN_HALL));
+                    rectangle = CASTLE_BASEMENT[2];//mid
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(16 * 9 + 8, 16 * 8), TransitionTile.Map.CASTLE_BASEMENT_ENTRANCE));
+                    break;
                 case CASTLE_HYRULE:
-                    rectangle = HYRULE_CASTLE[0];
+                    rectangle = HYRULE_CASTLE[0];//to gar
                     set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(1004, 100), TransitionTile.Map.CASTLE_GARDEN));
+                    rectangle = HYRULE_CASTLE[1];
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(488, 1040 - 32), TransitionTile.Map.CASTLE_MAIN_HALL));
+                    break;
+                case CASTLE_MAIN_HALL:
+                    rectangle = CASTLE_MAIN_HALL[0];//left
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(500, 100), TransitionTile.Map.CASTLE_BASEMENT));
+                    rectangle = CASTLE_MAIN_HALL[1];//right
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(500, 100), TransitionTile.Map.CASTLE_BASEMENT));
+                    rectangle = CASTLE_MAIN_HALL[2];//bottom
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(424, 64), TransitionTile.Map.CASTLE_HYRULE));
+                    rectangle = CASTLE_MAIN_HALL[3];//top
+                    set.add(TransitionTile.create(rectangle.x, rectangle.y, rectangle.width, rectangle.height, new Point(500, 100), TransitionTile.Map.CASTLE_THRONE_ROOM));
                     break;
                 case CASTLE_GARDEN:
                     rectangle = HYRULE_GARDEN[0];
@@ -64,6 +108,7 @@ public class MapManager {
     private HashMap<TransitionTile.Map, LinkedHashSet<TransitionTile>> transitionTiles = new HashMap<>();
     private final TransitionTile deadTile = TransitionTile.create(0, 0, 0, 0, new Point(0, 0), TransitionTile.Map.NONE);
 
+
     private MapManager() {
     }
 
@@ -72,6 +117,9 @@ public class MapManager {
         return instance;
     }
 
+    public LinkedHashSet<TransitionTile> getTransitionTiles() {
+        return transitionTiles.get(current);
+    }
 
     public TransitionTile checkTransitionTile(Sprite sprite) {
         LinkedHashSet<TransitionTile> transitionTiles = this.transitionTiles.get(current);

@@ -5,14 +5,13 @@ import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
-import groupproject.gameengine.contracts.Debuggable;
 import groupproject.gameengine.sprite.AttackSprite;
 import groupproject.gameengine.sprite.Sprite;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class ZeldaWorldManager extends BaseWorldManager implements Debuggable {
+public class ZeldaWorldManager extends BaseWorldManager {
 
     public ZeldaWorldManager(GameContainer container) {
         super(container);
