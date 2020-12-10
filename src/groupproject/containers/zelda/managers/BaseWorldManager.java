@@ -69,12 +69,14 @@ public abstract class BaseWorldManager implements Renderable, Debuggable {
 
     @Override
     public void render(Graphics g) {
-        mapManager.getCurrentMap().render(g);
+        g.setColor(Color.BLACK);
+        g.fillRect(0,0, (int)GlobalCamera.getInstance().getWidth(), (int)GlobalCamera.getInstance().getHeight());
+        mapManager.render(g);
         enemies.stream().filter(e -> !e.isDead()).forEach(e -> e.render(g));
         renderGame(g);
         player.render(g);
         if (mapManager.getCurrentMapOverlay() != null)
-            mapManager.getCurrentMapOverlay().render(g);
+            mapManager.renderOverlay(g);
 
         if (inDebuggingMode()) {
             LinkedHashSet<TransitionTile> transitionTiles = MapManager.getInstance().getTransitionTiles();

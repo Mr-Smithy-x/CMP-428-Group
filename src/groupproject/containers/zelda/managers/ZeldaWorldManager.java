@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 
 public class ZeldaWorldManager extends BaseWorldManager {
 
+
     public ZeldaWorldManager(GameContainer container) {
         super(container);
     }
@@ -81,6 +82,7 @@ public class ZeldaWorldManager extends BaseWorldManager {
         mapManager.getAStar().solvePath(enemy, getPlayer());
     }
 
+
     /**
      * Enemy AI work and others
      */
@@ -109,7 +111,7 @@ public class ZeldaWorldManager extends BaseWorldManager {
                             (enemy.getY().intValue() == getPlayer().getY().intValue())) {
                         getPlayer().damageHealth(0.5);
                     }
-                }else if(distance <= 100){
+                } else if (distance <= 100) {
                     enemy.shoot();
                 }
                 enemy.automate();

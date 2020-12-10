@@ -3,6 +3,7 @@ package groupproject.containers.zelda;
 import groupproject.containers.zelda.managers.MenuScreenManager;
 import groupproject.containers.zelda.helpers.GameTextDialog;
 import groupproject.containers.zelda.managers.MapManager;
+import groupproject.containers.zelda.managers.TransitionManager;
 import groupproject.containers.zelda.managers.ZeldaWorldManager;
 import groupproject.containers.zelda.models.MinishLink;
 import groupproject.containers.zelda.models.Octorok;
@@ -46,9 +47,14 @@ public class ZeldaContainer extends GameContainer {
 
     @Override
     protected void onPlay() {
-        world.automate();
         world.adjust();
-        world.manual(pressedKey);
+        if(TransitionManager.getInstance().shouldTrigger()){
+            TransitionManager.getInstance().trigger();
+        }
+        if(TransitionManager.getInstance().isPlaying() && TransitionManager.getInstance().isFinishedTransitioning()) {
+            world.automate();
+            world.manual(pressedKey);
+        }
         //You can remove these below
         if (world.getPlayer().isOverlapping(healthBox)) {
             world.getPlayer().incrementHealth(.5);
@@ -84,6 +90,7 @@ public class ZeldaContainer extends GameContainer {
             g.setColor(new Color(255, 70, 70));
             drawTextCenteredOffset(g, GameTextDialog.PLAYER_DIED, 0, getHeight() / 4);
         }
+        TransitionManager.getInstance().render(g);
     }
 
     @Override
@@ -133,7 +140,10 @@ public class ZeldaContainer extends GameContainer {
             game.onEvent(e);
         } else {
             AttackSprite player = world.getPlayer();
-            System.out.printf("POS: (%s, %s)\n", player.getX(), player.getY());
+            boolean playing = TransitionManager.getInstance().isPlaying();
+            System.out.println(playing);
+            TransitionManager.getInstance().setPlaying(!playing);
+            System.out.println(TransitionManager.getInstance().isPlaying());
         }
     }
 
