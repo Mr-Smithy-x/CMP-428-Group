@@ -85,18 +85,21 @@ public class MapManager {
     }
 
     public void loadTileMap(String mapFile) {
-        try (FileInputStream fis = new FileInputStream(TileMapModel.MAP_FOLDER + mapFile + ".tilemap"); ObjectInputStream is = new ObjectInputStream(fis)) {
-            TileMapModel mapModel = (TileMapModel) is.readObject();
-            TileMap currentMap = new TileMap(mapModel);
-            currentMap.initializeMap();
-            if (aStar == null) {
-                aStar = new ATileStarAlgorithm(currentMap);
-            } else {
-                aStar.setNetwork(currentMap);
-            }
-            TileMap currentMapOverlay = loadOverlayMap(TileMapModel.MAP_FOLDER + mapFile + "_overlay.tilemap");
-            TransitionTile.Map map = TransitionTile.Map.parse(mapFile);
-            if (!transitionTiles.containsKey(map)) {
+        TransitionTile.Map map = TransitionTile.Map.parse(mapFile);
+        if (transitionTiles.containsKey(map)) {
+            Optional<TransitionTile.Map> first = transitionTiles.keySet().stream().filter(p -> p.getFile().equals(map.getFile())).findFirst();
+            first.ifPresent(value -> current = value);
+        } else {
+            try (FileInputStream fis = new FileInputStream(TileMapModel.MAP_FOLDER + mapFile + ".tilemap"); ObjectInputStream is = new ObjectInputStream(fis)) {
+                TileMapModel mapModel = (TileMapModel) is.readObject();
+                TileMap currentMap = new TileMap(mapModel);
+                currentMap.initializeMap();
+                if (aStar == null) {
+                    aStar = new ATileStarAlgorithm(currentMap);
+                } else {
+                    aStar.setNetwork(currentMap);
+                }
+                TileMap currentMapOverlay = loadOverlayMap(TileMapModel.MAP_FOLDER + mapFile + "_overlay.tilemap");
                 map.setMap(currentMap);
                 if (currentMapOverlay != null) {
                     map.setMapOverlay(currentMapOverlay);
@@ -104,12 +107,9 @@ public class MapManager {
                 LinkedHashSet<TransitionTile> tiles = Points.getTiles(map);
                 transitionTiles.put(map, tiles);
                 current = map;
-            } else {
-                Optional<TransitionTile.Map> first = transitionTiles.keySet().stream().filter(p -> p.getFile().equals(map.getFile())).findFirst();
-                first.ifPresent(value -> current = value);
+            } catch (ClassNotFoundException | IOException e) {
+                e.printStackTrace();
             }
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
         }
     }
 

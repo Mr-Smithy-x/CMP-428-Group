@@ -5,13 +5,14 @@ import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.GameContainer;
 import groupproject.gameengine.camera.GlobalCamera;
+import groupproject.gameengine.contracts.Debuggable;
 import groupproject.gameengine.sprite.AttackSprite;
 import groupproject.gameengine.sprite.Sprite;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class ZeldaWorldManager extends BaseWorldManager {
+public class ZeldaWorldManager extends BaseWorldManager implements Debuggable {
 
     public ZeldaWorldManager(GameContainer container) {
         super(container);
@@ -69,8 +70,10 @@ public class ZeldaWorldManager extends BaseWorldManager {
             getPlayer().move();
         }
         TransitionTile transitionTile = MapManager.getInstance().checkTransitionTile(getPlayer());
-        if(transitionTile.getMap() != TransitionTile.Map.NONE){
-            System.out.println(transitionTile.getMap());
+        if (transitionTile.getMap() != TransitionTile.Map.NONE) {
+            if (inDebuggingMode()) {
+                System.out.printf("Entering: %s\n", transitionTile.getMap());
+            }
             MapManager.getInstance().transition(getPlayer(), transitionTile);
         }
     }
@@ -88,7 +91,7 @@ public class ZeldaWorldManager extends BaseWorldManager {
             enemy.isProjectileHitting(getPlayer());
             if (enemy.isInsideCamera(GlobalCamera.getInstance())) {
                 double distance = enemy.distanceBetween(getPlayer());
-                if(enemy.isPathNullOrEmpty()) {
+                if (enemy.isPathNullOrEmpty()) {
                     calculatePath(enemy);
                 }
                 if (distance <= 100) {
