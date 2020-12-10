@@ -76,18 +76,26 @@ public class ZeldaContainer extends GameContainer {
             }
         }
         if(!gibdo.isDead()){
-            if(gibdo.getX().intValue() <= 310 && gibdo.getY().intValue() == 350){
+            //gibdo.getX().intValue() <= 310 && gibdo.getY().intValue == 350
+            //gibdo.getX().intValue() <= gibdo.getX().intValue()+10 && gibdo.getY().intValue() == gibdo.getY().intValue()
+            if(gibdo.getX().intValue() <= gibdo.getX().intValue()+10 && gibdo.getY().intValue() == gibdo.getY().intValue()){
                 gibdo.setSpritePose(Sprite.Pose.LEFT);
                 gibdo.move();
             }
-            if(gibdo.getX().intValue() == 140 && gibdo.getY().intValue() >= 350){
+            //gibdo.getX().intValue() <= 140 && gibdo.getY().intValue() >= 350
+            //gibdo.getX().intValue() <= gibdo.getX().intValue()-10 && gibdo.getY().intValue() == gibdo.getY().intValue()
+            if(gibdo.getX().intValue() >= gibdo.getX().intValue()-10 && gibdo.getY().intValue() == gibdo.getY().intValue()){
                 gibdo.setSpritePose(Sprite.Pose.DOWN);
                 gibdo.move();
             }
+            //gibdo.getX().intValue() >= 140 && gibdo.getY().intValue() == 450
+            //gibdo.getX().intValue() >= gibdo.getX().intValue()-10 && gibdo.getY().intValue() == gibdo.getY().intValue()+100
             if(gibdo.getX().intValue() >= 140 && gibdo.getY().intValue() == 450){
                 gibdo.setSpritePose(Sprite.Pose.RIGHT);
                 gibdo.move();
             }
+            //gibdo.getX().intValue() >= 310 && gibdo.getY().intValue() == 450
+            //gibdo.getX().intValue() >= gibdo.getX().intValue()+10 && gibdo.getY().intValue() == gibdo.getY().intValue()+100
             if(gibdo.getX().intValue() == 310 && gibdo.getY().intValue() <= 450){
                 gibdo.setSpritePose(Sprite.Pose.UP);
                 gibdo.move();
