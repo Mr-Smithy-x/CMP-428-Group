@@ -42,11 +42,13 @@ public class Tile extends Node<Tile> implements Comparable<Node<Tile>>, Renderab
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(tileImage,
-                getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
-                getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
-                null);
-        if (System.getProperty("DEBUG").equals("true") && boundsRect != null) drawBoundsRect(g);
+        if(canRender(GlobalCamera.getInstance())) {
+            g.drawImage(tileImage,
+                    getCameraOffsetX(GlobalCamera.getInstance()).intValue(),
+                    getCameraOffsetY(GlobalCamera.getInstance()).intValue(),
+                    null);
+            if (System.getProperty("DEBUG").equals("true") && boundsRect != null) drawBoundsRect(g);
+        }
     }
 
     public void drawBoundsRect(Graphics g) {
