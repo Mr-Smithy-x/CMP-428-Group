@@ -1,14 +1,11 @@
 package groupproject.containers.zelda.contracts;
 
 import groupproject.gameengine.camera.BaseCamera;
-import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.contracts.CameraContract;
 
 import java.awt.*;
 
 public interface MiniHealthBar extends Life, CameraContract {
-
-    Polygon triangle = new Polygon(new int[]{0, 10, 20}, new int[]{0, 10, 0}, 3);
 
     default void renderHud(Graphics graphics, BaseCamera camera) {
         if(canRender(camera)) {
