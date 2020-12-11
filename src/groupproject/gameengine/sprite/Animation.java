@@ -19,6 +19,15 @@ public class Animation {
     private final Timer timer;
     private List<Image> frames = new ArrayList<>();
     private int currentFrame = 0;
+    private boolean paused = false;
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
 
     public Animation(int delay, String prefix, String directory) {
         this(delay);
@@ -114,10 +123,12 @@ public class Animation {
         @Override
         public void run() {
             if (!frames.isEmpty()) {
-                if (currentFrame < frames.size() - 1) {
-                    currentFrame += 1;
-                } else {
-                    currentFrame = 0;
+                if(!paused) {
+                    if (currentFrame < frames.size() - 1) {
+                        currentFrame += 1;
+                    } else {
+                        currentFrame = 0;
+                    }
                 }
             }
         }

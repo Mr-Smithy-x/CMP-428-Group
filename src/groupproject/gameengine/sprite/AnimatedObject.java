@@ -113,28 +113,30 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
     // Draws the sprite's current image based on its current state.
     @Override
     public void render(Graphics g) {
-        Image currentFrame;
-        if (moving) {
-            currentFrame = getCurrentAnimation().getCurrentFrame();
-        } else {
-            currentFrame = getCurrentAnimation().getFirstFrame();
-        }
-        if (currentFrame == null) {
-            Animation safeAnimation = getSafeAnimation();
+        if(canRender(GlobalCamera.getInstance())) {
+            Image currentFrame;
             if (moving) {
-                currentFrame = safeAnimation.getCurrentFrame();
+                currentFrame = getCurrentAnimation().getCurrentFrame();
             } else {
-                currentFrame = safeAnimation.getFirstFrame();
+                currentFrame = getCurrentAnimation().getFirstFrame();
             }
-        }
-        g.drawImage(currentFrame,
-                getDrawImageXPosition(currentFrame),
-                getDrawImageYPosition(currentFrame),
-                (int) (currentFrame.getWidth(null) * scaled),
-                (int) (currentFrame.getHeight(null) * scaled), null);
-        if (inDebuggingMode()) {
-            drawActualImageBounds(currentFrame, g);
-            drawBounds(g);
+            if (currentFrame == null) {
+                Animation safeAnimation = getSafeAnimation();
+                if (moving) {
+                    currentFrame = safeAnimation.getCurrentFrame();
+                } else {
+                    currentFrame = safeAnimation.getFirstFrame();
+                }
+            }
+            g.drawImage(currentFrame,
+                    getDrawImageXPosition(currentFrame),
+                    getDrawImageYPosition(currentFrame),
+                    (int) (currentFrame.getWidth(null) * scaled),
+                    (int) (currentFrame.getHeight(null) * scaled), null);
+            if (inDebuggingMode()) {
+                drawActualImageBounds(currentFrame, g);
+                drawBounds(g);
+            }
         }
         moving = false;
     }

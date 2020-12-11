@@ -73,8 +73,10 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
     }
 
     public void setSpritePose(Pose currentPose) {
+        getCurrentAnimation().setPaused(true);
         this.currentPose = currentPose;
         this.direction = currentPose.direction;
+        getCurrentAnimation().setPaused(false);
     }
 
     //This is for fetching sound effects in the future for specific class by their classname
