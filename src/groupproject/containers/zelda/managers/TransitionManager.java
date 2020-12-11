@@ -1,6 +1,8 @@
 package groupproject.containers.zelda.managers;
 
 import groupproject.containers.zelda.models.TransitionTile;
+import groupproject.containers.zelda.sound.GlobalSoundEffect;
+import groupproject.containers.zelda.sound.GlobalSoundTrack;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.contracts.Renderable;
 import groupproject.gameengine.hud.BaseHud;
@@ -105,8 +107,11 @@ public class TransitionManager extends BaseHud implements Renderable {
         this.playing = playing;
         if (!playing) {
             set((int) circle.getWidth() - 1);
+            GlobalSoundEffect.getInstance().play(GlobalSoundEffect.Clips.WARPROOMCHANGE);
+            GlobalSoundTrack.getInstance().pause();
         } else {
             set((int) circle.getWidth() + 1);
+            GlobalSoundTrack.getInstance().resume();
         }
     }
 

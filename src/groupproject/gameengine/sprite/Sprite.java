@@ -1,8 +1,10 @@
 package groupproject.gameengine.sprite;
 
+import groupproject.containers.zelda.managers.MapManager;
 import groupproject.containers.zelda.sound.GlobalSoundEffect;
 import groupproject.gameengine.camera.GlobalCamera;
 import groupproject.gameengine.tile.Tile;
+import groupproject.gameengine.tile.TileMap;
 import groupproject.spritesheeteditor.models.FileFormat;
 import groupproject.spritesheeteditor.models.PoseFileFormat;
 
@@ -140,7 +142,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         int imageWidth = (int) (currentFrame.getWidth(null) * scaled) / 2;
         int cameraX2Offset = getCameraOffsetX2(GlobalCamera.getInstance()).intValue();
         int boundsWidth = (int) (getWidth().intValue() * scaled) / 2;
-        int realPositionX = (int) (cameraX2Offset - (imageWidth + boundsWidth/scaled));
+        int realPositionX = (int) (cameraX2Offset - (imageWidth + boundsWidth / scaled));
         return realPositionX;
     }
 
@@ -178,7 +180,7 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
         return currentPose.direction;
     }
 
-    public void automate() {
+    public void automate(MapManager manager) {
         if (path != null) {
             if (targetTile == null) {
                 if (!path.isEmpty()) {
@@ -197,10 +199,13 @@ public abstract class Sprite extends AnimatedObject<EnumMap<Sprite.Pose, Animati
                 if (isLeftOf(targetTile)) {
                     setSpritePose(Pose.RIGHT);
                 }
+                boolean isSpriteColliding = manager.isSpriteCollidingWithMap(this, getSpritePose());
                 if (!path.isEmpty()) {
-                    super.move();
+                    if (!isSpriteColliding) {
+                        super.move();
+                    }
                 }
-                if (isOverlapping(targetTile)) {
+                if (isOverlapping(targetTile) || isSpriteColliding) {
                     this.targetTile = null;
                 }
             }

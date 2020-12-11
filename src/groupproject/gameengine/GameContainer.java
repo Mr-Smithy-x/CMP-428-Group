@@ -74,6 +74,9 @@ public abstract class GameContainer implements Runnable, KeyListener, MouseListe
     protected void onCreateImages() {
         offScreenImage = container.createImage(getWidth(), getHeight());
         offScreenGraphics = offScreenImage.getGraphics();
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        ((Graphics2D)offScreenGraphics).setRenderingHints(rh);
         offScreenGraphics.setFont(caveatFont);
     }
 

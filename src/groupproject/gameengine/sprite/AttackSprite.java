@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public abstract class AttackSprite<P extends DamageProjectile> extends Sprite implements Energy, Damage {
 
@@ -44,22 +45,22 @@ public abstract class AttackSprite<P extends DamageProjectile> extends Sprite im
                         break;
                     case UP:
                         if (e.getY().intValue() < getY().intValue()) {
-                            e.damageHealth(getDamagePoints() / 2);
+                            e.damageHealth(getDamagePoints() * new Random().nextInt((int) getDamagePoints()));
                         }
                         break;
                     case DOWN:
                         if (e.getY().intValue() > getY().intValue()) {
-                            e.damageHealth(getDamagePoints() / 2);
+                            e.damageHealth(getDamagePoints() * new Random().nextInt((int) getDamagePoints()));
                         }
                         break;
                     case LEFT:
                         if (e.getX().intValue() < getX().intValue()) {
-                            e.damageHealth(getDamagePoints() / 2);
+                            e.damageHealth(getDamagePoints() * new Random().nextInt((int) getDamagePoints()));
                         }
                         break;
                     case RIGHT:
                         if (e.getX().intValue() > getX().intValue()) {
-                            e.damageHealth(getDamagePoints() / 2);
+                            e.damageHealth(getDamagePoints() * new Random().nextInt((int) getDamagePoints()));
                         }
                         break;
                 }

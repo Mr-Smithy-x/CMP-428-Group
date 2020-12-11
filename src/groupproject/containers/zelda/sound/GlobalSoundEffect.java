@@ -52,6 +52,7 @@ public class GlobalSoundEffect extends BaseSound {
         public static final Clip HURT = init(getInstance().get("fall.wav"));
         public static final Clip ERROR = init(getInstance().get("error.wav"));
         public static final Clip CANE = init(getInstance().get("cane.wav"));
+        public static final Clip WARPROOMCHANGE = init(getInstance().get("mirror_warp_room_change.wav"));
 
         private Clips() {
         }

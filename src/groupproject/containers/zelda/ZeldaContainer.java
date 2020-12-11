@@ -130,7 +130,7 @@ public class ZeldaContainer extends GameContainer {
      */
     @Override
     public int getWidth() {
-        return 450;
+        return (int) (450 * GlobalCamera.getInstance().getScaling());
     }
 
     @Override
@@ -154,7 +154,7 @@ public class ZeldaContainer extends GameContainer {
      */
     @Override
     public int getHeight() {
-        return 450;
+        return (int) (450 * GlobalCamera.getInstance().getScaling());
     }
 
 }

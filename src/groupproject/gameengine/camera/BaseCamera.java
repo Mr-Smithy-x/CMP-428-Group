@@ -71,7 +71,7 @@ public abstract class BaseCamera {
         this.yOrigin = yOffset;
     }
 
-    public int getScaling() {
+    public double getScaling() {
         return scaling;
     }
 

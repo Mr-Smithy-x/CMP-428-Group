@@ -114,7 +114,7 @@ public class ZeldaWorldManager extends BaseWorldManager {
                 } else if (distance <= 100) {
                     enemy.shoot();
                 }
-                enemy.automate();
+                enemy.automate(mapManager);
             }
         });
     }
@@ -128,8 +128,12 @@ public class ZeldaWorldManager extends BaseWorldManager {
         } else {
             GlobalSoundTrack.getInstance().setTrack(GlobalSoundTrack.Track.NORMAL);
         }
-        GlobalSoundEffect.getInstance().play(getPlayer());
-        GlobalSoundTrack.getInstance().play();
+        if(TransitionManager.getInstance().isPlaying() && TransitionManager.getInstance().isFinishedTransitioning()) {
+            GlobalSoundEffect.getInstance().play(getPlayer());
+            GlobalSoundTrack.getInstance().play();
+        }else{
+            GlobalSoundTrack.getInstance().stop();
+        }
     }
 
     @Override

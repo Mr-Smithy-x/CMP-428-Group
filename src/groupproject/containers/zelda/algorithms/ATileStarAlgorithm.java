@@ -52,21 +52,18 @@ public class ATileStarAlgorithm extends AStar<TileMap, Tile> implements PathFind
         sprite = null;
     }
 
-    public void solvePath(Sprite start, Sprite end) {
+    public void solvePath(Sprite enemy, Sprite player) {
         reset();
-        this.sprite = start;
-        if (start.getX().intValue() > end.getX().intValue()) {
-            setStartNode(end);
-            setEndNode(start);
-            solve();
-            List list = new ArrayList(path);
-            Collections.sort(list, Collections.reverseOrder());
-            path = new LinkedHashSet(list);
-        } else if (start.getX().intValue() < end.getX().intValue()) {
-            setStartNode(start);
-            setEndNode(end);
-            solve();
+        this.sprite = enemy;
+        if (enemy.getX().intValue() < player.getX().intValue()) {
+            setStartNode(enemy);
+            setEndNode(player);
+
+        } else if (enemy.getX().intValue() > player.getX().intValue()) {
+            setStartNode(player);
+            setEndNode(enemy);
         }
+        solve();
         updateUI();
         getNetwork().resetNetwork();
     }
