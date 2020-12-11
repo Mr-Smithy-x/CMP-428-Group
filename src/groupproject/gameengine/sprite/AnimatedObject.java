@@ -179,16 +179,16 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
     public void move() {
         switch (direction) {
             case UP:
-                moveUp(velocity);
+                moveUp(velocity * GlobalCamera.getInstance().getScaling());
                 break;
             case DOWN:
-                moveDown(velocity);
+                moveDown(velocity * GlobalCamera.getInstance().getScaling());
                 break;
             case LEFT:
-                moveLeft(velocity);
+                moveLeft(velocity * GlobalCamera.getInstance().getScaling());
                 break;
             case RIGHT:
-                moveRight(velocity);
+                moveRight(velocity * GlobalCamera.getInstance().getScaling());
                 break;
             default:
                 break;
@@ -212,7 +212,7 @@ public abstract class AnimatedObject<T, F extends FileFormat> implements Rendera
     }
 
     public int getVelocity() {
-        return velocity;
+        return (int) (velocity * GlobalCamera.getInstance().getScaling());
     }
 
     public void setVelocity(int velocity) {

@@ -3,11 +3,14 @@ package groupproject.gameengine.sound;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.EnumMap;
+import java.util.HashMap;
 
 public abstract class BaseSound {
 
     protected static final String SOUND_TRACK_FOLDER = "assets/sound/tracks";
     protected static final String SOUND_EFFECTS_FOLDER = "assets/sound/effects";
+    protected final HashMap<Clip, Integer> frame = new HashMap<>();
 
     public static Clip init(File file) {
         try {
@@ -74,5 +77,21 @@ public abstract class BaseSound {
     public void close(Clip clip) {
         stop(clip);
         clip.close();
+    }
+
+    public void pause(Clip clip) {
+        if(clip.isRunning()){
+            frame.replace(clip, clip.getFramePosition());
+            clip.stop();
+        }
+    }
+    public void resume(Clip clip) {
+        if(!clip.isActive()){
+            if (frame.containsKey(clip)) {
+                Integer integer = frame.get(clip);
+                clip.setFramePosition(integer);
+            }
+            clip.start();
+        }
     }
 }

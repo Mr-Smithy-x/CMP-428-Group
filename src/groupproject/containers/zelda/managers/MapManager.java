@@ -177,7 +177,14 @@ public class MapManager implements Renderable, TransitionManager.OnTransition {
         TransitionTile.Map map = TransitionTile.Map.parse(mapFile);
         if (transitionTiles.containsKey(map)) {
             Optional<TransitionTile.Map> first = transitionTiles.keySet().stream().filter(p -> p.getFile().equals(map.getFile())).findFirst();
-            first.ifPresent(value -> current = value);
+            first.ifPresent(value -> {
+                current = value;
+                if (aStar == null) {
+                    aStar = new ATileStarAlgorithm(current.getMap());
+                } else {
+                    aStar.setNetwork(current.getMap());
+                }
+            });
         } else {
             try (FileInputStream fis = new FileInputStream(TileMapModel.MAP_FOLDER + mapFile + ".tilemap"); ObjectInputStream is = new ObjectInputStream(fis)) {
                 TileMapModel mapModel = (TileMapModel) is.readObject();

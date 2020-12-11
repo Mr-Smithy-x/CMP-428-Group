@@ -51,6 +51,26 @@ public class GlobalSoundTrack extends BaseSound {
         return SOUND_TRACK_FOLDER;
     }
 
+    public void resume() {
+        Clip clip = this.clips.get(this.track);
+        if(!clip.isActive()) {
+            resume(clip);
+        }
+    }
+    public void pause() {
+        Clip clip = this.clips.get(this.track);
+        if(clip.isActive()) {
+            pause(clip);
+        }
+    }
+
+    public void stop() {
+        Clip clip = this.clips.get(this.track);
+        if(clip.isActive()) {
+            stop(clip);
+        }
+    }
+
     public enum Track {
         PAUSE("select_screen.wav"),
         NORMAL("overworld.wav"),
